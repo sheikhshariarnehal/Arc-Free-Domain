@@ -99,12 +99,12 @@ export default function LandingPage() {
       <Navbar />
 
       <main className="flex-1 flex flex-col items-center">
-        {/* Skeuomorphic Landing Page Hero Section */}
+        {/* Minimal Modern Skeuomorphic Hero Section */}
         <section className="w-full max-w-4xl mx-auto text-center pt-16 pb-16 sm:pt-24 sm:pb-24 px-4 flex flex-col items-center">
-          {/* Status Badge Pill */}
+          {/* Minimal White Status Badge Pill */}
           <Badge
             variant="outline"
-            className="mb-6 border-none bg-blue-500/10 backdrop-blur-md text-blue-400 text-[11px] font-mono py-1 px-3.5 rounded-full shadow-[inset_0_1px_0px_0_rgba(255,255,255,0.15)] flex items-center gap-2 hover:bg-blue-500/20 transition-all cursor-default"
+            className="mb-6 border-none bg-white/8 backdrop-blur-md text-slate-200 text-[11px] font-mono py-1 px-3.5 rounded-full shadow-[inset_0_1px_0px_0_rgba(255,255,255,0.2)] flex items-center gap-2 hover:bg-white/12 transition-all cursor-default"
           >
             <span className="size-1.5 rounded-full bg-blue-400 animate-pulse inline-block" />
             <span>Cloudflare Edge DNS &bull; Instant Free Subdomains</span>
@@ -113,7 +113,7 @@ export default function LandingPage() {
           {/* Hero Headline */}
           <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.05] mb-5 text-foreground">
             Your name. Your project. <br />
-            <span className="font-mono bg-gradient-to-r from-blue-400 via-indigo-400 to-cyan-400 bg-clip-text text-transparent">
+            <span className="font-mono text-blue-400 font-extrabold">
               .arc.bd
             </span>
           </h1>
@@ -180,16 +180,16 @@ export default function LandingPage() {
               ))}
             </div>
 
-            {/* Platform Feature Telemetry Tags */}
-            <div className="flex items-center justify-center gap-4 mt-6 text-[11px] font-mono text-muted-foreground/80">
-              <span className="flex items-center gap-1">
-                <Zap className="size-3 text-blue-400" /> &lt; 50ms Edge DNS
+            {/* Platform Feature Telemetry Tags (Minimal White Icons) */}
+            <div className="flex items-center justify-center gap-5 mt-6 text-[11px] font-mono text-slate-300">
+              <span className="flex items-center gap-1.5">
+                <Zap className="size-3 text-white" /> &lt; 50ms Edge DNS
               </span>
-              <span className="flex items-center gap-1">
-                <Lock className="size-3 text-blue-400" /> Free SSL Included
+              <span className="flex items-center gap-1.5">
+                <Lock className="size-3 text-white" /> Free SSL Included
               </span>
-              <span className="flex items-center gap-1">
-                <Cpu className="size-3 text-blue-400" /> Vercel &amp; GitHub Ready
+              <span className="flex items-center gap-1.5">
+                <Cpu className="size-3 text-white" /> Vercel &amp; GitHub Ready
               </span>
             </div>
 
