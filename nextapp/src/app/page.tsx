@@ -104,29 +104,29 @@ export default function LandingPage() {
           {/* Status Badge Pill */}
           <Badge
             variant="outline"
-            className="mb-6 border-white/15 bg-white/5 text-slate-300 text-xs font-mono py-1.5 px-4 rounded-full shadow-sm flex items-center gap-2"
+            className="mb-6 border-white/15 bg-white/5 backdrop-blur-md text-slate-300 text-[11px] font-mono py-1 px-3.5 rounded-full shadow-sm flex items-center gap-2 hover:bg-white/10 transition-all cursor-default"
           >
-            <span className="size-2 rounded-full bg-emerald-400 animate-pulse inline-block" />
+            <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse inline-block" />
             <span>Cloudflare Edge DNS &bull; Instant Free Subdomains</span>
           </Badge>
 
           {/* Hero Headline */}
-          <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.08] mb-6 text-foreground">
+          <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.05] mb-5 text-foreground">
             Your name. Your project. <br />
-            <span className="font-mono text-white">
+            <span className="font-mono bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
               .arc.bd
             </span>
           </h1>
 
-          <p className="text-base sm:text-lg text-muted-foreground mb-10 max-w-xl leading-relaxed">
+          <p className="text-sm sm:text-base text-muted-foreground/90 max-w-lg mb-10 leading-relaxed font-normal">
             Claim a free <code className="text-slate-200 font-mono font-semibold">.arc.bd</code> subdomain in seconds. Direct routing to Vercel, GitHub Pages, or any VPS.
           </p>
 
-          {/* Search Box with Minimal Focus & Skeuomorphic Button */}
-          <div className="w-full max-w-xl group">
-            <form onSubmit={checkAvailability} className="flex flex-col sm:flex-row items-stretch gap-2.5">
-              <div className="relative flex-1 flex items-center">
-                <Search className="absolute left-4 size-4 text-muted-foreground transition-colors group-focus-within:text-foreground" />
+          {/* Unified Floating Search Bar Container */}
+          <div className="w-full max-w-xl">
+            <form onSubmit={checkAvailability} className="w-full">
+              <div className="relative flex items-center bg-card/90 border border-white/12 rounded-full p-1.5 pl-4 shadow-[0_8px_30px_rgba(0,0,0,0.4)] focus-within:border-white/30 focus-within:ring-1 focus-within:ring-white/20 transition-all group">
+                <Search className="size-4 text-muted-foreground shrink-0 mr-2.5 transition-colors group-focus-within:text-foreground" />
                 <input
                   type="text"
                   placeholder="my-cool-project"
@@ -136,30 +136,29 @@ export default function LandingPage() {
                     setAvailability('idle');
                     setReason(null);
                   }}
-                  className="w-full h-12 bg-card border border-white/10 rounded-full pl-11 pr-24 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-white/30 focus:ring-1 focus:ring-white/20 transition-all font-mono shadow-sm group-focus-within:shadow-[0_0_20px_rgba(255,255,255,0.05)]"
+                  className="w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none font-mono"
                 />
                 {searchQuery && (
                   <button
                     type="button"
                     onClick={clearSearch}
-                    className="absolute right-20 p-1 text-muted-foreground hover:text-foreground transition-colors"
+                    className="p-1 text-muted-foreground hover:text-foreground transition-colors mr-1 shrink-0"
                   >
                     <X className="size-3.5" />
                   </button>
                 )}
-                <span className="absolute right-4 text-xs text-muted-foreground font-mono font-medium">.arc.bd</span>
+                <span className="text-xs text-muted-foreground/70 font-mono font-medium mr-3 shrink-0 select-none">
+                  .arc.bd
+                </span>
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="h-10 px-5 text-xs font-semibold shrink-0 rounded-full"
+                >
+                  {loading ? <Loader2 className="size-3.5 animate-spin mr-1" /> : <Search className="size-3.5 mr-1" />}
+                  {loading ? "Checking..." : "Check Availability"}
+                </Button>
               </div>
-
-              {/* Minimal Skeuomorphic Check Button */}
-              <Button
-                type="submit"
-                disabled={loading}
-                size="hero"
-                className="h-12 shrink-0"
-              >
-                {loading ? <Loader2 className="size-4 animate-spin mr-1" /> : <Search className="size-4 mr-1" />}
-                {loading ? "Checking..." : "Check Availability"}
-              </Button>
             </form>
 
             {/* Quick Skeuomorphic Suggestion Pills */}
@@ -202,7 +201,7 @@ export default function LandingPage() {
             {/* Availability Result Card */}
             <div className="min-h-14 mt-4 flex items-center justify-center">
               {availability === 'available' && (
-                <div className="flex items-center justify-between gap-4 bg-white/5 border border-white/15 px-4 py-2.5 rounded-xl w-full text-left animate-fade-in">
+                <div className="flex items-center justify-between gap-4 bg-white/5 border border-white/15 px-4 py-2.5 rounded-xl w-full text-left animate-fade-in shadow-md">
                   <div className="flex items-center gap-2 text-sm text-emerald-400 font-medium font-mono">
                     <CheckCircle className="size-4 shrink-0 text-emerald-400" />
                     <span>{searchQuery}.arc.bd is available!</span>
@@ -221,7 +220,7 @@ export default function LandingPage() {
               )}
 
               {availability === 'taken' && (
-                <div className="flex items-center gap-2 bg-destructive/10 border border-destructive/30 px-4 py-2.5 rounded-xl w-full text-left text-sm text-destructive font-medium font-mono animate-fade-in">
+                <div className="flex items-center gap-2 bg-destructive/10 border border-destructive/30 px-4 py-2.5 rounded-xl w-full text-left text-sm text-destructive font-medium font-mono animate-fade-in shadow-md">
                   <XCircle className="size-4 shrink-0 text-destructive" />
                   <span>{searchQuery}.arc.bd is unavailable ({reason || 'Taken'}).</span>
                 </div>

@@ -80,24 +80,24 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 bg-background/85 backdrop-blur-md border-b border-border/60">
+    <nav className="sticky top-0 z-50 bg-background/90 backdrop-blur-md border-b border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="size-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 group-hover:bg-emerald-500/20 transition-all">
-              <Globe className="size-4" />
+            <div className="size-8 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white group-hover:bg-white/10 transition-all">
+              <Globe className="size-4 text-emerald-400" />
             </div>
-            <span className="text-base font-bold text-foreground tracking-tight">
+            <span className="text-base font-bold text-white tracking-tight">
               ARC<span className="text-emerald-400 font-mono">.BD</span>
             </span>
           </Link>
 
           {/* Desktop Nav Links */}
-          <div className="hidden md:flex items-center space-x-8 text-sm font-medium text-muted-foreground">
-            <Link href="/" className="hover:text-foreground transition-colors">Home</Link>
-            <Link href="/docs" className="hover:text-foreground transition-colors">Documentation</Link>
-            <Link href="/report" className="hover:text-foreground transition-colors">Report Abuse</Link>
+          <div className="hidden md:flex items-center space-x-8 text-xs font-medium text-slate-300">
+            <Link href="/" className="hover:text-white transition-colors">Home</Link>
+            <Link href="/docs" className="hover:text-white transition-colors">Documentation</Link>
+            <Link href="/report" className="hover:text-white transition-colors">Report Abuse</Link>
           </div>
 
           {/* Desktop User Profile Dropdown / Sign In Button */}
@@ -105,24 +105,27 @@ export default function Navbar() {
             {session ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className="h-10 px-3 border-border/80 bg-card hover:bg-secondary/80 flex items-center gap-2.5 rounded-xl transition-all"
+                  <button
+                    className="relative inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 text-white text-xs font-medium transition-all duration-200 active:scale-95 cursor-pointer shadow-sm overflow-hidden"
                   >
-                    <Avatar className="size-6 border border-emerald-500/30">
+                    <span
+                      className="absolute inset-0 pointer-events-none rounded-full"
+                      style={{ boxShadow: "inset 0 1.5px 0px 0 rgba(255, 255, 255, 0.2)" }}
+                    />
+                    <Avatar className="size-5 border border-white/20">
                       <AvatarImage src="" alt={userName} />
-                      <AvatarFallback className="bg-emerald-500/20 text-emerald-400 text-[10px] font-bold">
+                      <AvatarFallback className="bg-white/10 text-white text-[9px] font-bold font-mono">
                         {getInitials(userName)}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="text-xs font-semibold text-foreground max-w-[120px] truncate">
+                    <span className="max-w-[100px] truncate text-slate-200">
                       {userName}
                     </span>
-                    <ChevronDown className="size-3.5 text-muted-foreground" />
-                  </Button>
+                    <ChevronDown className="size-3 text-slate-400" />
+                  </button>
                 </DropdownMenuTrigger>
 
-                <DropdownMenuContent align="end" className="w-56 p-2 space-y-1">
+                <DropdownMenuContent align="end" className="w-56 p-2 space-y-1 bg-card border-white/15 shadow-xl">
                   <DropdownMenuLabel className="font-normal p-2">
                     <div className="flex flex-col space-y-1">
                       <div className="flex items-center justify-between">
@@ -130,25 +133,25 @@ export default function Navbar() {
                         {isAdmin ? (
                           <Badge variant="destructive" className="text-[9px] px-1.5 py-0 h-4">Admin</Badge>
                         ) : (
-                          <Badge variant="secondary" className="text-[9px] px-1.5 py-0 h-4 text-emerald-400 border-emerald-500/30">Developer</Badge>
+                          <Badge variant="outline" className="text-[9px] px-1.5 py-0 h-4 text-emerald-400 border-emerald-500/30">Developer</Badge>
                         )}
                       </div>
                       <p className="text-[11px] text-muted-foreground truncate">{userEmail}</p>
                     </div>
                   </DropdownMenuLabel>
 
-                  <DropdownMenuSeparator className="bg-border/60" />
+                  <DropdownMenuSeparator className="bg-white/10" />
 
-                  <DropdownMenuItem asChild className="cursor-pointer text-xs focus:bg-emerald-500/10 focus:text-emerald-400 rounded-lg">
+                  <DropdownMenuItem asChild className="cursor-pointer text-xs focus:bg-white/10 focus:text-white rounded-lg">
                     <Link href="/dashboard" className="flex items-center gap-2">
                       <LayoutDashboard className="size-3.5 text-emerald-400" />
                       <span>Dashboard Overview</span>
                     </Link>
                   </DropdownMenuItem>
 
-                  <DropdownMenuItem asChild className="cursor-pointer text-xs focus:bg-emerald-500/10 focus:text-emerald-400 rounded-lg">
+                  <DropdownMenuItem asChild className="cursor-pointer text-xs focus:bg-white/10 focus:text-white rounded-lg">
                     <Link href="/dashboard/domains" className="flex items-center gap-2">
-                      <Globe2 className="size-3.5 text-emerald-400" />
+                      <Globe2 className="size-3.5 text-slate-400" />
                       <span>My Subdomains</span>
                     </Link>
                   </DropdownMenuItem>
@@ -162,23 +165,23 @@ export default function Navbar() {
                     </DropdownMenuItem>
                   )}
 
-                  <DropdownMenuSeparator className="bg-border/60" />
+                  <DropdownMenuSeparator className="bg-white/10" />
 
-                  <DropdownMenuItem asChild className="cursor-pointer text-xs focus:bg-secondary rounded-lg">
+                  <DropdownMenuItem asChild className="cursor-pointer text-xs focus:bg-white/10 rounded-lg">
                     <Link href="/docs" className="flex items-center gap-2">
                       <BookOpen className="size-3.5 text-muted-foreground" />
                       <span>Documentation</span>
                     </Link>
                   </DropdownMenuItem>
 
-                  <DropdownMenuItem asChild className="cursor-pointer text-xs focus:bg-secondary rounded-lg">
+                  <DropdownMenuItem asChild className="cursor-pointer text-xs focus:bg-white/10 rounded-lg">
                     <Link href="/report" className="flex items-center gap-2">
                       <Flag className="size-3.5 text-muted-foreground" />
                       <span>Report Abuse</span>
                     </Link>
                   </DropdownMenuItem>
 
-                  <DropdownMenuSeparator className="bg-border/60" />
+                  <DropdownMenuSeparator className="bg-white/10" />
 
                   <DropdownMenuItem
                     onClick={handleSignOut}
@@ -190,7 +193,7 @@ export default function Navbar() {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Button size="sm" variant="outline" asChild className="text-xs font-semibold rounded-xl border-border/80 hover:bg-secondary">
+              <Button size="sm" variant="outline" asChild className="text-xs font-semibold rounded-full border-white/15">
                 <Link href="/login">
                   Sign In <ArrowRight className="size-3 ml-1" />
                 </Link>
@@ -209,17 +212,17 @@ export default function Navbar() {
 
       {/* Mobile Drawer */}
       {isOpen && (
-        <div className="md:hidden bg-background/95 border-b border-border px-4 pt-2 pb-4 space-y-2 text-sm font-medium">
-          <Link href="/" className="block py-2 text-foreground hover:text-emerald-400">Home</Link>
-          <Link href="/docs" className="block py-2 text-foreground hover:text-emerald-400">Documentation</Link>
-          <Link href="/report" className="block py-2 text-foreground hover:text-emerald-400">Report Abuse</Link>
+        <div className="md:hidden bg-background/95 border-b border-white/10 px-4 pt-2 pb-4 space-y-2 text-sm font-medium">
+          <Link href="/" className="block py-2 text-foreground hover:text-white">Home</Link>
+          <Link href="/docs" className="block py-2 text-foreground hover:text-white">Documentation</Link>
+          <Link href="/report" className="block py-2 text-foreground hover:text-white">Report Abuse</Link>
 
-          <div className="pt-2 border-t border-border">
+          <div className="pt-2 border-t border-white/10">
             {session ? (
               <div className="space-y-2 pt-1">
                 <div className="flex items-center gap-2 pb-2">
-                  <Avatar className="size-7 border border-emerald-500/30">
-                    <AvatarFallback className="bg-emerald-500/20 text-emerald-400 text-xs font-bold">
+                  <Avatar className="size-7 border border-white/20">
+                    <AvatarFallback className="bg-white/10 text-white text-xs font-bold font-mono">
                       {getInitials(userName)}
                     </AvatarFallback>
                   </Avatar>
