@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/server'
 import { validateSubdomainName } from '@/lib/validation'
 import { getFullDomain } from '@/lib/utils'
 
@@ -16,7 +16,10 @@ export async function GET(request: Request) {
     return NextResponse.json({ name, available: false, reason: error }, { status: 400 })
   }
 
-  const supabase = await createClient()
+  // Use admin client to bypass RLS — availability check is a public endpoint
+  // and RLS would silently return no rows for unauthenticated callers,
+  // making every domain look available even when it's taken.
+  const supabase = await createAdminClient()
 
   const { data: reserved } = await supabase
     .from('reserved_subdomains')
