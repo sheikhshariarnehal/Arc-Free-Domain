@@ -99,38 +99,38 @@ export default function LandingPage() {
       <Navbar />
 
       <main className="flex-1 flex flex-col items-center">
-        {/* Perfectly Responsive & Impeccably Spaced Hero Section */}
-        <section className="w-full max-w-4xl mx-auto text-center pt-12 pb-14 sm:pt-20 sm:pb-20 md:pt-24 md:pb-24 px-4 sm:px-6 flex flex-col items-center">
-          {/* Crisp Minimal Status Badge Pill */}
+        {/* Fully Responsive & Impeccably Spaced Hero Section */}
+        <section className="w-full max-w-5xl mx-auto text-center pt-10 pb-12 sm:pt-16 sm:pb-16 md:pt-20 md:pb-20 lg:pt-24 lg:pb-24 px-3 sm:px-6 lg:px-8 flex flex-col items-center overflow-x-hidden">
+          {/* Public Beta Status Badge Pill */}
           <Badge
             variant="outline"
-            className="mb-5 sm:mb-6 border border-white/10 bg-white/5 backdrop-blur-md text-blue-400 font-semibold text-[10px] sm:text-xs font-mono py-1.5 px-4 rounded-full flex items-center gap-2 hover:bg-white/10 hover:border-white/20 transition-all cursor-default select-none shadow-none"
+            className="mb-4 sm:mb-6 border border-white/10 bg-white/5 backdrop-blur-md text-blue-400 font-semibold text-[10px] sm:text-xs font-mono py-1.5 px-3.5 sm:px-4 rounded-full flex items-center gap-1.5 sm:gap-2 hover:bg-white/10 hover:border-white/20 transition-all cursor-default select-none shadow-none max-w-[95%] sm:max-w-none text-center"
           >
-            <span className="size-1.5 sm:size-2 rounded-full bg-blue-400 animate-pulse inline-block" />
-            <span>Public Beta &bull; Limited Time Offer</span>
+            <span className="size-1.5 sm:size-2 rounded-full bg-blue-400 animate-pulse inline-block shrink-0" />
+            <span className="truncate">Public Beta &bull; Limited Time Offer</span>
           </Badge>
 
           {/* Fluid Responsive Headline */}
-          <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.1] sm:leading-[1.05] mb-4 sm:mb-6 text-white max-w-3xl">
+          <h1 className="text-2xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.12] sm:leading-[1.05] mb-3 sm:mb-5 text-white max-w-4xl px-1 sm:px-0">
             Get Your Professional <br className="hidden sm:inline" />
-            <span className="text-blue-400 font-extrabold">
+            <span className="text-blue-400 font-extrabold inline-block sm:inline">
               Domain Identity
             </span>
           </h1>
 
           {/* Balanced Subheadline */}
-          <p className="text-xs sm:text-base md:text-lg text-slate-200 font-medium max-w-md sm:max-w-xl mb-8 sm:mb-10 leading-relaxed px-2 sm:px-0">
+          <p className="text-xs sm:text-base md:text-lg text-slate-200 font-medium max-w-xs sm:max-w-xl md:max-w-2xl mb-7 sm:mb-10 leading-relaxed px-2 sm:px-0">
             Claim your free <code className="text-blue-400 font-mono font-semibold">.arc.bd</code> subdomain in seconds. Direct routing to Vercel, GitHub Pages, or any custom VPS.
           </p>
 
           {/* Fully Responsive Unified Search Bar Container */}
-          <div className="w-full max-w-md sm:max-w-xl">
+          <div className="w-full max-w-sm sm:max-w-xl">
             <form onSubmit={checkAvailability} className="w-full">
               <div
-                className="relative flex items-center bg-card/95 rounded-full p-1 sm:p-1.5 pl-3.5 sm:pl-4 transition-all group overflow-hidden"
+                className="relative flex items-center bg-card/95 rounded-full p-1 sm:p-1.5 pl-3 sm:pl-4 transition-all group overflow-hidden"
                 style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.25)" }}
               >
-                <Search className="size-3.5 sm:size-4 text-slate-400 shrink-0 mr-2 sm:mr-2.5 transition-colors group-focus-within:text-blue-400" />
+                <Search className="size-3.5 sm:size-4 text-slate-400 shrink-0 mr-1.5 sm:mr-2.5 transition-colors group-focus-within:text-blue-400" />
                 <input
                   type="text"
                   placeholder="your-project-name"
@@ -140,7 +140,7 @@ export default function LandingPage() {
                     setAvailability('idle');
                     setReason(null);
                   }}
-                  className="w-full bg-transparent text-xs sm:text-sm text-white placeholder:text-slate-400 focus:outline-none font-mono font-medium"
+                  className="w-full min-w-0 bg-transparent text-xs sm:text-sm text-white placeholder:text-slate-400 focus:outline-none font-mono font-medium"
                 />
                 {searchQuery && (
                   <button
@@ -148,17 +148,17 @@ export default function LandingPage() {
                     onClick={clearSearch}
                     className="p-1 text-slate-400 hover:text-white transition-colors mr-1 shrink-0"
                   >
-                    <X className="size-3.5" />
+                    <X className="size-3 sm:size-3.5" />
                   </button>
                 )}
-                <span className="text-[11px] sm:text-xs text-slate-300 font-mono font-semibold mr-2.5 sm:mr-3 shrink-0 select-none">
+                <span className="text-[10px] sm:text-xs text-slate-300 font-mono font-semibold mr-2 sm:mr-3 shrink-0 select-none">
                   .arc.bd
                 </span>
                 <Button
                   type="submit"
                   disabled={loading}
                   variant="default"
-                  className="h-9 sm:h-10 px-3.5 sm:px-5 text-[11px] sm:text-xs font-semibold shrink-0 rounded-full"
+                  className="h-8 sm:h-10 px-3 sm:px-5 text-[10px] sm:text-xs font-semibold shrink-0 rounded-full"
                 >
                   {loading ? <Loader2 className="size-3 sm:size-3.5 animate-spin mr-1" /> : <Search className="size-3 sm:size-3.5 mr-1" />}
                   {loading ? "Checking..." : "Check Availability"}
@@ -167,13 +167,13 @@ export default function LandingPage() {
             </form>
 
             {/* Responsive Popular Suggestion Micro-Pills */}
-            <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mt-3.5 sm:mt-4 text-xs">
-              <span className="font-semibold text-[11px] sm:text-xs text-slate-300 mr-0.5">Try popular:</span>
+            <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mt-3 sm:mt-4 text-xs">
+              <span className="font-semibold text-[10px] sm:text-xs text-slate-300 mr-0.5">Try popular:</span>
               {SUGGESTIONS.map((sugg) => (
                 <button
                   key={sugg}
                   onClick={() => handleSuggestionClick(sugg)}
-                  className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-mono font-medium text-white bg-white/12 hover:bg-blue-500/25 hover:text-blue-300 transition-all duration-200 active:scale-95 cursor-pointer border-none shadow-[inset_0_1px_0px_0_rgba(255,255,255,0.25)]"
+                  className="px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-mono font-medium text-white bg-white/12 hover:bg-blue-500/25 hover:text-blue-300 transition-all duration-200 active:scale-95 cursor-pointer border-none shadow-[inset_0_1px_0px_0_rgba(255,255,255,0.25)]"
                 >
                   {sugg}
                 </button>
@@ -181,23 +181,23 @@ export default function LandingPage() {
             </div>
 
             {/* Platform Feature Telemetry Tags */}
-            <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 mt-6 sm:mt-8 text-[11px] sm:text-xs font-mono text-slate-200 font-medium">
+            <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-6 mt-5 sm:mt-8 text-[10px] sm:text-xs font-mono text-slate-200 font-medium">
               <span className="flex items-center gap-1.5">
-                <Zap className="size-3 sm:size-3.5 text-blue-400" /> &lt; 50ms Edge DNS
+                <Zap className="size-3 sm:size-3.5 text-blue-400 shrink-0" /> &lt; 50ms Edge DNS
               </span>
               <span className="flex items-center gap-1.5">
-                <Lock className="size-3 sm:size-3.5 text-blue-400" /> Free SSL Included
+                <Lock className="size-3 sm:size-3.5 text-blue-400 shrink-0" /> Free SSL Included
               </span>
               <span className="flex items-center gap-1.5">
-                <Cpu className="size-3 sm:size-3.5 text-blue-400" /> Vercel &amp; GitHub Ready
+                <Cpu className="size-3 sm:size-3.5 text-blue-400 shrink-0" /> Vercel &amp; GitHub Ready
               </span>
             </div>
 
             {/* Availability Result Card with Smart Alternatives */}
-            <div className="min-h-14 mt-4 sm:mt-5 flex items-center justify-center">
+            <div className="min-h-14 mt-4 sm:mt-5 flex items-center justify-center w-full">
               {availability === 'available' && (
                 <div
-                  className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 bg-blue-500/15 p-3.5 sm:px-4 sm:py-3 rounded-lg w-full text-left animate-fade-in border-none"
+                  className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 bg-blue-500/15 p-3 sm:px-4 sm:py-3 rounded-lg w-full text-left animate-fade-in border-none"
                   style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.25)" }}
                 >
                   <div className="flex items-center gap-2 text-xs sm:text-sm text-blue-400 font-semibold font-mono">
@@ -229,7 +229,7 @@ export default function LandingPage() {
 
                   {/* Smart Alternative Suggestions */}
                   <div className="flex items-center gap-2 pt-1.5 border-t border-destructive/20 text-xs font-mono text-slate-200">
-                    <span className="flex items-center gap-1.5 text-white font-medium">
+                    <span className="flex items-center gap-1.5 text-white font-medium shrink-0">
                       <Lightbulb className="size-3.5 text-amber-400" /> Try instead:
                     </span>
                     <div className="flex flex-wrap gap-1.5">
