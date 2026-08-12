@@ -256,3 +256,13 @@ input:-webkit-autofill:active {
 .skeuo-button-rect {
   border-radius: 8px !important;
 }
+
+/* Surface modifier — lighter gradient for buttons on dark card backgrounds */
+.skeuo-button-surface {
+  background-image: linear-gradient(180deg, #3f3f46, #27272a) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: none !important;
+}
+.skeuo-button-surface::before {
+  box-shadow: inset 0 1px 0px 0 rgba(255, 255, 255, 0.22) !important;
+}
