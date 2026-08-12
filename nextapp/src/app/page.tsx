@@ -101,10 +101,10 @@ export default function LandingPage() {
       <main className="flex-1 flex flex-col items-center">
         {/* Perfectly Responsive & Impeccably Spaced Hero Section */}
         <section className="w-full max-w-4xl mx-auto text-center pt-12 pb-14 sm:pt-20 sm:pb-20 md:pt-24 md:pb-24 px-4 sm:px-6 flex flex-col items-center">
-          {/* Public Beta Status Badge Pill */}
+          {/* Crisp Minimal Status Badge Pill */}
           <Badge
             variant="outline"
-            className="mb-5 sm:mb-6 border-none bg-blue-500/15 backdrop-blur-md text-blue-400 font-semibold text-[10px] sm:text-xs font-mono py-1 sm:py-1.5 px-3.5 sm:px-4 rounded-full shadow-[inset_0_1px_0px_0_rgba(255,255,255,0.2)] flex items-center gap-2 hover:bg-blue-500/25 transition-all cursor-default select-none"
+            className="mb-5 sm:mb-6 border border-white/10 bg-white/5 backdrop-blur-md text-blue-400 font-semibold text-[10px] sm:text-xs font-mono py-1.5 px-4 rounded-full flex items-center gap-2 hover:bg-white/10 hover:border-white/20 transition-all cursor-default select-none shadow-none"
           >
             <span className="size-1.5 sm:size-2 rounded-full bg-blue-400 animate-pulse inline-block" />
             <span>Public Beta &bull; Limited Time Offer</span>
@@ -112,7 +112,7 @@ export default function LandingPage() {
 
           {/* Fluid Responsive Headline */}
           <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.1] sm:leading-[1.05] mb-4 sm:mb-6 text-white max-w-3xl">
-            Your Professional <br className="hidden sm:inline" />
+            Get Your Professional <br className="hidden sm:inline" />
             <span className="text-blue-400 font-extrabold">
               Domain Identity
             </span>
