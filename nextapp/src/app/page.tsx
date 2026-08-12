@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
-import { Search, CheckCircle, XCircle, Gift, Zap, Code, Shield, Settings, Globe, Loader2, X, Sparkles, ArrowRight, Lock, Cpu } from "lucide-react";
+import { Search, CheckCircle, XCircle, Gift, Zap, Code, Shield, Settings, Globe, Loader2, X, Sparkles, ArrowRight, Lock, Cpu, Lightbulb } from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -89,6 +89,11 @@ export default function LandingPage() {
     }
   };
 
+  const getAlternatives = (query: string) => {
+    const clean = query.trim().toLowerCase();
+    return [`${clean}-app`, `${clean}-dev`, `get-${clean}`];
+  };
+
   return (
     <div className="flex-1 flex flex-col min-h-screen bg-background text-foreground selection:bg-blue-500/20 selection:text-blue-400">
       <Navbar />
@@ -157,14 +162,14 @@ export default function LandingPage() {
               </div>
             </form>
 
-            {/* Compact Minimal Popular Suggestion Micro-Pills */}
+            {/* Compact High-Contrast Popular Suggestion Micro-Pills */}
             <div className="flex flex-wrap items-center justify-center gap-1.5 mt-3.5 text-xs text-muted-foreground">
-              <span className="font-medium text-[10px] text-muted-foreground/80 mr-0.5">Popular:</span>
+              <span className="font-medium text-[10px] text-slate-400 mr-0.5">Popular:</span>
               {SUGGESTIONS.map((sugg) => (
                 <button
                   key={sugg}
                   onClick={() => handleSuggestionClick(sugg)}
-                  className="px-2.5 py-0.5 rounded-full text-[10px] font-mono text-slate-300 bg-white/5 border border-white/10 hover:border-blue-500/40 hover:bg-blue-500/10 hover:text-blue-400 transition-all duration-200 active:scale-95 cursor-pointer shadow-2xs"
+                  className="px-2.5 py-0.5 rounded-full text-[10px] font-mono text-slate-200 bg-white/8 border border-white/15 hover:border-blue-400/50 hover:bg-blue-500/15 hover:text-blue-300 transition-all duration-200 active:scale-95 cursor-pointer shadow-2xs"
                 >
                   {sugg}
                 </button>
@@ -184,7 +189,7 @@ export default function LandingPage() {
               </span>
             </div>
 
-            {/* Availability Result Card */}
+            {/* Availability Result Card with Smart Alternatives */}
             <div className="min-h-14 mt-4 flex items-center justify-center">
               {availability === 'available' && (
                 <div className="flex items-center justify-between gap-4 bg-blue-500/10 border border-blue-500/30 px-4 py-2.5 rounded-xl w-full text-left animate-fade-in shadow-md">
@@ -206,9 +211,29 @@ export default function LandingPage() {
               )}
 
               {availability === 'taken' && (
-                <div className="flex items-center gap-2 bg-destructive/10 border border-destructive/30 px-4 py-2.5 rounded-xl w-full text-left text-sm text-destructive font-medium font-mono animate-fade-in shadow-md">
-                  <XCircle className="size-4 shrink-0 text-destructive" />
-                  <span>{searchQuery}.arc.bd is unavailable ({reason || 'Taken'}).</span>
+                <div className="flex flex-col gap-2 bg-destructive/10 border border-destructive/30 p-3.5 rounded-xl w-full text-left animate-fade-in shadow-md">
+                  <div className="flex items-center gap-2 text-xs text-destructive font-medium font-mono">
+                    <XCircle className="size-4 shrink-0 text-destructive" />
+                    <span>{searchQuery}.arc.bd is unavailable ({reason || 'Taken'}).</span>
+                  </div>
+
+                  {/* Smart Alternative Suggestions */}
+                  <div className="flex items-center gap-2 pt-1 border-t border-destructive/20 text-[11px] font-mono text-muted-foreground">
+                    <span className="flex items-center gap-1 text-slate-300">
+                      <Lightbulb className="size-3 text-amber-400" /> Try instead:
+                    </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {getAlternatives(searchQuery).map((alt) => (
+                        <button
+                          key={alt}
+                          onClick={() => handleSuggestionClick(alt)}
+                          className="px-2 py-0.5 rounded-md bg-white/10 hover:bg-blue-500/20 text-slate-200 hover:text-blue-300 border border-white/15 transition-all cursor-pointer text-[10px]"
+                        >
+                          {alt}.arc.bd
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
