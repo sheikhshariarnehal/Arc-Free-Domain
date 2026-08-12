@@ -143,7 +143,7 @@ function LoginForm() {
 
   return (
     <div
-      className="bg-card/95 p-8 rounded-xl border border-white/10 backdrop-blur-xl transition-all"
+      className="bg-card/95 p-5 sm:p-8 rounded-xl border border-white/10 backdrop-blur-xl transition-all"
       style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.2)" }}
     >
       {/* First-Timer Claim Banner */}
@@ -159,7 +159,7 @@ function LoginForm() {
         </div>
       )}
 
-      <div className="text-center mb-8">
+      <div className="text-center mb-5">
         <h1 className="text-2xl sm:text-3xl font-extrabold text-white mb-2 tracking-tight">
           {isLogin ? "Welcome back" : "Create an account"}
         </h1>
@@ -191,7 +191,7 @@ function LoginForm() {
       )}
 
       <div
-        className="flex p-1 bg-background rounded-lg mb-6 border border-white/10"
+        className="flex p-1 bg-background rounded-lg mb-5 border border-white/10"
         style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.15)" }}
       >
         <button
@@ -226,7 +226,7 @@ function LoginForm() {
         </button>
       </div>
 
-      <form className="space-y-4" onSubmit={handleAuth}>
+      <form className="space-y-3" onSubmit={handleAuth}>
         {!isLogin && (
           <div className="space-y-1">
             <label className="text-xs font-semibold text-slate-300">Name</label>
@@ -286,20 +286,20 @@ function LoginForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full skeuo-button skeuo-button-primary py-2.5 rounded-lg font-semibold text-xs sm:text-sm transition-all mt-6 active:scale-[0.98] flex items-center justify-center gap-2 text-white border-none cursor-pointer"
+          className="w-full skeuo-button skeuo-button-primary py-2.5 rounded-lg font-semibold text-xs sm:text-sm transition-all mt-4 active:scale-[0.98] flex items-center justify-center gap-2 text-white border-none cursor-pointer"
         >
           {loading && <Loader2 className="h-4 w-4 animate-spin" />}
           {isLogin ? "Sign In" : "Create Account"}
         </button>
       </form>
 
-      <div className="mt-6 flex items-center">
+      <div className="mt-5 flex items-center">
         <div className="flex-grow border-t border-white/10"></div>
         <span className="mx-4 text-xs font-mono text-slate-400">or continue with</span>
         <div className="flex-grow border-t border-white/10"></div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 mt-5">
+      <div className="grid grid-cols-2 gap-3 mt-4">
         <button
           type="button"
           disabled={loading}
@@ -335,14 +335,14 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-background selection:bg-blue-500/20 selection:text-blue-400">
+    <div className="min-h-screen flex flex-col bg-background selection:bg-blue-500/20 selection:text-blue-400 overflow-y-auto">
       <Navbar />
 
-      <div className="flex-1 flex items-center justify-center p-4">
+      <div className="flex-1 flex items-start sm:items-center justify-center px-4 py-8">
         <div className="w-full max-w-md animate-slide-up">
           <Suspense fallback={
             <div
-              className="bg-card/95 p-8 rounded-xl text-center text-slate-400 border border-white/10"
+              className="bg-card/95 p-6 rounded-xl text-center text-slate-400 border border-white/10"
               style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.25)" }}
             >
               Loading login form...
