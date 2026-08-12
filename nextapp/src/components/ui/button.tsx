@@ -5,32 +5,25 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "relative inline-flex items-center justify-center font-semibold transition-all duration-200 active:scale-95 hover:brightness-[120%] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 cursor-pointer select-none border-none overflow-hidden",
+  "skeuo-button focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 cursor-pointer select-none border-none overflow-hidden",
   {
     variants: {
       variant: {
-        default:
-          "text-white shadow-[0_2px_10px_rgba(59,130,246,0.3)]",
-        emerald:
-          "text-white shadow-[0_2px_10px_rgba(16,185,129,0.3)]",
-        dark:
-          "text-white shadow-[0_0px_0px_-2px_rgba(0,0,0,0.5)]",
-        destructive:
-          "text-white shadow-[0_2px_10px_rgba(239,68,68,0.3)]",
-        outline:
-          "border border-white/15 text-white shadow-[0_0px_0px_-2px_rgba(0,0,0,0.5)]",
-        secondary:
-          "text-white shadow-[0_0px_0px_-2px_rgba(0,0,0,0.5)]",
-        ghost:
-          "hover:bg-white/10 hover:text-foreground active:scale-95 transition-all",
-        link: "text-primary underline-offset-4 hover:underline",
+        default: "skeuo-button-primary",
+        emerald: "skeuo-button-emerald",
+        dark: "skeuo-button",
+        destructive: "skeuo-button-destructive",
+        outline: "skeuo-button-outline",
+        secondary: "skeuo-button",
+        ghost: "hover:bg-white/10 hover:text-foreground active:scale-95 transition-all bg-none shadow-none text-white",
+        link: "text-primary underline-offset-4 hover:underline bg-none shadow-none p-0 h-auto",
       },
       size: {
         default: "h-10 px-5 py-2 text-sm rounded-full",
         sm: "h-9 rounded-full px-4 text-xs",
         lg: "h-12 rounded-full px-8 text-base",
         hero: "h-12 px-8 py-3 rounded-full text-base font-semibold",
-        icon: "h-10 w-10 rounded-full",
+        icon: "h-10 w-10 p-0 rounded-full",
       },
     },
     defaultVariants: {
@@ -47,37 +40,11 @@ export interface ButtonProps
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = "default", size = "default", asChild = false, children, style, ...props }, ref) => {
-    // Primary electric sapphire gradient matching primary theme
-    let bgStyle: React.CSSProperties = {
-      backgroundImage: "linear-gradient(180deg, #3b82f6, #1d4ed8)",
-    }
-
-    if (variant === "emerald") {
-      bgStyle = {
-        backgroundImage: "linear-gradient(180deg, #10b981, #047857)",
-      }
-    } else if (variant === "dark" || variant === "secondary") {
-      bgStyle = {
-        backgroundImage: "linear-gradient(180deg, #2d2d30, #18181b)",
-      }
-    } else if (variant === "destructive") {
-      bgStyle = {
-        backgroundImage: "linear-gradient(180deg, #ef4444, #b91c1c)",
-      }
-    } else if (variant === "outline") {
-      bgStyle = {
-        backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.1), rgba(255,255,255,0.03))",
-      }
-    }
-
-    const mergedStyle = { ...bgStyle, ...style }
-
+  ({ className, variant = "default", size = "default", asChild = false, children, ...props }, ref) => {
     if (asChild) {
       return (
         <Slot
           className={cn(buttonVariants({ variant, size, className }))}
-          style={mergedStyle}
           ref={ref}
           {...props}
         >
@@ -89,21 +56,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <button
         className={cn(buttonVariants({ variant, size, className }))}
-        style={mergedStyle}
         ref={ref}
         {...props}
       >
-        {/* Blended Top Light Rim Layer */}
-        {variant !== "ghost" && variant !== "link" && (
-          <span
-            className="absolute inset-0 pointer-events-none rounded-[inherit]"
-            style={{
-              boxShadow: "inset 0 1.5px 0px 0 rgba(255, 255, 255, 0.3)",
-            }}
-          />
-        )}
-
-        {/* Content Z-Layer */}
         <span className="relative z-10 flex items-center justify-center gap-2">
           {children}
         </span>
