@@ -99,37 +99,38 @@ export default function LandingPage() {
       <Navbar />
 
       <main className="flex-1 flex flex-col items-center">
-        {/* High-Contrast Skeuomorphic Hero Section */}
-        <section className="w-full max-w-4xl mx-auto text-center pt-16 pb-16 sm:pt-24 sm:pb-24 px-4 flex flex-col items-center">
+        {/* Perfectly Responsive & Impeccably Spaced Hero Section */}
+        <section className="w-full max-w-4xl mx-auto text-center pt-12 pb-14 sm:pt-20 sm:pb-20 md:pt-24 md:pb-24 px-4 sm:px-6 flex flex-col items-center">
           {/* Public Beta Status Badge Pill */}
           <Badge
             variant="outline"
-            className="mb-6 border-none bg-blue-500/15 backdrop-blur-md text-blue-400 font-semibold text-[11px] font-mono py-1.5 px-4 rounded-full shadow-[inset_0_1px_0px_0_rgba(255,255,255,0.2)] flex items-center gap-2 hover:bg-blue-500/25 transition-all cursor-default"
+            className="mb-5 sm:mb-6 border-none bg-blue-500/15 backdrop-blur-md text-blue-400 font-semibold text-[10px] sm:text-xs font-mono py-1 sm:py-1.5 px-3.5 sm:px-4 rounded-full shadow-[inset_0_1px_0px_0_rgba(255,255,255,0.2)] flex items-center gap-2 hover:bg-blue-500/25 transition-all cursor-default select-none"
           >
-            <span className="size-2 rounded-full bg-blue-400 animate-pulse inline-block" />
+            <span className="size-1.5 sm:size-2 rounded-full bg-blue-400 animate-pulse inline-block" />
             <span>Public Beta &bull; Limited Time Offer</span>
           </Badge>
 
-          {/* User Requested Hero Headline */}
-          <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.05] mb-5 text-white">
-            Your Professional <br />
+          {/* Fluid Responsive Headline */}
+          <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.1] sm:leading-[1.05] mb-4 sm:mb-6 text-white max-w-3xl">
+            Your Professional <br className="hidden sm:inline" />
             <span className="text-blue-400 font-extrabold">
               Domain Identity
             </span>
           </h1>
 
-          <p className="text-base sm:text-lg text-slate-200 font-medium max-w-xl mb-10 leading-relaxed">
+          {/* Balanced Subheadline */}
+          <p className="text-xs sm:text-base md:text-lg text-slate-200 font-medium max-w-md sm:max-w-xl mb-8 sm:mb-10 leading-relaxed px-2 sm:px-0">
             Claim your free <code className="text-blue-400 font-mono font-semibold">.arc.bd</code> subdomain in seconds. Direct routing to Vercel, GitHub Pages, or any custom VPS.
           </p>
 
-          {/* Unified Floating Search Bar Container */}
-          <div className="w-full max-w-xl">
+          {/* Fully Responsive Unified Search Bar Container */}
+          <div className="w-full max-w-md sm:max-w-xl">
             <form onSubmit={checkAvailability} className="w-full">
               <div
-                className="relative flex items-center bg-card/95 rounded-full p-1.5 pl-4 transition-all group overflow-hidden"
+                className="relative flex items-center bg-card/95 rounded-full p-1 sm:p-1.5 pl-3.5 sm:pl-4 transition-all group overflow-hidden"
                 style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.25)" }}
               >
-                <Search className="size-4 text-slate-400 shrink-0 mr-2.5 transition-colors group-focus-within:text-blue-400" />
+                <Search className="size-3.5 sm:size-4 text-slate-400 shrink-0 mr-2 sm:mr-2.5 transition-colors group-focus-within:text-blue-400" />
                 <input
                   type="text"
                   placeholder="your-project-name"
@@ -139,7 +140,7 @@ export default function LandingPage() {
                     setAvailability('idle');
                     setReason(null);
                   }}
-                  className="w-full bg-transparent text-sm text-white placeholder:text-slate-400 focus:outline-none font-mono font-medium"
+                  className="w-full bg-transparent text-xs sm:text-sm text-white placeholder:text-slate-400 focus:outline-none font-mono font-medium"
                 />
                 {searchQuery && (
                   <button
@@ -150,29 +151,29 @@ export default function LandingPage() {
                     <X className="size-3.5" />
                   </button>
                 )}
-                <span className="text-xs text-slate-300 font-mono font-semibold mr-3 shrink-0 select-none">
+                <span className="text-[11px] sm:text-xs text-slate-300 font-mono font-semibold mr-2.5 sm:mr-3 shrink-0 select-none">
                   .arc.bd
                 </span>
                 <Button
                   type="submit"
                   disabled={loading}
                   variant="default"
-                  className="h-10 px-5 text-xs font-semibold shrink-0 rounded-full"
+                  className="h-9 sm:h-10 px-3.5 sm:px-5 text-[11px] sm:text-xs font-semibold shrink-0 rounded-full"
                 >
-                  {loading ? <Loader2 className="size-3.5 animate-spin mr-1" /> : <Search className="size-3.5 mr-1" />}
+                  {loading ? <Loader2 className="size-3 sm:size-3.5 animate-spin mr-1" /> : <Search className="size-3 sm:size-3.5 mr-1" />}
                   {loading ? "Checking..." : "Check Availability"}
                 </Button>
               </div>
             </form>
 
-            {/* High-Contrast Popular Suggestion Micro-Pills */}
-            <div className="flex flex-wrap items-center justify-center gap-1.5 mt-4 text-xs">
-              <span className="font-semibold text-xs text-slate-300 mr-1">Try popular:</span>
+            {/* Responsive Popular Suggestion Micro-Pills */}
+            <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mt-3.5 sm:mt-4 text-xs">
+              <span className="font-semibold text-[11px] sm:text-xs text-slate-300 mr-0.5">Try popular:</span>
               {SUGGESTIONS.map((sugg) => (
                 <button
                   key={sugg}
                   onClick={() => handleSuggestionClick(sugg)}
-                  className="px-3 py-1 rounded-full text-xs font-mono font-medium text-white bg-white/12 hover:bg-blue-500/25 hover:text-blue-300 transition-all duration-200 active:scale-95 cursor-pointer border-none shadow-[inset_0_1px_0px_0_rgba(255,255,255,0.25)]"
+                  className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-mono font-medium text-white bg-white/12 hover:bg-blue-500/25 hover:text-blue-300 transition-all duration-200 active:scale-95 cursor-pointer border-none shadow-[inset_0_1px_0px_0_rgba(255,255,255,0.25)]"
                 >
                   {sugg}
                 </button>
@@ -180,26 +181,26 @@ export default function LandingPage() {
             </div>
 
             {/* Platform Feature Telemetry Tags */}
-            <div className="flex items-center justify-center gap-6 mt-7 text-xs font-mono text-slate-200 font-medium">
+            <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 mt-6 sm:mt-8 text-[11px] sm:text-xs font-mono text-slate-200 font-medium">
               <span className="flex items-center gap-1.5">
-                <Zap className="size-3.5 text-blue-400" /> &lt; 50ms Edge DNS
+                <Zap className="size-3 sm:size-3.5 text-blue-400" /> &lt; 50ms Edge DNS
               </span>
               <span className="flex items-center gap-1.5">
-                <Lock className="size-3.5 text-blue-400" /> Free SSL Included
+                <Lock className="size-3 sm:size-3.5 text-blue-400" /> Free SSL Included
               </span>
               <span className="flex items-center gap-1.5">
-                <Cpu className="size-3.5 text-blue-400" /> Vercel &amp; GitHub Ready
+                <Cpu className="size-3 sm:size-3.5 text-blue-400" /> Vercel &amp; GitHub Ready
               </span>
             </div>
 
             {/* Availability Result Card with Smart Alternatives */}
-            <div className="min-h-14 mt-5 flex items-center justify-center">
+            <div className="min-h-14 mt-4 sm:mt-5 flex items-center justify-center">
               {availability === 'available' && (
                 <div
-                  className="flex items-center justify-between gap-4 bg-blue-500/15 px-4 py-3 rounded-lg w-full text-left animate-fade-in border-none"
+                  className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 bg-blue-500/15 p-3.5 sm:px-4 sm:py-3 rounded-lg w-full text-left animate-fade-in border-none"
                   style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.25)" }}
                 >
-                  <div className="flex items-center gap-2 text-sm text-blue-400 font-semibold font-mono">
+                  <div className="flex items-center gap-2 text-xs sm:text-sm text-blue-400 font-semibold font-mono">
                     <CheckCircle className="size-4 shrink-0 text-blue-400" />
                     <span>{searchQuery}.arc.bd is available!</span>
                   </div>
@@ -208,7 +209,7 @@ export default function LandingPage() {
                     size="default"
                     onClick={handleClaimClick}
                     disabled={claiming}
-                    className="shrink-0"
+                    className="w-full sm:w-auto shrink-0"
                   >
                     {claiming && <Loader2 className="size-3 mr-1 animate-spin" />}
                     Claim Free Now <ArrowRight className="size-3 ml-1" />
@@ -218,7 +219,7 @@ export default function LandingPage() {
 
               {availability === 'taken' && (
                 <div
-                  className="flex flex-col gap-2.5 bg-destructive/15 p-4 rounded-lg w-full text-left animate-fade-in border-none"
+                  className="flex flex-col gap-2.5 bg-destructive/15 p-3.5 sm:p-4 rounded-lg w-full text-left animate-fade-in border-none"
                   style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.25)" }}
                 >
                   <div className="flex items-center gap-2 text-xs text-destructive font-semibold font-mono">
@@ -250,10 +251,10 @@ export default function LandingPage() {
         </section>
 
         {/* Feature Grid */}
-        <section className="w-full max-w-6xl mx-auto py-16 px-4 border-t border-white/10">
-          <div className="text-center mb-12">
-            <h2 className="text-2xl font-bold tracking-tight text-white">Minimal Infrastructure</h2>
-            <p className="text-sm text-slate-300 mt-1 font-medium">Built for speed, reliability, and modern web developer workflows.</p>
+        <section className="w-full max-w-6xl mx-auto py-12 sm:py-16 px-4 border-t border-white/10">
+          <div className="text-center mb-8 sm:mb-12">
+            <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-white">Minimal Infrastructure</h2>
+            <p className="text-xs sm:text-sm text-slate-300 mt-1 font-medium">Built for speed, reliability, and modern web developer workflows.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -282,18 +283,18 @@ export default function LandingPage() {
         </section>
 
         {/* 3-Step Process */}
-        <section className="w-full max-w-4xl mx-auto py-16 px-4 border-t border-white/10 text-center">
-          <h2 className="text-2xl font-bold tracking-tight text-white mb-12">Three Simple Steps</h2>
+        <section className="w-full max-w-4xl mx-auto py-12 sm:py-16 px-4 border-t border-white/10 text-center">
+          <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-white mb-8 sm:mb-12">Three Simple Steps</h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
             {[
               { num: "01", title: "Search Domain", desc: "Type your preferred name and verify real-time availability." },
               { num: "02", title: "Claim Free", desc: "Sign up in seconds to lock your subdomain into your account." },
               { num: "03", title: "Configure DNS", desc: "Point your domain to Vercel, GitHub Pages, or any IPv4 server." }
             ].map((step, i) => (
-              <Card key={i} className="text-center p-6">
+              <Card key={i} className="text-center p-5 sm:p-6">
                 <CardContent className="p-0 flex flex-col items-center">
-                  <span className="font-mono text-xl font-bold text-white mb-3">{step.num}</span>
+                  <span className="font-mono text-lg sm:text-xl font-bold text-white mb-2.5 sm:mb-3">{step.num}</span>
                   <h3 className="font-semibold text-sm text-white mb-1.5">{step.title}</h3>
                   <p className="text-xs text-slate-300 leading-relaxed">{step.desc}</p>
                 </CardContent>
