@@ -172,7 +172,7 @@
   }
 }
 
-/* Pure CSS - Skeuomorphic Button System */
+/* Pure CSS - Skeuomorphic Button System (No hover scale zoom) */
 .skeuo-button {
   position: relative;
   display: inline-flex;
@@ -202,12 +202,12 @@
 }
 
 .skeuo-button:hover {
-  filter: brightness(90%);
-  transform: translateY(-3px) scale(0.95);
+  filter: brightness(115%);
+  transform: translateY(-1px);
 }
 
 .skeuo-button:active {
-  transform: scale(0.95);
+  transform: scale(0.96);
 }
 
 .skeuo-button-primary {

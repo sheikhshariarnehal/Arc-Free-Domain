@@ -105,13 +105,7 @@ export default function Navbar() {
             {session ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button
-                    className="relative inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 text-white text-xs font-medium transition-all duration-200 active:scale-95 cursor-pointer shadow-sm overflow-hidden"
-                  >
-                    <span
-                      className="absolute inset-0 pointer-events-none rounded-full"
-                      style={{ boxShadow: "inset 0 1.5px 0px 0 rgba(255, 255, 255, 0.2)" }}
-                    />
+                  <button className="skeuo-button skeuo-button-outline px-3.5 py-1.5 h-9 text-xs gap-2 text-white">
                     <Avatar className="size-5 border border-white/20">
                       <AvatarImage src="" alt={userName} />
                       <AvatarFallback className="bg-blue-500/20 text-blue-400 text-[9px] font-bold font-mono">
