@@ -13,15 +13,15 @@ const Card = React.forwardRef<
       ...style,
     }}
     className={cn(
-      "relative rounded-xl border border-white/10 bg-card text-card-foreground shadow-[inset_0_1.5px_0px_0_rgba(255,255,255,0.12),0_4px_12px_rgba(0,0,0,0.4)] backdrop-blur-md hover:border-white/25 hover:shadow-[inset_0_1.5px_0px_0_rgba(255,255,255,0.25),0_6px_20px_rgba(0,0,0,0.6)] transition-all duration-300 group overflow-hidden",
+      "relative rounded-xl border-none bg-card text-card-foreground backdrop-blur-md transition-all duration-300 group overflow-hidden",
       className
     )}
     {...props}
   >
-    {/* Blended Top Light Rim Layer */}
+    {/* Pure Skeuomorphic Top Light Rim Layer (No Outer Border Line) */}
     <span
       className="absolute inset-0 pointer-events-none rounded-[inherit]"
-      style={{ boxShadow: "inset 0 1.5px 0px 0 rgba(255, 255, 255, 0.15)" }}
+      style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.18)" }}
     />
     <div className="relative z-10">{children}</div>
   </div>

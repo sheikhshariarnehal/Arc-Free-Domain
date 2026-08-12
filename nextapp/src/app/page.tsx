@@ -104,7 +104,7 @@ export default function LandingPage() {
           {/* Status Badge Pill */}
           <Badge
             variant="outline"
-            className="mb-6 border-blue-500/30 bg-blue-500/10 backdrop-blur-md text-blue-400 text-[11px] font-mono py-1 px-3.5 rounded-full shadow-sm flex items-center gap-2 hover:bg-blue-500/20 transition-all cursor-default"
+            className="mb-6 border-none bg-blue-500/10 backdrop-blur-md text-blue-400 text-[11px] font-mono py-1 px-3.5 rounded-full shadow-[inset_0_1px_0px_0_rgba(255,255,255,0.15)] flex items-center gap-2 hover:bg-blue-500/20 transition-all cursor-default"
           >
             <span className="size-1.5 rounded-full bg-blue-400 animate-pulse inline-block" />
             <span>Cloudflare Edge DNS &bull; Instant Free Subdomains</span>
@@ -122,10 +122,13 @@ export default function LandingPage() {
             Claim a free <code className="text-blue-400 font-mono font-semibold">.arc.bd</code> subdomain in seconds. Direct routing to Vercel, GitHub Pages, or any VPS.
           </p>
 
-          {/* Unified Floating Search Bar Container */}
+          {/* Unified Floating Search Bar Container (Skeuomorphic Top Rim Reflection) */}
           <div className="w-full max-w-xl">
             <form onSubmit={checkAvailability} className="w-full">
-              <div className="relative flex items-center bg-card/90 border border-white/12 rounded-full p-1.5 pl-4 shadow-[0_8px_30px_rgba(0,0,0,0.4)] focus-within:border-blue-500/40 focus-within:ring-1 focus-within:ring-blue-500/30 transition-all group">
+              <div
+                className="relative flex items-center bg-card/90 rounded-full p-1.5 pl-4 transition-all group overflow-hidden"
+                style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.2)" }}
+              >
                 <Search className="size-4 text-muted-foreground shrink-0 mr-2.5 transition-colors group-focus-within:text-blue-400" />
                 <input
                   type="text"
@@ -169,7 +172,8 @@ export default function LandingPage() {
                 <button
                   key={sugg}
                   onClick={() => handleSuggestionClick(sugg)}
-                  className="px-2.5 py-0.5 rounded-full text-[10px] font-mono text-slate-200 bg-white/8 border border-white/15 hover:border-blue-400/50 hover:bg-blue-500/15 hover:text-blue-300 transition-all duration-200 active:scale-95 cursor-pointer shadow-2xs"
+                  className="px-2.5 py-0.5 rounded-full text-[10px] font-mono text-slate-200 bg-white/8 hover:bg-blue-500/15 hover:text-blue-300 transition-all duration-200 active:scale-95 cursor-pointer border-none"
+                  style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.15)" }}
                 >
                   {sugg}
                 </button>
@@ -192,7 +196,10 @@ export default function LandingPage() {
             {/* Availability Result Card with Smart Alternatives */}
             <div className="min-h-14 mt-4 flex items-center justify-center">
               {availability === 'available' && (
-                <div className="flex items-center justify-between gap-4 bg-blue-500/10 border border-blue-500/30 px-4 py-2.5 rounded-xl w-full text-left animate-fade-in shadow-md">
+                <div
+                  className="flex items-center justify-between gap-4 bg-blue-500/10 px-4 py-2.5 rounded-xl w-full text-left animate-fade-in border-none"
+                  style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.18)" }}
+                >
                   <div className="flex items-center gap-2 text-sm text-blue-400 font-medium font-mono">
                     <CheckCircle className="size-4 shrink-0 text-blue-400" />
                     <span>{searchQuery}.arc.bd is available!</span>
@@ -211,7 +218,10 @@ export default function LandingPage() {
               )}
 
               {availability === 'taken' && (
-                <div className="flex flex-col gap-2 bg-destructive/10 border border-destructive/30 p-3.5 rounded-xl w-full text-left animate-fade-in shadow-md">
+                <div
+                  className="flex flex-col gap-2 bg-destructive/10 p-3.5 rounded-xl w-full text-left animate-fade-in border-none"
+                  style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.18)" }}
+                >
                   <div className="flex items-center gap-2 text-xs text-destructive font-medium font-mono">
                     <XCircle className="size-4 shrink-0 text-destructive" />
                     <span>{searchQuery}.arc.bd is unavailable ({reason || 'Taken'}).</span>
@@ -227,7 +237,8 @@ export default function LandingPage() {
                         <button
                           key={alt}
                           onClick={() => handleSuggestionClick(alt)}
-                          className="px-2 py-0.5 rounded-md bg-white/10 hover:bg-blue-500/20 text-slate-200 hover:text-blue-300 border border-white/15 transition-all cursor-pointer text-[10px]"
+                          className="px-2 py-0.5 rounded-md bg-white/10 hover:bg-blue-500/20 text-slate-200 hover:text-blue-300 border-none transition-all cursor-pointer text-[10px]"
+                          style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.15)" }}
                         >
                           {alt}.arc.bd
                         </button>
@@ -258,7 +269,7 @@ export default function LandingPage() {
             ].map((item, i) => (
               <Card key={i} className="p-5 flex flex-col gap-2.5">
                 <CardContent className="p-0 flex flex-col gap-2.5">
-                  <div className="size-9 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400">
+                  <div className="size-9 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-400">
                     <item.icon className="size-4" />
                   </div>
                   <h3 className="font-semibold text-sm text-foreground">{item.title}</h3>
@@ -295,7 +306,7 @@ export default function LandingPage() {
       <footer className="border-t border-white/10 bg-background text-xs text-muted-foreground">
         <div className="max-w-7xl mx-auto px-4 py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <div className="size-5 rounded bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400">
+            <div className="size-5 rounded bg-blue-500/10 flex items-center justify-center text-blue-400">
               <Globe className="size-3" />
             </div>
             <span className="font-medium text-foreground">ARC.BD</span>
