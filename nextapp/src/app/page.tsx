@@ -99,7 +99,7 @@ export default function LandingPage() {
       <Navbar />
 
       <main className="flex-1 flex flex-col items-center">
-        {/* Polished Hero Section with Theme Variables */}
+        {/* Skeuomorphic Landing Page Hero Section */}
         <section className="w-full max-w-4xl mx-auto text-center pt-16 pb-16 sm:pt-24 sm:pb-24 px-4 flex flex-col items-center">
           {/* Status Badge Pill */}
           <Badge
@@ -122,7 +122,7 @@ export default function LandingPage() {
             Claim a free <code className="text-emerald-400 font-mono font-semibold">.arc.bd</code> subdomain in seconds. Direct routing to Vercel, GitHub Pages, or any VPS.
           </p>
 
-          {/* Theme-Grounded Search Box */}
+          {/* Search Box with Skeuomorphic Check Button */}
           <div className="w-full max-w-xl group">
             <form onSubmit={checkAvailability} className="flex flex-col sm:flex-row items-stretch gap-2.5">
               <div className="relative flex-1 flex items-center">
@@ -136,7 +136,7 @@ export default function LandingPage() {
                     setAvailability('idle');
                     setReason(null);
                   }}
-                  className="w-full h-12 bg-card border border-border/80 rounded-xl pl-11 pr-24 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500/40 transition-all font-mono shadow-sm group-focus-within:shadow-[0_0_25px_rgba(16,185,129,0.15)]"
+                  className="w-full h-12 bg-card border border-border/80 rounded-full pl-11 pr-24 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500/40 transition-all font-mono shadow-sm group-focus-within:shadow-[0_0_25px_rgba(16,185,129,0.15)]"
                 />
                 {searchQuery && (
                   <button
@@ -150,26 +150,38 @@ export default function LandingPage() {
                 <span className="absolute right-4 text-xs text-muted-foreground font-mono font-medium">.arc.bd</span>
               </div>
 
+              {/* Skeuomorphic Check Button */}
               <Button
                 type="submit"
                 disabled={loading}
-                className="h-12 px-6 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold text-sm rounded-xl transition-all shrink-0 active:scale-95 shadow-[0_0_20px_rgba(16,185,129,0.25)]"
+                size="hero"
+                className="h-12 shrink-0"
               >
-                {loading ? <Loader2 className="size-4 animate-spin mr-1.5" /> : null}
+                {loading ? <Loader2 className="size-4 animate-spin mr-1" /> : <Search className="size-4 mr-1" />}
                 {loading ? "Checking..." : "Check Availability"}
               </Button>
             </form>
 
-            {/* Quick Suggestion Pills */}
-            <div className="flex flex-wrap items-center justify-center gap-2 mt-3.5 text-xs text-muted-foreground">
+            {/* Quick Skeuomorphic Suggestion Pills */}
+            <div className="flex flex-wrap items-center justify-center gap-2 mt-4 text-xs text-muted-foreground">
               <span className="font-medium text-[11px]">Popular:</span>
               {SUGGESTIONS.map((sugg) => (
                 <button
                   key={sugg}
                   onClick={() => handleSuggestionClick(sugg)}
-                  className="px-2.5 py-0.5 rounded-md bg-secondary/80 hover:bg-secondary text-muted-foreground hover:text-emerald-400 font-mono text-[11px] transition-colors border border-border/50"
+                  className="relative inline-flex items-center justify-center transition-all duration-200 active:scale-95 hover:brightness-[120%] cursor-pointer px-3 py-1 rounded-full text-[11px] font-mono text-white border-none overflow-hidden"
+                  style={{
+                    backgroundImage: "linear-gradient(180deg, #2d2d30, #18181b)",
+                    boxShadow: "0 0px 0px -2px rgba(0, 0, 0, 0.5)",
+                  }}
                 >
-                  {sugg}
+                  <span
+                    className="absolute inset-0 pointer-events-none rounded-full"
+                    style={{ boxShadow: "inset 0 1.5px 0px 0 rgba(255, 255, 255, 0.25)" }}
+                  />
+                  <span className="relative z-10 flex items-center gap-1 text-emerald-400">
+                    {sugg}
+                  </span>
                 </button>
               ))}
             </div>
@@ -187,28 +199,28 @@ export default function LandingPage() {
               </span>
             </div>
 
-            {/* Availability Result Card */}
+            {/* Availability Result Card with Skeuomorphic Claim Button */}
             <div className="min-h-14 mt-4 flex items-center justify-center">
               {availability === 'available' && (
-                <div className="flex items-center justify-between gap-4 bg-emerald-500/10 border border-emerald-500/30 px-4 py-2.5 rounded-xl w-full text-left animate-fade-in">
+                <div className="flex items-center justify-between gap-4 bg-emerald-500/10 border border-emerald-500/30 px-4 py-2.5 rounded-2xl w-full text-left animate-fade-in">
                   <div className="flex items-center gap-2 text-sm text-emerald-400 font-medium font-mono">
                     <CheckCircle className="size-4 shrink-0 text-emerald-400" />
                     <span>{searchQuery}.arc.bd is available!</span>
                   </div>
                   <Button
-                    size="sm"
+                    size="default"
                     onClick={handleClaimClick}
                     disabled={claiming}
-                    className="h-8 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-semibold rounded-lg shrink-0 shadow-sm"
+                    className="shrink-0"
                   >
                     {claiming && <Loader2 className="size-3 mr-1 animate-spin" />}
-                    Claim Free <ArrowRight className="size-3 ml-1" />
+                    Claim Free Now <ArrowRight className="size-3 ml-1" />
                   </Button>
                 </div>
               )}
 
               {availability === 'taken' && (
-                <div className="flex items-center gap-2 bg-destructive/10 border border-destructive/30 px-4 py-2.5 rounded-xl w-full text-left text-sm text-destructive font-medium font-mono animate-fade-in">
+                <div className="flex items-center gap-2 bg-destructive/10 border border-destructive/30 px-4 py-2.5 rounded-2xl w-full text-left text-sm text-destructive font-medium font-mono animate-fade-in">
                   <XCircle className="size-4 shrink-0 text-destructive" />
                   <span>{searchQuery}.arc.bd is unavailable ({reason || 'Taken'}).</span>
                 </div>
@@ -217,7 +229,7 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Feature Grid using Theme Cards */}
+        {/* Feature Grid */}
         <section className="w-full max-w-6xl mx-auto py-16 px-4 border-t border-border/50">
           <div className="text-center mb-12">
             <h2 className="text-2xl font-bold tracking-tight text-foreground">Minimal Infrastructure</h2>
@@ -246,7 +258,7 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* 3-Step Process using Theme Cards */}
+        {/* 3-Step Process */}
         <section className="w-full max-w-4xl mx-auto py-16 px-4 border-t border-border/50 text-center">
           <h2 className="text-2xl font-bold tracking-tight text-foreground mb-12">Three Simple Steps</h2>
 
@@ -256,7 +268,7 @@ export default function LandingPage() {
               { num: "02", title: "Claim Free", desc: "Sign up in seconds to lock your subdomain into your account." },
               { num: "03", title: "Configure DNS", desc: "Point your domain to Vercel, GitHub Pages, or any IPv4 server." }
             ].map((step, i) => (
-              <Card key={i} className="bg-card/50 border-border/60 text-center p-6 rounded-xl">
+              <Card key={i} className="bg-card/50 border-border/60 text-center p-6 rounded-2xl">
                 <CardContent className="p-0 flex flex-col items-center">
                   <span className="font-mono text-xl font-bold text-emerald-400 mb-3">{step.num}</span>
                   <h3 className="font-semibold text-sm text-foreground mb-1.5">{step.title}</h3>
@@ -268,7 +280,7 @@ export default function LandingPage() {
         </section>
       </main>
 
-      {/* Footer grounded in Theme Tokens */}
+      {/* Footer */}
       <footer className="border-t border-border/50 bg-background text-xs text-muted-foreground">
         <div className="max-w-7xl mx-auto px-4 py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
