@@ -59,6 +59,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const navSection2 = [
     { name: 'Reserved Names', href: '/admin/reserved', icon: ShieldBan },
     { name: 'Abuse Reports', href: '/admin/reports', icon: Flag },
+    { name: 'Root DNS', href: '/admin/dns', icon: Layers },
     { name: 'System Settings', href: '/admin/settings', icon: Settings },
   ];
 
