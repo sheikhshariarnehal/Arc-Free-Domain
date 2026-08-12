@@ -96,42 +96,82 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="flex-1 flex flex-col min-h-screen bg-background text-foreground selection:bg-blue-500/20 selection:text-blue-400">
+    <div className="flex-1 flex flex-col min-h-screen bg-background text-foreground selection:bg-blue-500/20 selection:text-blue-400 overflow-x-hidden">
       <Navbar />
 
       <main className="flex-1 flex flex-col items-center">
-        {/* Fully Responsive & Impeccably Spaced Hero Section */}
-        <section className="w-full max-w-5xl mx-auto text-center pt-8 pb-12 sm:pt-14 sm:pb-16 md:pt-18 md:pb-20 lg:pt-20 lg:pb-24 px-3 sm:px-6 lg:px-8 flex flex-col items-center overflow-x-hidden">
-          {/* Public Beta Status Badge Pill */}
+        {/* Hero Section */}
+        <section className="w-full max-w-5xl mx-auto text-center pt-10 pb-12 sm:pt-16 sm:pb-20 px-4 sm:px-6 lg:px-8 flex flex-col items-center">
+
+          {/* Beta Badge */}
           <Badge
             variant="outline"
-            className="mb-4 sm:mb-6 border border-white/10 bg-white/5 backdrop-blur-md text-blue-400 font-semibold text-[10px] sm:text-xs font-mono py-1.5 px-3.5 sm:px-4 rounded-full flex items-center gap-1.5 sm:gap-2 hover:bg-white/10 hover:border-white/20 transition-all cursor-default select-none shadow-none max-w-[95%] sm:max-w-none text-center"
+            className="mb-5 sm:mb-7 border border-white/10 bg-white/5 backdrop-blur-md text-blue-400 font-semibold text-[10px] sm:text-xs font-mono py-1.5 px-3.5 rounded-full flex items-center gap-1.5 hover:bg-white/10 hover:border-white/20 transition-all cursor-default select-none"
           >
             <span className="size-1.5 sm:size-2 rounded-full bg-blue-400 animate-pulse inline-block shrink-0" />
-            <span className="truncate">Public Beta &bull; Limited Time Offer</span>
+            <span>Public Beta &bull; Limited Time Offer</span>
           </Badge>
 
-          {/* Fluid Responsive Headline */}
-          <h1 className="text-2xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.12] sm:leading-[1.05] mb-3 sm:mb-5 text-white max-w-4xl px-1 sm:px-0">
-            Get Your Professional <br className="hidden sm:inline" />
-            <span className="text-blue-400 font-extrabold inline-block sm:inline">
+          {/* Headline */}
+          <h1 className="text-[28px] leading-tight sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight sm:leading-[1.05] mb-4 sm:mb-5 text-white max-w-4xl">
+            Get Your Professional{" "}
+            <br className="hidden sm:inline" />
+            <span className="text-blue-400 font-extrabold">
               Domain Identity
             </span>
           </h1>
 
-          {/* Balanced Subheadline */}
-          <p className="text-xs sm:text-base md:text-lg text-slate-200 font-medium max-w-xs sm:max-w-xl md:max-w-2xl mb-6 sm:mb-9 leading-relaxed px-2 sm:px-0">
-            Claim your free <code className="text-blue-400 font-mono font-semibold">.arc.bd</code> subdomain in seconds. Direct routing to Vercel, GitHub Pages, or any custom VPS.
+          {/* Subheadline */}
+          <p className="text-sm sm:text-base md:text-lg text-slate-200 font-medium max-w-xs sm:max-w-xl md:max-w-2xl mb-8 sm:mb-10 leading-relaxed px-2 sm:px-0">
+            Claim your free <code className="text-blue-400 font-mono font-semibold">.arc.bd</code> subdomain in seconds.{" "}
+            <span className="hidden sm:inline">Direct routing to Vercel, GitHub Pages, or any custom VPS.</span>
           </p>
 
-          {/* Fully Responsive Unified Search Bar Container */}
-          <div className="w-full max-w-sm sm:max-w-xl">
+          {/* Search Bar — stacks on mobile */}
+          <div className="w-full max-w-[340px] sm:max-w-xl">
             <form onSubmit={checkAvailability} className="w-full">
+              {/* Mobile: vertical stack */}
+              <div className="flex flex-col gap-2 sm:hidden">
+                <div
+                  className="relative flex items-center bg-card/95 rounded-xl px-3 py-2.5 transition-all group"
+                  style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.2)" }}
+                >
+                  <Search className="size-4 text-slate-400 shrink-0 mr-2 group-focus-within:text-blue-400 transition-colors" />
+                  <input
+                    type="text"
+                    placeholder="your-project-name"
+                    value={searchQuery}
+                    onChange={(e) => {
+                      setSearchQuery(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''));
+                      setAvailability('idle');
+                      setReason(null);
+                    }}
+                    className="w-full min-w-0 bg-transparent text-sm text-white placeholder:text-slate-400 focus:outline-none font-mono font-medium"
+                  />
+                  {searchQuery && (
+                    <button type="button" onClick={clearSearch} className="p-1 text-slate-400 hover:text-white transition-colors mr-1 shrink-0">
+                      <X className="size-3.5" />
+                    </button>
+                  )}
+                  <span className="text-xs text-slate-300 font-mono font-semibold shrink-0 select-none">.arc.bd</span>
+                </div>
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  variant="default"
+                  className="w-full h-10 text-sm font-semibold rounded-xl"
+                >
+                  {loading ? <Loader2 className="size-4 animate-spin mr-1.5" /> : <Search className="size-4 mr-1.5" />}
+                  {loading ? "Checking..." : "Check Availability"}
+                </Button>
+              </div>
+
+              {/* Desktop: inline pill */}
               <div
-                className="relative flex items-center bg-card/95 rounded-full p-1 sm:p-1.5 pl-3 sm:pl-4 transition-all group overflow-hidden"
+                className="hidden sm:flex relative items-center bg-card/95 rounded-full p-1.5 pl-4 transition-all group overflow-hidden"
                 style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.25)" }}
               >
-                <Search className="size-3.5 sm:size-4 text-slate-400 shrink-0 mr-1.5 sm:mr-2.5 transition-colors group-focus-within:text-blue-400" />
+                <Search className="size-4 text-slate-400 shrink-0 mr-2.5 transition-colors group-focus-within:text-blue-400" />
                 <input
                   type="text"
                   placeholder="your-project-name"
@@ -141,41 +181,35 @@ export default function LandingPage() {
                     setAvailability('idle');
                     setReason(null);
                   }}
-                  className="w-full min-w-0 bg-transparent text-xs sm:text-sm text-white placeholder:text-slate-400 focus:outline-none font-mono font-medium"
+                  className="w-full min-w-0 bg-transparent text-sm text-white placeholder:text-slate-400 focus:outline-none font-mono font-medium"
                 />
                 {searchQuery && (
-                  <button
-                    type="button"
-                    onClick={clearSearch}
-                    className="p-1 text-slate-400 hover:text-white transition-colors mr-1 shrink-0"
-                  >
-                    <X className="size-3 sm:size-3.5" />
+                  <button type="button" onClick={clearSearch} className="p-1 text-slate-400 hover:text-white transition-colors mr-1 shrink-0">
+                    <X className="size-3.5" />
                   </button>
                 )}
-                <span className="text-[10px] sm:text-xs text-slate-300 font-mono font-semibold mr-2 sm:mr-3 shrink-0 select-none">
-                  .arc.bd
-                </span>
+                <span className="text-xs text-slate-300 font-mono font-semibold mr-3 shrink-0 select-none">.arc.bd</span>
                 <Button
                   type="submit"
                   disabled={loading}
                   variant="default"
-                  className="h-8 sm:h-10 px-3 sm:px-5 text-[10px] sm:text-xs font-semibold shrink-0 rounded-full"
+                  className="h-10 px-5 text-xs font-semibold shrink-0 rounded-full"
                 >
-                  {loading ? <Loader2 className="size-3 sm:size-3.5 animate-spin mr-1" /> : <Search className="size-3 sm:size-3.5 mr-1" />}
+                  {loading ? <Loader2 className="size-3.5 animate-spin mr-1" /> : <Search className="size-3.5 mr-1" />}
                   {loading ? "Checking..." : "Check Availability"}
                 </Button>
               </div>
             </form>
 
-            {/* Polished Borderless Skeuomorphic Availability Result Card */}
+            {/* Availability Result Card */}
             {availability !== 'idle' && (
               <div className="w-full mt-3 animate-slide-up">
                 {availability === 'available' && (
                   <div
-                    className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 bg-blue-500/15 p-3.5 sm:px-5 sm:py-3.5 rounded-full w-full text-left border-none backdrop-blur-md"
+                    className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 bg-blue-500/15 p-3.5 sm:px-5 sm:py-3.5 rounded-2xl w-full text-left border-none backdrop-blur-md"
                     style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.25)" }}
                   >
-                    <div className="flex items-center gap-2.5 text-xs sm:text-sm text-white font-semibold font-mono pl-2">
+                    <div className="flex items-center gap-2.5 text-xs sm:text-sm text-white font-semibold font-mono">
                       <CheckCircle className="size-4.5 shrink-0 text-blue-400" />
                       <span><strong className="text-blue-400">{searchQuery}</strong>.arc.bd is available!</span>
                     </div>
@@ -202,8 +236,7 @@ export default function LandingPage() {
                       <span><strong className="text-destructive font-bold">{searchQuery}</strong>.arc.bd is unavailable ({reason || 'Taken'}).</span>
                     </div>
 
-                    {/* Smart Alternative Suggestions */}
-                    <div className="flex items-center gap-2 pt-2 border-t border-destructive/20 text-xs font-mono text-slate-200">
+                    <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-destructive/20 text-xs font-mono text-slate-200">
                       <span className="flex items-center gap-1.5 text-white font-medium shrink-0">
                         <Lightbulb className="size-3.5 text-amber-400" /> Try instead:
                       </span>
@@ -224,22 +257,10 @@ export default function LandingPage() {
               </div>
             )}
 
-            {/* Responsive Popular Suggestion Micro-Pills */}
-            <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mt-3.5 sm:mt-4 text-xs">
-              <span className="font-semibold text-[10px] sm:text-xs text-slate-300 mr-0.5">Try popular:</span>
-              {SUGGESTIONS.map((sugg) => (
-                <button
-                  key={sugg}
-                  onClick={() => handleSuggestionClick(sugg)}
-                  className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-mono font-medium text-white bg-white/12 hover:bg-blue-500/25 hover:text-blue-300 transition-all duration-200 active:scale-95 cursor-pointer border-none shadow-[inset_0_1px_0px_0_rgba(255,255,255,0.25)]"
-                >
-                  {sugg}
-                </button>
-              ))}
-            </div>
+{/* Popular suggestions removed */}
 
-            {/* Platform Feature Telemetry Tags */}
-            <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-6 mt-5 sm:mt-8 text-[10px] sm:text-xs font-mono text-slate-200 font-medium">
+            {/* Platform Tags */}
+            <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 mt-6 sm:mt-8 text-[10px] sm:text-xs font-mono text-slate-200 font-medium">
               <span className="flex items-center gap-1.5">
                 <Zap className="size-3 sm:size-3.5 text-blue-400 shrink-0" /> &lt; 50ms Edge DNS
               </span>
@@ -260,7 +281,7 @@ export default function LandingPage() {
             <p className="text-xs sm:text-sm text-slate-300 mt-1 font-medium">Built for speed, reliability, and modern web developer workflows.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
               { icon: Gift, title: "Free Forever", desc: "No credit card required. 100% free subdomains for personal and commercial projects." },
               { icon: Zap, title: "Instant Cloudflare DNS", desc: "Global edge propagation in seconds via Cloudflare DNS API v4 integration." },
@@ -289,7 +310,7 @@ export default function LandingPage() {
         <section className="w-full max-w-4xl mx-auto py-12 sm:py-16 px-4 border-t border-white/10 text-center">
           <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-white mb-8 sm:mb-12">Three Simple Steps</h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
             {[
               { num: "01", title: "Search Domain", desc: "Type your preferred name and verify real-time availability." },
               { num: "02", title: "Claim Free", desc: "Sign up in seconds to lock your subdomain into your account." },
