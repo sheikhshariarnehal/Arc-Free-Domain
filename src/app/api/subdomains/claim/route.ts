@@ -93,7 +93,11 @@ export async function POST(request: Request) {
 
   if (insertError || !subdomain) {
     console.error('[Claim Subdomain Error]', insertError)
-    return NextResponse.json({ error: insertError?.message || 'Failed to register subdomain in database' }, { status: 500 })
+    // Unique constraint violation — subdomain was taken between the check and the insert
+    if (insertError?.code === '23505' || insertError?.message?.includes('unique')) {
+      return NextResponse.json({ error: `"${name}.arc.bd" is already taken.` }, { status: 400 })
+    }
+    return NextResponse.json({ error: 'Failed to register subdomain. Please try again.' }, { status: 500 })
   }
 
   try {
