@@ -202,7 +202,7 @@ export default function LandingPage() {
             {/* Availability Result Card */}
             <div className="min-h-14 mt-4 flex items-center justify-center">
               {availability === 'available' && (
-                <div className="flex items-center justify-between gap-4 bg-white/5 border border-white/15 px-4 py-2.5 rounded-2xl w-full text-left animate-fade-in">
+                <div className="flex items-center justify-between gap-4 bg-white/5 border border-white/15 px-4 py-2.5 rounded-xl w-full text-left animate-fade-in">
                   <div className="flex items-center gap-2 text-sm text-emerald-400 font-medium font-mono">
                     <CheckCircle className="size-4 shrink-0 text-emerald-400" />
                     <span>{searchQuery}.arc.bd is available!</span>
@@ -221,7 +221,7 @@ export default function LandingPage() {
               )}
 
               {availability === 'taken' && (
-                <div className="flex items-center gap-2 bg-destructive/10 border border-destructive/30 px-4 py-2.5 rounded-2xl w-full text-left text-sm text-destructive font-medium font-mono animate-fade-in">
+                <div className="flex items-center gap-2 bg-destructive/10 border border-destructive/30 px-4 py-2.5 rounded-xl w-full text-left text-sm text-destructive font-medium font-mono animate-fade-in">
                   <XCircle className="size-4 shrink-0 text-destructive" />
                   <span>{searchQuery}.arc.bd is unavailable ({reason || 'Taken'}).</span>
                 </div>
@@ -248,7 +248,7 @@ export default function LandingPage() {
             ].map((item, i) => (
               <Card key={i} className="p-5 flex flex-col gap-2.5">
                 <CardContent className="p-0 flex flex-col gap-2.5">
-                  <div className="size-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-300">
+                  <div className="size-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-slate-300">
                     <item.icon className="size-4" />
                   </div>
                   <h3 className="font-semibold text-sm text-foreground">{item.title}</h3>
