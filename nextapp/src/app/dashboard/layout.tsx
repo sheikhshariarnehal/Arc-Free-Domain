@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
@@ -81,9 +82,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {/* Brand Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-border">
           <div className="flex items-center gap-2.5">
-            <div className="flex size-8 items-center justify-center rounded-md bg-primary text-primary-foreground text-xs font-bold">
-              A
-            </div>
+            <Image src="/arc.png" alt="ARC.BD Logo" width={32} height={32} className="size-8 object-contain rounded-md shrink-0" />
             <div className="flex flex-col leading-none">
               <span className="text-sm font-semibold text-foreground">ARC.BD</span>
               <span className="text-[11px] text-muted-foreground">Free Subdomain Platform</span>
@@ -181,7 +180,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <main className="flex-1 flex flex-col min-w-0 h-screen overflow-y-auto">
         {/* Mobile topbar */}
         <header className="md:hidden flex items-center gap-3 px-4 py-3 border-b border-border bg-background sticky top-0 z-30">
-          <Globe className="size-5 text-primary" />
+          <Image src="/arc.png" alt="ARC.BD Logo" width={24} height={24} className="size-6 object-contain rounded" />
           <span className="font-semibold text-foreground">ARC.BD Dashboard</span>
         </header>
 

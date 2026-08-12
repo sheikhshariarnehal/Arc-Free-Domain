@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { 
   LayoutDashboard, 
@@ -72,9 +73,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {/* Top Brand Header Block */}
         <div className="p-3 flex items-center justify-between border-b border-sidebar-border">
           <div className="flex items-center gap-3 overflow-hidden">
-            <div className="size-8 rounded-lg bg-sidebar-primary/10 border border-sidebar-border flex items-center justify-center shrink-0">
-              <Layers className="size-4 text-sidebar-foreground" />
-            </div>
+            <Image src="/arc.png" alt="ARC.BD Logo" width={32} height={32} className="size-8 object-contain rounded-lg shrink-0" />
             {sidebarOpen && (
               <div className="flex flex-col min-w-0">
                 <span className="text-sm font-semibold text-sidebar-foreground leading-tight truncate">

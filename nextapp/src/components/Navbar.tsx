@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { Globe, Menu, X, Shield, User, LogOut, ChevronDown, LayoutDashboard, Globe2, FileText, AlertTriangle, BookOpen, Sparkles } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -92,8 +93,8 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto flex h-16 items-center justify-between px-4 sm:px-6">
         {/* Brand Logo */}
         <Link href="/" className="flex items-center space-x-2.5 group">
-          <div className="size-8 rounded-lg bg-white/10 flex items-center justify-center text-white group-hover:scale-105 transition-transform" style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.25)" }}>
-            <Globe className="size-4 text-white" />
+          <div className="size-8 rounded-lg bg-white/10 flex items-center justify-center text-white group-hover:scale-105 transition-transform overflow-hidden" style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.25)" }}>
+            <Image src="/arc.png" alt="ARC.BD Logo" width={32} height={32} className="size-7 object-contain" />
           </div>
           <span className="font-extrabold text-lg tracking-tight text-white">
             ARC<span className="text-blue-400 font-mono">.BD</span>

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
@@ -311,10 +312,10 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <div
-              className="size-5 rounded bg-white/12 flex items-center justify-center text-white"
+              className="size-5 rounded bg-white/12 flex items-center justify-center text-white overflow-hidden"
               style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.25)" }}
             >
-              <Globe className="size-3 text-white" />
+              <Image src="/arc.png" alt="ARC.BD Logo" width={20} height={20} className="size-4 object-contain" />
             </div>
             <span className="font-semibold text-white">ARC.BD</span>
             <span className="text-slate-300">&copy; {new Date().getFullYear()}</span>

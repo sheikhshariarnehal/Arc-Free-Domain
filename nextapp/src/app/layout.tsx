@@ -8,6 +8,11 @@ export const metadata: Metadata = {
   title: "ARC.BD | Free Subdomain Platform",
   description: "Claim your free .arc.bd subdomain in seconds. Built for developers and creators in Bangladesh.",
   keywords: ["arc.bd", "free subdomain", "bangladesh domain", "developer tools"],
+  icons: {
+    icon: "/arc.png",
+    shortcut: "/arc.png",
+    apple: "/arc.png",
+  },
 };
 
 export default function RootLayout({
