@@ -5,15 +5,26 @@ import { cn } from "@/lib/utils"
 const Card = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
+>(({ className, children, style, ...props }, ref) => (
   <div
     ref={ref}
+    style={{
+      backgroundImage: "linear-gradient(180deg, rgba(30, 30, 35, 0.7), rgba(20, 20, 24, 0.5))",
+      ...style,
+    }}
     className={cn(
-      "rounded-lg border bg-card text-card-foreground shadow-sm",
+      "relative rounded-2xl border border-border/70 bg-card text-card-foreground shadow-[inset_0_1.5px_0px_0_rgba(255,255,255,0.12),0_4px_12px_rgba(0,0,0,0.4)] backdrop-blur-md hover:border-emerald-500/40 hover:shadow-[inset_0_1.5px_0px_0_rgba(255,255,255,0.2),0_6px_25px_rgba(16,185,129,0.15)] transition-all duration-300 group overflow-hidden",
       className
     )}
     {...props}
-  />
+  >
+    {/* Blended Top Light Rim Layer */}
+    <span
+      className="absolute inset-0 pointer-events-none rounded-[inherit]"
+      style={{ boxShadow: "inset 0 1.5px 0px 0 rgba(255, 255, 255, 0.15)" }}
+    />
+    <div className="relative z-10">{children}</div>
+  </div>
 ))
 Card.displayName = "Card"
 
@@ -36,7 +47,7 @@ const CardTitle = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "text-2xl font-semibold leading-none tracking-tight",
+      "text-2xl font-semibold leading-none tracking-tight text-foreground",
       className
     )}
     {...props}
