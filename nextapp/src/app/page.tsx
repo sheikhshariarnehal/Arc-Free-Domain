@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 
-const SUGGESTIONS = ["my-app", "dev-portfolio", "api-demo", "bangla-tech"];
+const SUGGESTIONS = ["portfolio", "saas-app", "api-v1", "my-store", "dev-blog"];
 
 export default function LandingPage() {
   const router = useRouter();
@@ -99,7 +99,7 @@ export default function LandingPage() {
       <Navbar />
 
       <main className="flex-1 flex flex-col items-center">
-        {/* Minimal Modern Skeuomorphic Hero Section */}
+        {/* Humanized & Meaningful Hero Section */}
         <section className="w-full max-w-4xl mx-auto text-center pt-16 pb-16 sm:pt-24 sm:pb-24 px-4 flex flex-col items-center">
           {/* Minimal White Status Badge Pill */}
           <Badge
@@ -110,19 +110,19 @@ export default function LandingPage() {
             <span>Cloudflare Edge DNS &bull; Instant Free Subdomains</span>
           </Badge>
 
-          {/* Hero Headline */}
+          {/* Meaningful & Inspiring Hero Headline */}
           <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.05] mb-5 text-foreground">
-            Your name. Your project. <br />
+            Launch your project with a free <br />
             <span className="font-mono text-blue-400 font-extrabold">
               .arc.bd
-            </span>
+            </span> domain
           </h1>
 
-          <p className="text-sm sm:text-base text-muted-foreground/90 max-w-lg mb-10 leading-relaxed font-normal">
-            Claim a free <code className="text-blue-400 font-mono font-semibold">.arc.bd</code> subdomain in seconds. Direct routing to Vercel, GitHub Pages, or any VPS.
+          <p className="text-sm sm:text-base text-muted-foreground/90 max-w-xl mb-10 leading-relaxed font-normal">
+            Instant Cloudflare Edge DNS for your Vercel, GitHub Pages, or VPS projects. Free forever for developers, creators, and students.
           </p>
 
-          {/* Unified Floating Search Bar Container (Skeuomorphic Top Rim Reflection) */}
+          {/* Unified Floating Search Bar Container */}
           <div className="w-full max-w-xl">
             <form onSubmit={checkAvailability} className="w-full">
               <div
@@ -132,7 +132,7 @@ export default function LandingPage() {
                 <Search className="size-4 text-muted-foreground shrink-0 mr-2.5 transition-colors group-focus-within:text-blue-400" />
                 <input
                   type="text"
-                  placeholder="my-cool-project"
+                  placeholder="your-project-name"
                   value={searchQuery}
                   onChange={(e) => {
                     setSearchQuery(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''));
@@ -165,9 +165,9 @@ export default function LandingPage() {
               </div>
             </form>
 
-            {/* Compact High-Contrast Popular Suggestion Micro-Pills */}
+            {/* Meaningful Popular Suggestion Micro-Pills */}
             <div className="flex flex-wrap items-center justify-center gap-1.5 mt-3.5 text-xs text-muted-foreground">
-              <span className="font-medium text-[10px] text-slate-400 mr-0.5">Popular:</span>
+              <span className="font-medium text-[10px] text-slate-400 mr-0.5">Try popular:</span>
               {SUGGESTIONS.map((sugg) => (
                 <button
                   key={sugg}
@@ -180,7 +180,7 @@ export default function LandingPage() {
               ))}
             </div>
 
-            {/* Platform Feature Telemetry Tags (Minimal White Icons) */}
+            {/* Platform Feature Telemetry Tags */}
             <div className="flex items-center justify-center gap-5 mt-6 text-[11px] font-mono text-slate-300">
               <span className="flex items-center gap-1.5">
                 <Zap className="size-3 text-white" /> &lt; 50ms Edge DNS

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Globe, Menu, X, Shield, User, LogOut, ChevronDown, LayoutDashboard, Globe2, FileText, AlertTriangle } from "lucide-react";
+import { Globe, Menu, X, Shield, User, LogOut, ChevronDown, LayoutDashboard, Globe2, FileText, AlertTriangle, BookOpen, Sparkles } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -61,7 +61,7 @@ export default function Navbar() {
         .single();
       setProfile(data);
     } catch {
-      // Fallback if profile fetch fails
+      // Fallback profile
     } finally {
       setLoading(false);
     }
@@ -92,28 +92,31 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto flex h-16 items-center justify-between px-4 sm:px-6">
         {/* Brand Logo */}
         <Link href="/" className="flex items-center space-x-2.5 group">
-          <div className="size-8 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 group-hover:scale-105 transition-transform">
-            <Globe className="size-4" />
+          <div className="size-8 rounded-lg bg-white/8 flex items-center justify-center text-white group-hover:scale-105 transition-transform" style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.2)" }}>
+            <Globe className="size-4 text-white" />
           </div>
           <span className="font-extrabold text-lg tracking-tight text-foreground">
             ARC<span className="text-blue-400 font-mono">.BD</span>
           </span>
         </Link>
 
-        {/* Desktop Navigation Links */}
+        {/* Humanized Desktop Navigation Links */}
         <nav className="hidden md:flex items-center space-x-8 text-sm font-medium">
           <Link href="/" className="text-muted-foreground hover:text-foreground transition-colors">
-            Home
+            Overview
           </Link>
           <Link href="/docs" className="text-muted-foreground hover:text-foreground transition-colors">
-            Docs
+            Documentation
+          </Link>
+          <Link href="/docs/vercel" className="text-muted-foreground hover:text-foreground transition-colors">
+            Vercel &amp; GitHub Guides
           </Link>
           <Link href="/report" className="text-muted-foreground hover:text-foreground transition-colors">
-            Report Abuse
+            Abuse Center
           </Link>
         </nav>
 
-        {/* Desktop Auth Controls */}
+        {/* Desktop Auth & Profile Menu */}
         <div className="hidden md:flex items-center space-x-3">
           {loading ? (
             <div className="size-8 rounded-full bg-white/5 animate-pulse" />
@@ -127,22 +130,22 @@ export default function Navbar() {
                       {getInitials(userName)}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="max-w-[100px] truncate text-slate-200">
+                  <span className="max-w-[110px] truncate text-slate-200 font-medium">
                     {userName}
                   </span>
                   <ChevronDown className="size-3 text-slate-400" />
                 </button>
               </DropdownMenuTrigger>
 
-              <DropdownMenuContent align="end" className="w-56 p-2 space-y-1 bg-card border-white/15 shadow-xl">
-                <DropdownMenuLabel className="font-normal p-2">
+              <DropdownMenuContent align="end" className="w-60 p-2 space-y-1 bg-card border-none shadow-2xl rounded-xl">
+                <DropdownMenuLabel className="font-normal p-2.5">
                   <div className="flex flex-col space-y-1">
                     <div className="flex items-center justify-between">
                       <p className="text-xs font-semibold text-foreground truncate">{userName}</p>
                       {isAdmin ? (
                         <Badge variant="destructive" className="text-[9px] px-1.5 py-0 h-4">Admin</Badge>
                       ) : (
-                        <Badge variant="outline" className="text-[9px] px-1.5 py-0 h-4 text-blue-400 border-blue-500/30">Developer</Badge>
+                        <Badge variant="outline" className="text-[9px] px-1.5 py-0 h-4 text-blue-400 border-none bg-blue-500/10">Developer</Badge>
                       )}
                     </div>
                     <p className="text-[11px] text-muted-foreground truncate">{userEmail}</p>
@@ -151,23 +154,23 @@ export default function Navbar() {
                 <DropdownMenuSeparator className="bg-white/10" />
 
                 <DropdownMenuGroup>
-                  <DropdownMenuItem asChild className="text-xs cursor-pointer focus:bg-white/10">
-                    <Link href="/dashboard" className="flex items-center">
-                      <LayoutDashboard className="size-3.5 mr-2 text-blue-400" />
-                      Dashboard Overview
+                  <DropdownMenuItem asChild className="text-xs cursor-pointer focus:bg-white/10 rounded-lg">
+                    <Link href="/dashboard" className="flex items-center py-1.5">
+                      <LayoutDashboard className="size-3.5 mr-2.5 text-blue-400" />
+                      Dashboard
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem asChild className="text-xs cursor-pointer focus:bg-white/10">
-                    <Link href="/dashboard/domains" className="flex items-center">
-                      <Globe2 className="size-3.5 mr-2 text-blue-400" />
+                  <DropdownMenuItem asChild className="text-xs cursor-pointer focus:bg-white/10 rounded-lg">
+                    <Link href="/dashboard/domains" className="flex items-center py-1.5">
+                      <Globe2 className="size-3.5 mr-2.5 text-blue-400" />
                       My Subdomains
                     </Link>
                   </DropdownMenuItem>
                   {isAdmin && (
-                    <DropdownMenuItem asChild className="text-xs cursor-pointer focus:bg-white/10">
-                      <Link href="/admin" className="flex items-center">
-                        <Shield className="size-3.5 mr-2 text-destructive" />
-                        Admin Panel
+                    <DropdownMenuItem asChild className="text-xs cursor-pointer focus:bg-white/10 rounded-lg">
+                      <Link href="/admin" className="flex items-center py-1.5">
+                        <Shield className="size-3.5 mr-2.5 text-destructive" />
+                        Admin Management
                       </Link>
                     </DropdownMenuItem>
                   )}
@@ -176,15 +179,15 @@ export default function Navbar() {
                 <DropdownMenuSeparator className="bg-white/10" />
 
                 <DropdownMenuGroup>
-                  <DropdownMenuItem asChild className="text-xs cursor-pointer focus:bg-white/10">
-                    <Link href="/docs" className="flex items-center">
-                      <FileText className="size-3.5 mr-2 text-muted-foreground" />
-                      Documentation
+                  <DropdownMenuItem asChild className="text-xs cursor-pointer focus:bg-white/10 rounded-lg">
+                    <Link href="/docs" className="flex items-center py-1.5">
+                      <BookOpen className="size-3.5 mr-2.5 text-muted-foreground" />
+                      Guides &amp; API Docs
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem asChild className="text-xs cursor-pointer focus:bg-white/10">
-                    <Link href="/report" className="flex items-center">
-                      <AlertTriangle className="size-3.5 mr-2 text-muted-foreground" />
+                  <DropdownMenuItem asChild className="text-xs cursor-pointer focus:bg-white/10 rounded-lg">
+                    <Link href="/report" className="flex items-center py-1.5">
+                      <AlertTriangle className="size-3.5 mr-2.5 text-muted-foreground" />
                       Report Abuse
                     </Link>
                   </DropdownMenuItem>
@@ -194,9 +197,9 @@ export default function Navbar() {
 
                 <DropdownMenuItem
                   onClick={handleSignOut}
-                  className="text-xs text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer"
+                  className="text-xs text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer rounded-lg py-1.5"
                 >
-                  <LogOut className="size-3.5 mr-2" />
+                  <LogOut className="size-3.5 mr-2.5" />
                   Sign Out
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -222,7 +225,7 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* Mobile Menu Drawer */}
+      {/* Mobile Drawer */}
       {isOpen && (
         <div className="md:hidden border-b border-white/10 bg-card/95 backdrop-blur-xl px-4 pt-3 pb-6 space-y-4 animate-slide-up">
           <nav className="flex flex-col space-y-3 font-medium text-sm">
@@ -231,21 +234,28 @@ export default function Navbar() {
               onClick={() => setIsOpen(false)}
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
-              Home
+              Overview
             </Link>
             <Link
               href="/docs"
               onClick={() => setIsOpen(false)}
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
-              Docs
+              Documentation
+            </Link>
+            <Link
+              href="/docs/vercel"
+              onClick={() => setIsOpen(false)}
+              className="text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Deployment Guides
             </Link>
             <Link
               href="/report"
               onClick={() => setIsOpen(false)}
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
-              Report Abuse
+              Abuse Center
             </Link>
           </nav>
           <div className="pt-2 border-t border-white/10 flex flex-col space-y-2">
