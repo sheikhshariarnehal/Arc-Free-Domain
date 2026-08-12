@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Mail, Lock, User, Loader2, AlertCircle, CheckCircle2 } from "lucide-react";
+import { Mail, Lock, User, Loader2, AlertCircle, CheckCircle2, Sparkles } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import { createClient } from "@/lib/supabase/client";
 
@@ -139,6 +139,16 @@ function LoginForm() {
 
   return (
     <div className="glass-card p-8 rounded-2xl border border-white/10">
+      {/* First-Timer Claim Banner */}
+      {claimName && (
+        <div className="mb-6 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center gap-3 text-emerald-400 text-sm animate-fade-in">
+          <Sparkles className="h-5 w-5 shrink-0" />
+          <span>
+            Sign in or create an account to claim <strong className="font-mono text-white">{claimName}.arc.bd</strong> free!
+          </span>
+        </div>
+      )}
+
       <div className="text-center mb-8">
         <h1 className="text-3xl font-bold text-white mb-2">
           {isLogin ? "Welcome back" : "Create an account"}
@@ -296,5 +306,3 @@ export default function LoginPage() {
     </div>
   );
 }
-
-

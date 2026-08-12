@@ -1,0 +1,6 @@
+{
+  "projectRoot": "g:/arc.bd",
+  "appDir": "g:/arc.bd/nextapp",
+  "devServerUrl": "http://localhost:3000",
+  "command": "npm run dev"
+}
