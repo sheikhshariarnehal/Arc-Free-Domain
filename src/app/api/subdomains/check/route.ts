@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { createAdminClient } from '@/lib/supabase/server'
+import { createClient } from '@/lib/supabase/server'
 import { validateSubdomainName } from '@/lib/validation'
 import { getFullDomain } from '@/lib/utils'
 
@@ -16,30 +16,22 @@ export async function GET(request: Request) {
     return NextResponse.json({ name, available: false, reason: error }, { status: 400 })
   }
 
-  // Use admin client to bypass RLS — availability check is a public endpoint
-  // and RLS would silently return no rows for unauthenticated callers,
-  // making every domain look available even when it's taken.
-  const supabase = await createAdminClient()
+  // Use the SECURITY DEFINER RPC — it runs as superuser server-side,
+  // bypassing RLS entirely regardless of the caller's auth state.
+  // This ensures anonymous users get accurate availability results.
+  const supabase = await createClient()
+  const { data, error: rpcError } = await supabase
+    .rpc('check_subdomain_availability', { subdomain_name: name })
 
-  const { data: reserved } = await supabase
-    .from('reserved_subdomains')
-    .select('id')
-    .eq('name', name)
-    .single()
-
-  if (reserved) {
-    return NextResponse.json({ name, available: false, reason: 'Reserved name' })
+  if (rpcError) {
+    console.error('[check availability RPC error]', rpcError)
+    return NextResponse.json({ error: 'Failed to check availability' }, { status: 500 })
   }
 
-  const { data: existing } = await supabase
-    .from('subdomains')
-    .select('id, status')
-    .eq('name', name)
-    .in('status', ['active', 'pending', 'suspended'])
-    .single()
+  const result = data as { available: boolean; reason?: string }
 
-  if (existing) {
-    return NextResponse.json({ name, available: false, reason: 'Already taken' })
+  if (!result.available) {
+    return NextResponse.json({ name, available: false, reason: result.reason || 'Already taken' })
   }
 
   return NextResponse.json({ name, domain: getFullDomain(name), available: true })
