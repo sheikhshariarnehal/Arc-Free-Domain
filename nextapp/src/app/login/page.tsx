@@ -132,8 +132,8 @@ function LoginForm() {
   if (checkingSession) {
     return (
       <div
-        className="bg-card/95 p-8 rounded-2xl text-center text-slate-300 flex items-center justify-center gap-3 border-none"
-        style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.25)" }}
+        className="bg-card/95 p-8 rounded-xl text-center text-slate-300 flex items-center justify-center gap-3 border border-white/10"
+        style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.2)" }}
       >
         <Loader2 className="h-5 w-5 animate-spin text-blue-400" />
         <span className="font-mono text-sm">Checking session...</span>
@@ -143,16 +143,16 @@ function LoginForm() {
 
   return (
     <div
-      className="bg-card/95 p-8 rounded-2xl border-none backdrop-blur-xl transition-all"
-      style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.25)" }}
+      className="bg-card/95 p-8 rounded-xl border border-white/10 backdrop-blur-xl transition-all"
+      style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.2)" }}
     >
       {/* First-Timer Claim Banner */}
       {claimName && (
         <div
-          className="mb-6 p-4 bg-blue-500/15 rounded-xl flex items-center gap-3 text-blue-400 text-sm animate-fade-in border-none"
+          className="mb-6 p-3.5 bg-blue-500/15 rounded-lg flex items-center gap-3 text-blue-400 text-sm animate-fade-in border border-blue-400/20"
           style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.2)" }}
         >
-          <Sparkles className="h-5 w-5 shrink-0 text-blue-400" />
+          <Sparkles className="h-4.5 w-4.5 shrink-0 text-blue-400" />
           <span>
             Sign in or create an account to claim <strong className="font-mono text-white">{claimName}.arc.bd</strong> free!
           </span>
@@ -160,10 +160,10 @@ function LoginForm() {
       )}
 
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-extrabold text-white mb-2 tracking-tight">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-white mb-2 tracking-tight">
           {isLogin ? "Welcome back" : "Create an account"}
         </h1>
-        <p className="text-slate-300 text-sm font-medium">
+        <p className="text-slate-300 text-xs sm:text-sm font-medium">
           {isLogin
             ? "Sign in to manage your .arc.bd subdomains"
             : "Start claiming free subdomains in seconds"}
@@ -172,33 +172,33 @@ function LoginForm() {
 
       {error && (
         <div
-          className="mb-6 p-4 bg-destructive/15 rounded-xl flex items-start gap-3 text-destructive-foreground text-sm border-none"
+          className="mb-6 p-3.5 bg-destructive/15 rounded-lg flex items-start gap-3 text-destructive-foreground text-xs sm:text-sm border border-destructive/20"
           style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.2)" }}
         >
-          <AlertCircle className="h-5 w-5 shrink-0 mt-0.5 text-destructive" />
+          <AlertCircle className="h-4.5 w-4.5 shrink-0 mt-0.5 text-destructive" />
           <span>{error}</span>
         </div>
       )}
 
       {message && (
         <div
-          className="mb-6 p-4 bg-blue-500/15 rounded-xl flex items-start gap-3 text-blue-300 text-sm border-none"
+          className="mb-6 p-3.5 bg-blue-500/15 rounded-lg flex items-start gap-3 text-blue-300 text-xs sm:text-sm border border-blue-400/20"
           style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.2)" }}
         >
-          <CheckCircle2 className="h-5 w-5 shrink-0 mt-0.5 text-blue-400" />
+          <CheckCircle2 className="h-4.5 w-4.5 shrink-0 mt-0.5 text-blue-400" />
           <span>{message}</span>
         </div>
       )}
 
       <div
-        className="flex p-1 bg-background rounded-xl mb-6 border border-white/10"
+        className="flex p-1 bg-background rounded-lg mb-6 border border-white/10"
         style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.15)" }}
       >
         <button
           type="button"
-          className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all cursor-pointer ${
+          className={`flex-1 py-1.5 text-xs sm:text-sm font-semibold rounded-md transition-all cursor-pointer ${
             isLogin
-              ? "bg-white/12 text-white shadow-sm"
+              ? "bg-white/12 text-white shadow-sm border border-white/10"
               : "text-slate-400 hover:text-slate-200"
           }`}
           onClick={() => {
@@ -211,9 +211,9 @@ function LoginForm() {
         </button>
         <button
           type="button"
-          className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all cursor-pointer ${
+          className={`flex-1 py-1.5 text-xs sm:text-sm font-semibold rounded-md transition-all cursor-pointer ${
             !isLogin
-              ? "bg-white/12 text-white shadow-sm"
+              ? "bg-white/12 text-white shadow-sm border border-white/10"
               : "text-slate-400 hover:text-slate-200"
           }`}
           onClick={() => {
@@ -231,14 +231,14 @@ function LoginForm() {
           <div className="space-y-1">
             <label className="text-xs font-semibold text-slate-300">Name</label>
             <div className="relative">
-              <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4.5 w-4.5 text-slate-400" />
+              <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
               <input
                 type="text"
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Your Name"
-                className="w-full bg-background border border-white/10 rounded-xl py-2.5 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all placeholder:text-slate-500"
+                className="w-full bg-background border border-white/10 hover:border-white/20 rounded-lg py-2.5 pl-10 pr-4 text-xs sm:text-sm text-white focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/40 transition-all placeholder:text-slate-500"
               />
             </div>
           </div>
@@ -247,14 +247,14 @@ function LoginForm() {
         <div className="space-y-1">
           <label className="text-xs font-semibold text-slate-300">Email</label>
           <div className="relative">
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4.5 w-4.5 text-slate-400" />
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
             <input
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
-              className="w-full bg-background border border-white/10 rounded-xl py-2.5 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all placeholder:text-slate-500"
+              className="w-full bg-background border border-white/10 hover:border-white/20 rounded-lg py-2.5 pl-10 pr-4 text-xs sm:text-sm text-white focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/40 transition-all placeholder:text-slate-500"
             />
           </div>
         </div>
@@ -262,7 +262,7 @@ function LoginForm() {
         <div className="space-y-1">
           <label className="text-xs font-semibold text-slate-300">Password</label>
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4.5 w-4.5 text-slate-400" />
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
             <input
               type={showPassword ? "text" : "password"}
               required
@@ -270,7 +270,7 @@ function LoginForm() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full bg-background border border-white/10 rounded-xl py-2.5 pl-10 pr-10 text-sm text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all placeholder:text-slate-500"
+              className="w-full bg-background border border-white/10 hover:border-white/20 rounded-lg py-2.5 pl-10 pr-10 text-xs sm:text-sm text-white focus:outline-none focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/40 transition-all placeholder:text-slate-500"
             />
             <button
               type="button"
@@ -286,7 +286,7 @@ function LoginForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full skeuo-button skeuo-button-primary py-2.5 rounded-xl font-semibold transition-all mt-6 active:scale-[0.98] flex items-center justify-center gap-2 text-white border-none cursor-pointer"
+          className="w-full skeuo-button skeuo-button-primary py-2.5 rounded-lg font-semibold text-xs sm:text-sm transition-all mt-6 active:scale-[0.98] flex items-center justify-center gap-2 text-white border-none cursor-pointer"
         >
           {loading && <Loader2 className="h-4 w-4 animate-spin" />}
           {isLogin ? "Sign In" : "Create Account"}
@@ -303,10 +303,10 @@ function LoginForm() {
         type="button"
         disabled={loading}
         onClick={() => handleOAuth("github")}
-        className="w-full mt-6 bg-white/8 hover:bg-white/15 disabled:opacity-50 border-none text-white py-2.5 rounded-xl font-medium transition-all flex items-center justify-center gap-2 cursor-pointer"
+        className="w-full mt-6 bg-white/8 hover:bg-white/15 disabled:opacity-50 border border-white/10 hover:border-white/20 text-white py-2.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center justify-center gap-2 cursor-pointer"
         style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.2)" }}
       >
-        <svg className="h-5 w-5 fill-current" viewBox="0 0 24 24">
+        <svg className="h-4.5 w-4.5 fill-current" viewBox="0 0 24 24">
           <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
         </svg>
         GitHub
@@ -324,7 +324,7 @@ export default function LoginPage() {
         <div className="w-full max-w-md animate-slide-up">
           <Suspense fallback={
             <div
-              className="bg-card/95 p-8 rounded-2xl text-center text-slate-400 border-none"
+              className="bg-card/95 p-8 rounded-xl text-center text-slate-400 border border-white/10"
               style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.25)" }}
             >
               Loading login form...
