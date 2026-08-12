@@ -212,3 +212,40 @@ export async function verifyRecordExists(
     return false;
   }
 }
+
+export async function listZoneDNSRecords(): Promise<{ success: boolean; result?: CloudflareDNSRecord[]; error?: string }> {
+  const config = getConfig();
+
+  if (!config) {
+    return {
+      success: true,
+      result: [
+        { id: "mock_1", type: "A", name: "arc.bd", content: "76.76.21.21", ttl: 1, proxied: true },
+        { id: "mock_2", type: "CNAME", name: "www.arc.bd", content: "cname.vercel-dns.com", ttl: 1, proxied: true },
+      ],
+    };
+  }
+
+  try {
+    const response = await fetch(
+      `${CLOUDFLARE_API_BASE}/zones/${config.zoneId}/dns_records?per_page=100`,
+      {
+        method: "GET",
+        headers: getHeaders(config.apiToken),
+      }
+    );
+
+    const data: CloudflareResponse<CloudflareDNSRecord[]> = await response.json();
+
+    if (!data.success) {
+      const errorMsg = data.errors.map((e) => e.message).join(", ");
+      return { success: false, error: errorMsg };
+    }
+
+    return { success: true, result: data.result };
+  } catch (error) {
+    console.error("[Cloudflare] listZoneDNSRecords error:", error);
+    return { success: false, error: "Failed to communicate with Cloudflare" };
+  }
+}
+
