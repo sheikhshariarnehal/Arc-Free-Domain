@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Globe, Plus, Search, Loader2, ExternalLink, Trash2 } from "lucide-react";
 import Link from "next/link";
@@ -67,7 +67,7 @@ function StatusBadge({ status }: { status: string }) {
 
 const MAX_SUBDOMAINS = 5;
 
-export default function DomainsList() {
+function DomainsListInner() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [subdomains, setSubdomains] = useState<SubdomainRecord[]>([]);
@@ -384,5 +384,17 @@ export default function DomainsList() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+export default function DomainsList() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center py-20 text-muted-foreground">
+        <Loader2 className="size-5 animate-spin mr-2" /> Loading...
+      </div>
+    }>
+      <DomainsListInner />
+    </Suspense>
   );
 }
