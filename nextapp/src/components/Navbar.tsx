@@ -85,11 +85,11 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="size-8 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white group-hover:bg-white/10 transition-all">
-              <Globe className="size-4 text-emerald-400" />
+            <div className="size-8 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 group-hover:bg-blue-500/20 transition-all">
+              <Globe className="size-4 text-blue-400" />
             </div>
             <span className="text-base font-bold text-white tracking-tight">
-              ARC<span className="text-emerald-400 font-mono">.BD</span>
+              ARC<span className="text-blue-400 font-mono">.BD</span>
             </span>
           </Link>
 
@@ -106,7 +106,7 @@ export default function Navbar() {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button
-                    className="relative inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 text-white text-xs font-medium transition-all duration-200 active:scale-95 cursor-pointer shadow-sm overflow-hidden"
+                    className="relative inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 text-white text-xs font-medium transition-all duration-200 active:scale-95 cursor-pointer shadow-sm overflow-hidden"
                   >
                     <span
                       className="absolute inset-0 pointer-events-none rounded-full"
@@ -114,7 +114,7 @@ export default function Navbar() {
                     />
                     <Avatar className="size-5 border border-white/20">
                       <AvatarImage src="" alt={userName} />
-                      <AvatarFallback className="bg-white/10 text-white text-[9px] font-bold font-mono">
+                      <AvatarFallback className="bg-blue-500/20 text-blue-400 text-[9px] font-bold font-mono">
                         {getInitials(userName)}
                       </AvatarFallback>
                     </Avatar>
@@ -133,7 +133,7 @@ export default function Navbar() {
                         {isAdmin ? (
                           <Badge variant="destructive" className="text-[9px] px-1.5 py-0 h-4">Admin</Badge>
                         ) : (
-                          <Badge variant="outline" className="text-[9px] px-1.5 py-0 h-4 text-emerald-400 border-emerald-500/30">Developer</Badge>
+                          <Badge variant="outline" className="text-[9px] px-1.5 py-0 h-4 text-blue-400 border-blue-500/30">Developer</Badge>
                         )}
                       </div>
                       <p className="text-[11px] text-muted-foreground truncate">{userEmail}</p>
@@ -144,7 +144,7 @@ export default function Navbar() {
 
                   <DropdownMenuItem asChild className="cursor-pointer text-xs focus:bg-white/10 focus:text-white rounded-lg">
                     <Link href="/dashboard" className="flex items-center gap-2">
-                      <LayoutDashboard className="size-3.5 text-emerald-400" />
+                      <LayoutDashboard className="size-3.5 text-blue-400" />
                       <span>Dashboard Overview</span>
                     </Link>
                   </DropdownMenuItem>
@@ -222,7 +222,7 @@ export default function Navbar() {
               <div className="space-y-2 pt-1">
                 <div className="flex items-center gap-2 pb-2">
                   <Avatar className="size-7 border border-white/20">
-                    <AvatarFallback className="bg-white/10 text-white text-xs font-bold font-mono">
+                    <AvatarFallback className="bg-blue-500/20 text-blue-400 text-xs font-bold font-mono">
                       {getInitials(userName)}
                     </AvatarFallback>
                   </Avatar>
@@ -232,7 +232,7 @@ export default function Navbar() {
                   </div>
                 </div>
 
-                <Link href="/dashboard" className="block text-emerald-400 font-semibold py-1.5">
+                <Link href="/dashboard" className="block text-blue-400 font-semibold py-1.5">
                   Dashboard Overview
                 </Link>
                 <Link href="/dashboard/domains" className="block text-slate-300 py-1.5">
@@ -248,7 +248,7 @@ export default function Navbar() {
                 </button>
               </div>
             ) : (
-              <Link href="/login" className="text-emerald-400 font-semibold block pt-1">Sign In</Link>
+              <Link href="/login" className="text-blue-400 font-semibold block pt-1">Sign In</Link>
             )}
           </div>
         </div>

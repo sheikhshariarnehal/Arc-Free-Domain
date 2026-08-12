@@ -90,10 +90,10 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="flex-1 flex flex-col min-h-screen bg-background text-foreground selection:bg-white/10 selection:text-white">
-      {/* Subtle Background Radial Ambient Glow */}
+    <div className="flex-1 flex flex-col min-h-screen bg-background text-foreground selection:bg-blue-500/20 selection:text-blue-400">
+      {/* Primary Radial Ambient Glow */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute -top-40 left-1/2 -translate-x-1/2 size-[650px] rounded-full bg-white/[0.02] blur-[150px]" />
+        <div className="absolute -top-40 left-1/2 -translate-x-1/2 size-[650px] rounded-full bg-blue-500/5 blur-[160px]" />
       </div>
 
       <Navbar />
@@ -104,29 +104,29 @@ export default function LandingPage() {
           {/* Status Badge Pill */}
           <Badge
             variant="outline"
-            className="mb-6 border-white/15 bg-white/5 backdrop-blur-md text-slate-300 text-[11px] font-mono py-1 px-3.5 rounded-full shadow-sm flex items-center gap-2 hover:bg-white/10 transition-all cursor-default"
+            className="mb-6 border-blue-500/30 bg-blue-500/10 backdrop-blur-md text-blue-400 text-[11px] font-mono py-1 px-3.5 rounded-full shadow-sm flex items-center gap-2 hover:bg-blue-500/20 transition-all cursor-default"
           >
-            <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse inline-block" />
+            <span className="size-1.5 rounded-full bg-blue-400 animate-pulse inline-block" />
             <span>Cloudflare Edge DNS &bull; Instant Free Subdomains</span>
           </Badge>
 
           {/* Hero Headline */}
           <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.05] mb-5 text-foreground">
             Your name. Your project. <br />
-            <span className="font-mono bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
+            <span className="font-mono bg-gradient-to-r from-blue-400 via-indigo-400 to-cyan-400 bg-clip-text text-transparent">
               .arc.bd
             </span>
           </h1>
 
           <p className="text-sm sm:text-base text-muted-foreground/90 max-w-lg mb-10 leading-relaxed font-normal">
-            Claim a free <code className="text-slate-200 font-mono font-semibold">.arc.bd</code> subdomain in seconds. Direct routing to Vercel, GitHub Pages, or any VPS.
+            Claim a free <code className="text-blue-400 font-mono font-semibold">.arc.bd</code> subdomain in seconds. Direct routing to Vercel, GitHub Pages, or any VPS.
           </p>
 
           {/* Unified Floating Search Bar Container */}
           <div className="w-full max-w-xl">
             <form onSubmit={checkAvailability} className="w-full">
-              <div className="relative flex items-center bg-card/90 border border-white/12 rounded-full p-1.5 pl-4 shadow-[0_8px_30px_rgba(0,0,0,0.4)] focus-within:border-white/30 focus-within:ring-1 focus-within:ring-white/20 transition-all group">
-                <Search className="size-4 text-muted-foreground shrink-0 mr-2.5 transition-colors group-focus-within:text-foreground" />
+              <div className="relative flex items-center bg-card/90 border border-white/12 rounded-full p-1.5 pl-4 shadow-[0_8px_30px_rgba(0,0,0,0.4)] focus-within:border-blue-500/40 focus-within:ring-1 focus-within:ring-blue-500/30 transition-all group">
+                <Search className="size-4 text-muted-foreground shrink-0 mr-2.5 transition-colors group-focus-within:text-blue-400" />
                 <input
                   type="text"
                   placeholder="my-cool-project"
@@ -153,6 +153,7 @@ export default function LandingPage() {
                 <Button
                   type="submit"
                   disabled={loading}
+                  variant="default"
                   className="h-10 px-5 text-xs font-semibold shrink-0 rounded-full"
                 >
                   {loading ? <Loader2 className="size-3.5 animate-spin mr-1" /> : <Search className="size-3.5 mr-1" />}
@@ -178,7 +179,7 @@ export default function LandingPage() {
                     className="absolute inset-0 pointer-events-none rounded-full"
                     style={{ boxShadow: "inset 0 1.5px 0px 0 rgba(255, 255, 255, 0.25)" }}
                   />
-                  <span className="relative z-10 flex items-center gap-1">
+                  <span className="relative z-10 flex items-center gap-1 hover:text-blue-400 transition-colors">
                     {sugg}
                   </span>
                 </button>
@@ -188,26 +189,26 @@ export default function LandingPage() {
             {/* Platform Feature Telemetry Tags */}
             <div className="flex items-center justify-center gap-4 mt-6 text-[11px] font-mono text-muted-foreground/80">
               <span className="flex items-center gap-1">
-                <Zap className="size-3 text-slate-400" /> &lt; 50ms Edge DNS
+                <Zap className="size-3 text-blue-400" /> &lt; 50ms Edge DNS
               </span>
               <span className="flex items-center gap-1">
-                <Lock className="size-3 text-slate-400" /> Free SSL Included
+                <Lock className="size-3 text-blue-400" /> Free SSL Included
               </span>
               <span className="flex items-center gap-1">
-                <Cpu className="size-3 text-slate-400" /> Vercel &amp; GitHub Ready
+                <Cpu className="size-3 text-blue-400" /> Vercel &amp; GitHub Ready
               </span>
             </div>
 
             {/* Availability Result Card */}
             <div className="min-h-14 mt-4 flex items-center justify-center">
               {availability === 'available' && (
-                <div className="flex items-center justify-between gap-4 bg-white/5 border border-white/15 px-4 py-2.5 rounded-xl w-full text-left animate-fade-in shadow-md">
-                  <div className="flex items-center gap-2 text-sm text-emerald-400 font-medium font-mono">
-                    <CheckCircle className="size-4 shrink-0 text-emerald-400" />
+                <div className="flex items-center justify-between gap-4 bg-blue-500/10 border border-blue-500/30 px-4 py-2.5 rounded-xl w-full text-left animate-fade-in shadow-md">
+                  <div className="flex items-center gap-2 text-sm text-blue-400 font-medium font-mono">
+                    <CheckCircle className="size-4 shrink-0 text-blue-400" />
                     <span>{searchQuery}.arc.bd is available!</span>
                   </div>
                   <Button
-                    variant="emerald"
+                    variant="default"
                     size="default"
                     onClick={handleClaimClick}
                     disabled={claiming}
@@ -247,7 +248,7 @@ export default function LandingPage() {
             ].map((item, i) => (
               <Card key={i} className="p-5 flex flex-col gap-2.5">
                 <CardContent className="p-0 flex flex-col gap-2.5">
-                  <div className="size-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-slate-300">
+                  <div className="size-9 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400">
                     <item.icon className="size-4" />
                   </div>
                   <h3 className="font-semibold text-sm text-foreground">{item.title}</h3>
@@ -270,7 +271,7 @@ export default function LandingPage() {
             ].map((step, i) => (
               <Card key={i} className="text-center p-6">
                 <CardContent className="p-0 flex flex-col items-center">
-                  <span className="font-mono text-xl font-bold text-slate-300 mb-3">{step.num}</span>
+                  <span className="font-mono text-xl font-bold text-blue-400 mb-3">{step.num}</span>
                   <h3 className="font-semibold text-sm text-foreground mb-1.5">{step.title}</h3>
                   <p className="text-xs text-muted-foreground leading-relaxed">{step.desc}</p>
                 </CardContent>
@@ -284,7 +285,7 @@ export default function LandingPage() {
       <footer className="border-t border-white/10 bg-background text-xs text-muted-foreground">
         <div className="max-w-7xl mx-auto px-4 py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <div className="size-5 rounded bg-white/5 border border-white/10 flex items-center justify-center text-slate-400">
+            <div className="size-5 rounded bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400">
               <Globe className="size-3" />
             </div>
             <span className="font-medium text-foreground">ARC.BD</span>
