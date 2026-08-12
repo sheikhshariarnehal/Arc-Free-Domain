@@ -26,6 +26,7 @@ import {
 interface DNSRecord {
   id: string;
   type: "A" | "CNAME" | "TXT";
+  name?: string;
   content: string;
   ttl: number;
 }
@@ -64,6 +65,7 @@ export default function DomainDetail() {
 
   // New DNS Record form
   const [recordType, setRecordType] = useState<"A" | "CNAME" | "TXT">("CNAME");
+  const [recordName, setRecordName] = useState("@");
   const [recordTarget, setRecordTarget] = useState("");
   const [addingRecord, setAddingRecord] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -108,6 +110,7 @@ export default function DomainDetail() {
         body: JSON.stringify({
           subdomain_id: subdomain.id,
           type: recordType,
+          name: recordName.trim() || "@",
           content: recordTarget.trim(),
         }),
       });
@@ -116,6 +119,7 @@ export default function DomainDetail() {
         throw new Error(data.error || "Failed to add DNS record");
       }
       setRecordTarget("");
+      setRecordName("@");
       setShowAddForm(false);
       setSuccessMsg("DNS record added successfully!");
       fetchDomain();
@@ -164,8 +168,9 @@ export default function DomainDetail() {
     }
   };
 
-  const applyPreset = async (type: "A" | "CNAME", target: string) => {
+  const applyPreset = async (type: "A" | "CNAME" | "TXT", target: string, name: string = "@") => {
     setRecordType(type);
+    setRecordName(name);
     setRecordTarget(target);
     setShowAddForm(true);
   };
@@ -242,22 +247,35 @@ export default function DomainDetail() {
           <CardTitle className="text-base font-semibold">Quick Setup Presets</CardTitle>
           <CardDescription>One-click presets for popular hosting platforms.</CardDescription>
         </CardHeader>
-        <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <CardContent className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <button
-            onClick={() => applyPreset("CNAME", "cname.vercel-dns.com")}
+            onClick={() => applyPreset("CNAME", "cname.vercel-dns.com", "@")}
             className="flex items-start gap-3 p-4 rounded-xl border border-border bg-card hover:bg-secondary/50 transition-all text-left group"
           >
             <div className="size-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20">
               <Server className="size-4 text-primary" />
             </div>
             <div>
-              <h3 className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors">Vercel Deployment</h3>
-              <p className="text-xs text-muted-foreground mt-0.5">Points CNAME to <code className="text-foreground">cname.vercel-dns.com</code></p>
+              <h3 className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors">Vercel CNAME</h3>
+              <p className="text-xs text-muted-foreground mt-0.5">CNAME <code className="text-foreground">@</code> → <code className="text-foreground">cname.vercel-dns.com</code></p>
             </div>
           </button>
 
           <button
-            onClick={() => applyPreset("CNAME", "your-username.github.io")}
+            onClick={() => applyPreset("TXT", "vc-domain-verify=...", "_vercel")}
+            className="flex items-start gap-3 p-4 rounded-xl border border-border bg-card hover:bg-secondary/50 transition-all text-left group"
+          >
+            <div className="size-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20">
+              <Code className="size-4 text-primary" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors">Vercel Verification</h3>
+              <p className="text-xs text-muted-foreground mt-0.5">TXT <code className="text-foreground">_vercel</code> → verification code</p>
+            </div>
+          </button>
+
+          <button
+            onClick={() => applyPreset("CNAME", "your-username.github.io", "@")}
             className="flex items-start gap-3 p-4 rounded-xl border border-border bg-card hover:bg-secondary/50 transition-all text-left group"
           >
             <div className="size-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20">
@@ -265,7 +283,7 @@ export default function DomainDetail() {
             </div>
             <div>
               <h3 className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors">GitHub Pages</h3>
-              <p className="text-xs text-muted-foreground mt-0.5">Points CNAME to <code className="text-foreground">username.github.io</code></p>
+              <p className="text-xs text-muted-foreground mt-0.5">CNAME <code className="text-foreground">@</code> → <code className="text-foreground">username.github.io</code></p>
             </div>
           </button>
         </CardContent>
@@ -284,9 +302,9 @@ export default function DomainDetail() {
         </CardHeader>
 
         {showAddForm && (
-          <form onSubmit={handleAddDNS} className="p-4 bg-muted/20 border-b border-border space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 items-end">
-              <div>
+          <form onSubmit={handleAddDNS} className="p-4 bg-muted/20 border-b border-border space-y-3">
+            <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
+              <div className="sm:col-span-3">
                 <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Record Type</label>
                 <Select value={recordType} onValueChange={(val) => setRecordType(val as "A" | "CNAME" | "TXT")}>
                   <SelectTrigger className="w-full h-9">
@@ -300,9 +318,19 @@ export default function DomainDetail() {
                 </Select>
               </div>
 
-              <div className="sm:col-span-2">
+              <div className="sm:col-span-3">
+                <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Name / Host</label>
+                <Input
+                  placeholder="@ or _vercel"
+                  value={recordName}
+                  onChange={(e) => setRecordName(e.target.value)}
+                  className="h-9 font-mono text-xs"
+                />
+              </div>
+
+              <div className="sm:col-span-4">
                 <label className="text-xs font-medium text-muted-foreground mb-1.5 block">
-                  {recordType === "A" ? "IPv4 Target Address" : recordType === "TXT" ? "TXT Record Value" : "Target Hostname"}
+                  {recordType === "A" ? "IPv4 Address" : recordType === "TXT" ? "TXT Value" : "Target Hostname"}
                 </label>
                 <Input
                   required
@@ -313,16 +341,20 @@ export default function DomainDetail() {
                   }
                   value={recordTarget}
                   onChange={(e) => setRecordTarget(e.target.value)}
-                  className="h-9"
+                  className="h-9 font-mono text-xs"
                 />
               </div>
 
-              <Button type="submit" disabled={addingRecord} className="h-9">
-                {addingRecord ? <Loader2 className="size-4 mr-1.5 animate-spin" /> : <Save className="size-4 mr-1.5" />}
-                Save Record
-              </Button>
+              <div className="sm:col-span-2">
+                <Button type="submit" disabled={addingRecord} className="h-9 w-full">
+                  {addingRecord ? <Loader2 className="size-4 mr-1.5 animate-spin" /> : <Save className="size-4 mr-1.5" />}
+                  Save Record
+                </Button>
+              </div>
             </div>
-
+            <p className="text-[11px] text-muted-foreground">
+              Tip: Use <code className="text-foreground bg-muted px-1 py-0.5 rounded font-mono">@</code> for root ({subdomain?.full_domain}), or prefix like <code className="text-foreground bg-muted px-1 py-0.5 rounded font-mono">_vercel</code> for TXT verification.
+            </p>
           </form>
         )}
 
@@ -331,6 +363,7 @@ export default function DomainDetail() {
             <TableHeader>
               <TableRow className="hover:bg-transparent border-border">
                 <TableHead className="text-xs uppercase text-muted-foreground font-semibold">Type</TableHead>
+                <TableHead className="text-xs uppercase text-muted-foreground font-semibold">Name / Host</TableHead>
                 <TableHead className="text-xs uppercase text-muted-foreground font-semibold">Target Content</TableHead>
                 <TableHead className="text-xs uppercase text-muted-foreground font-semibold">TTL</TableHead>
                 <TableHead className="text-xs uppercase text-muted-foreground font-semibold text-right">Actions</TableHead>
@@ -341,7 +374,10 @@ export default function DomainDetail() {
                 subdomain.dns_records.map((rec) => (
                   <TableRow key={rec.id} className="border-border hover:bg-muted/30">
                     <TableCell className="font-semibold text-primary">{rec.type}</TableCell>
-                    <TableCell className="font-mono text-xs text-foreground">{rec.content}</TableCell>
+                    <TableCell className="font-mono text-xs text-foreground font-medium">
+                      {rec.name || subdomain?.full_domain}
+                    </TableCell>
+                    <TableCell className="font-mono text-xs text-muted-foreground max-w-xs truncate">{rec.content}</TableCell>
                     <TableCell className="text-xs text-muted-foreground">Auto</TableCell>
                     <TableCell className="text-right">
                       <Button
@@ -357,7 +393,7 @@ export default function DomainDetail() {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={4} className="h-24 text-center text-muted-foreground text-sm">
+                  <TableCell colSpan={5} className="h-24 text-center text-muted-foreground text-sm">
                     No DNS records configured. Click "Add Record" to configure routing.
                   </TableCell>
                 </TableRow>

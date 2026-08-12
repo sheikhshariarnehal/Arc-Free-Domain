@@ -13,7 +13,7 @@ export async function POST(request: Request) {
   }
 
   const body = await request.json()
-  const { subdomain_id, type, content } = body
+  const { subdomain_id, type, content, name: inputName, name_prefix } = body
 
   if (!subdomain_id || !type || !content) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
@@ -59,9 +59,20 @@ export async function POST(request: Request) {
   }
 
   const fullDomain = getFullDomain(subdomain.name)
+  let recordName = fullDomain
+  const rawPrefix = (inputName || name_prefix || '').trim()
+  
+  if (rawPrefix && rawPrefix !== '@' && rawPrefix.toLowerCase() !== subdomain.name.toLowerCase() && rawPrefix.toLowerCase() !== fullDomain.toLowerCase()) {
+    const cleanPrefix = rawPrefix.toLowerCase()
+    if (cleanPrefix.endsWith(`.${fullDomain.toLowerCase()}`) || cleanPrefix.endsWith('.arc.bd')) {
+      recordName = cleanPrefix
+    } else {
+      recordName = `${cleanPrefix}.${fullDomain}`
+    }
+  }
   
   try {
-    const cfResult = await createDNSRecord({ type, name: fullDomain, content })
+    const cfResult = await createDNSRecord({ type, name: recordName, content })
     
     if (!cfResult.success || !cfResult.recordId) {
       throw new Error(cfResult.error || 'Cloudflare failed to return record ID')
@@ -72,7 +83,7 @@ export async function POST(request: Request) {
       .insert({
         subdomain_id: subdomain.id,
         type,
-        name: fullDomain,
+        name: recordName,
         content,
         cloudflare_record_id: cfResult.recordId,
         status: 'active'
