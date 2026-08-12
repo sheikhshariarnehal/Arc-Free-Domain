@@ -90,10 +90,10 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="flex-1 flex flex-col min-h-screen bg-background text-foreground selection:bg-emerald-500/20 selection:text-emerald-400">
-      {/* Background Radial Ambient Spot */}
+    <div className="flex-1 flex flex-col min-h-screen bg-background text-foreground selection:bg-white/10 selection:text-white">
+      {/* Subtle Background Radial Ambient Glow */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute -top-40 left-1/2 -translate-x-1/2 size-[650px] rounded-full bg-emerald-500/5 blur-[150px]" />
+        <div className="absolute -top-40 left-1/2 -translate-x-1/2 size-[650px] rounded-full bg-white/[0.02] blur-[150px]" />
       </div>
 
       <Navbar />
@@ -104,7 +104,7 @@ export default function LandingPage() {
           {/* Status Badge Pill */}
           <Badge
             variant="outline"
-            className="mb-6 border-emerald-500/30 bg-emerald-500/10 text-emerald-400 text-xs font-mono py-1.5 px-4 rounded-full shadow-sm flex items-center gap-2"
+            className="mb-6 border-white/15 bg-white/5 text-slate-300 text-xs font-mono py-1.5 px-4 rounded-full shadow-sm flex items-center gap-2"
           >
             <span className="size-2 rounded-full bg-emerald-400 animate-pulse inline-block" />
             <span>Cloudflare Edge DNS &bull; Instant Free Subdomains</span>
@@ -113,20 +113,20 @@ export default function LandingPage() {
           {/* Hero Headline */}
           <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.08] mb-6 text-foreground">
             Your name. Your project. <br />
-            <span className="text-emerald-400 font-mono bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
+            <span className="font-mono text-white">
               .arc.bd
             </span>
           </h1>
 
           <p className="text-base sm:text-lg text-muted-foreground mb-10 max-w-xl leading-relaxed">
-            Claim a free <code className="text-emerald-400 font-mono font-semibold">.arc.bd</code> subdomain in seconds. Direct routing to Vercel, GitHub Pages, or any VPS.
+            Claim a free <code className="text-slate-200 font-mono font-semibold">.arc.bd</code> subdomain in seconds. Direct routing to Vercel, GitHub Pages, or any VPS.
           </p>
 
-          {/* Search Box with Skeuomorphic Check Button */}
+          {/* Search Box with Minimal Focus & Skeuomorphic Button */}
           <div className="w-full max-w-xl group">
             <form onSubmit={checkAvailability} className="flex flex-col sm:flex-row items-stretch gap-2.5">
               <div className="relative flex-1 flex items-center">
-                <Search className="absolute left-4 size-4 text-muted-foreground transition-colors group-focus-within:text-emerald-400" />
+                <Search className="absolute left-4 size-4 text-muted-foreground transition-colors group-focus-within:text-foreground" />
                 <input
                   type="text"
                   placeholder="my-cool-project"
@@ -136,7 +136,7 @@ export default function LandingPage() {
                     setAvailability('idle');
                     setReason(null);
                   }}
-                  className="w-full h-12 bg-card border border-border/80 rounded-full pl-11 pr-24 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-emerald-500/60 focus:ring-1 focus:ring-emerald-500/40 transition-all font-mono shadow-sm group-focus-within:shadow-[0_0_25px_rgba(16,185,129,0.15)]"
+                  className="w-full h-12 bg-card border border-white/10 rounded-full pl-11 pr-24 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-white/30 focus:ring-1 focus:ring-white/20 transition-all font-mono shadow-sm group-focus-within:shadow-[0_0_20px_rgba(255,255,255,0.05)]"
                 />
                 {searchQuery && (
                   <button
@@ -150,7 +150,7 @@ export default function LandingPage() {
                 <span className="absolute right-4 text-xs text-muted-foreground font-mono font-medium">.arc.bd</span>
               </div>
 
-              {/* Skeuomorphic Check Button */}
+              {/* Minimal Skeuomorphic Check Button */}
               <Button
                 type="submit"
                 disabled={loading}
@@ -169,7 +169,7 @@ export default function LandingPage() {
                 <button
                   key={sugg}
                   onClick={() => handleSuggestionClick(sugg)}
-                  className="relative inline-flex items-center justify-center transition-all duration-200 active:scale-95 hover:brightness-[120%] cursor-pointer px-3 py-1 rounded-full text-[11px] font-mono text-white border-none overflow-hidden"
+                  className="relative inline-flex items-center justify-center transition-all duration-200 active:scale-95 hover:brightness-[125%] cursor-pointer px-3 py-1 rounded-full text-[11px] font-mono text-slate-300 border-none overflow-hidden"
                   style={{
                     backgroundImage: "linear-gradient(180deg, #2d2d30, #18181b)",
                     boxShadow: "0 0px 0px -2px rgba(0, 0, 0, 0.5)",
@@ -179,7 +179,7 @@ export default function LandingPage() {
                     className="absolute inset-0 pointer-events-none rounded-full"
                     style={{ boxShadow: "inset 0 1.5px 0px 0 rgba(255, 255, 255, 0.25)" }}
                   />
-                  <span className="relative z-10 flex items-center gap-1 text-emerald-400">
+                  <span className="relative z-10 flex items-center gap-1">
                     {sugg}
                   </span>
                 </button>
@@ -189,25 +189,26 @@ export default function LandingPage() {
             {/* Platform Feature Telemetry Tags */}
             <div className="flex items-center justify-center gap-4 mt-6 text-[11px] font-mono text-muted-foreground/80">
               <span className="flex items-center gap-1">
-                <Zap className="size-3 text-emerald-400" /> &lt; 50ms Edge DNS
+                <Zap className="size-3 text-slate-400" /> &lt; 50ms Edge DNS
               </span>
               <span className="flex items-center gap-1">
-                <Lock className="size-3 text-emerald-400" /> Free SSL Included
+                <Lock className="size-3 text-slate-400" /> Free SSL Included
               </span>
               <span className="flex items-center gap-1">
-                <Cpu className="size-3 text-emerald-400" /> Vercel &amp; GitHub Ready
+                <Cpu className="size-3 text-slate-400" /> Vercel &amp; GitHub Ready
               </span>
             </div>
 
-            {/* Availability Result Card with Skeuomorphic Claim Button */}
+            {/* Availability Result Card */}
             <div className="min-h-14 mt-4 flex items-center justify-center">
               {availability === 'available' && (
-                <div className="flex items-center justify-between gap-4 bg-emerald-500/10 border border-emerald-500/30 px-4 py-2.5 rounded-2xl w-full text-left animate-fade-in">
+                <div className="flex items-center justify-between gap-4 bg-white/5 border border-white/15 px-4 py-2.5 rounded-2xl w-full text-left animate-fade-in">
                   <div className="flex items-center gap-2 text-sm text-emerald-400 font-medium font-mono">
                     <CheckCircle className="size-4 shrink-0 text-emerald-400" />
                     <span>{searchQuery}.arc.bd is available!</span>
                   </div>
                   <Button
+                    variant="emerald"
                     size="default"
                     onClick={handleClaimClick}
                     disabled={claiming}
@@ -230,7 +231,7 @@ export default function LandingPage() {
         </section>
 
         {/* Feature Grid */}
-        <section className="w-full max-w-6xl mx-auto py-16 px-4 border-t border-border/50">
+        <section className="w-full max-w-6xl mx-auto py-16 px-4 border-t border-white/10">
           <div className="text-center mb-12">
             <h2 className="text-2xl font-bold tracking-tight text-foreground">Minimal Infrastructure</h2>
             <p className="text-sm text-muted-foreground mt-1">Built for speed, reliability, and modern web developer workflows.</p>
@@ -245,9 +246,9 @@ export default function LandingPage() {
               { icon: Settings, title: "Clean DNS Controls", desc: "Full control over A, CNAME, and TXT records right from your dashboard." },
               { icon: Globe, title: "Developer Community", desc: "Designed for Bangladesh and global builders bringing ideas online." }
             ].map((item, i) => (
-              <Card key={i} className="bg-card border-border/60 hover:border-emerald-500/30 hover:bg-card/90 transition-all duration-300 shadow-sm">
-                <CardContent className="p-5 flex flex-col gap-2.5">
-                  <div className="size-9 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400">
+              <Card key={i} className="p-5 flex flex-col gap-2.5">
+                <CardContent className="p-0 flex flex-col gap-2.5">
+                  <div className="size-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-300">
                     <item.icon className="size-4" />
                   </div>
                   <h3 className="font-semibold text-sm text-foreground">{item.title}</h3>
@@ -259,7 +260,7 @@ export default function LandingPage() {
         </section>
 
         {/* 3-Step Process */}
-        <section className="w-full max-w-4xl mx-auto py-16 px-4 border-t border-border/50 text-center">
+        <section className="w-full max-w-4xl mx-auto py-16 px-4 border-t border-white/10 text-center">
           <h2 className="text-2xl font-bold tracking-tight text-foreground mb-12">Three Simple Steps</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -268,9 +269,9 @@ export default function LandingPage() {
               { num: "02", title: "Claim Free", desc: "Sign up in seconds to lock your subdomain into your account." },
               { num: "03", title: "Configure DNS", desc: "Point your domain to Vercel, GitHub Pages, or any IPv4 server." }
             ].map((step, i) => (
-              <Card key={i} className="bg-card/50 border-border/60 text-center p-6 rounded-2xl">
+              <Card key={i} className="text-center p-6">
                 <CardContent className="p-0 flex flex-col items-center">
-                  <span className="font-mono text-xl font-bold text-emerald-400 mb-3">{step.num}</span>
+                  <span className="font-mono text-xl font-bold text-slate-300 mb-3">{step.num}</span>
                   <h3 className="font-semibold text-sm text-foreground mb-1.5">{step.title}</h3>
                   <p className="text-xs text-muted-foreground leading-relaxed">{step.desc}</p>
                 </CardContent>
@@ -281,10 +282,10 @@ export default function LandingPage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-border/50 bg-background text-xs text-muted-foreground">
+      <footer className="border-t border-white/10 bg-background text-xs text-muted-foreground">
         <div className="max-w-7xl mx-auto px-4 py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <div className="size-5 rounded bg-emerald-500/10 flex items-center justify-center text-emerald-400">
+            <div className="size-5 rounded bg-white/5 border border-white/10 flex items-center justify-center text-slate-400">
               <Globe className="size-3" />
             </div>
             <span className="font-medium text-foreground">ARC.BD</span>

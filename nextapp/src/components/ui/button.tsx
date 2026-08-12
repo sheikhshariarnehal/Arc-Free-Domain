@@ -5,7 +5,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "relative inline-flex items-center justify-center font-semibold transition-all duration-200 active:scale-95 hover:brightness-[120%] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 cursor-pointer select-none border-none overflow-hidden",
+  "relative inline-flex items-center justify-center font-semibold transition-all duration-200 active:scale-95 hover:brightness-[125%] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 cursor-pointer select-none border-none overflow-hidden",
   {
     variants: {
       variant: {
@@ -23,7 +23,7 @@ const buttonVariants = cva(
           "text-white shadow-[0_0px_0px_-2px_rgba(0,0,0,0.5)]",
         ghost:
           "hover:bg-white/10 hover:text-foreground active:scale-95 transition-all",
-        link: "text-emerald-400 underline-offset-4 hover:underline",
+        link: "text-foreground underline-offset-4 hover:underline",
       },
       size: {
         default: "h-10 px-5 py-2 text-sm rounded-full",
@@ -48,14 +48,14 @@ export interface ButtonProps
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = "default", size = "default", asChild = false, children, style, ...props }, ref) => {
-    // Default gradient backgrounds matching skeuomorphic spec
+    // Minimal dark metallic gradient matching dark theme
     let bgStyle: React.CSSProperties = {
-      backgroundImage: "linear-gradient(180deg, #10b981, #047857)",
+      backgroundImage: "linear-gradient(180deg, #2d2d30, #18181b)",
     }
 
-    if (variant === "dark" || variant === "secondary") {
+    if (variant === "emerald") {
       bgStyle = {
-        backgroundImage: "linear-gradient(180deg, #2d2d30, #18181b)",
+        backgroundImage: "linear-gradient(180deg, #10b981, #047857)",
       }
     } else if (variant === "destructive") {
       bgStyle = {
@@ -63,7 +63,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       }
     } else if (variant === "outline") {
       bgStyle = {
-        backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.05))",
+        backgroundImage: "linear-gradient(180deg, rgba(255,255,255,0.1), rgba(255,255,255,0.03))",
       }
     }
 

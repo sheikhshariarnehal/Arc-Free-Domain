@@ -9,11 +9,11 @@ const Card = React.forwardRef<
   <div
     ref={ref}
     style={{
-      backgroundImage: "linear-gradient(180deg, rgba(30, 30, 35, 0.7), rgba(20, 20, 24, 0.5))",
+      backgroundImage: "linear-gradient(180deg, rgba(30, 30, 35, 0.8), rgba(18, 18, 22, 0.6))",
       ...style,
     }}
     className={cn(
-      "relative rounded-2xl border border-border/70 bg-card text-card-foreground shadow-[inset_0_1.5px_0px_0_rgba(255,255,255,0.12),0_4px_12px_rgba(0,0,0,0.4)] backdrop-blur-md hover:border-emerald-500/40 hover:shadow-[inset_0_1.5px_0px_0_rgba(255,255,255,0.2),0_6px_25px_rgba(16,185,129,0.15)] transition-all duration-300 group overflow-hidden",
+      "relative rounded-2xl border border-white/10 bg-card text-card-foreground shadow-[inset_0_1.5px_0px_0_rgba(255,255,255,0.12),0_4px_12px_rgba(0,0,0,0.4)] backdrop-blur-md hover:border-white/25 hover:shadow-[inset_0_1.5px_0px_0_rgba(255,255,255,0.25),0_6px_20px_rgba(0,0,0,0.6)] transition-all duration-300 group overflow-hidden",
       className
     )}
     {...props}
