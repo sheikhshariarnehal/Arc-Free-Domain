@@ -1,252 +1,297 @@
 "use client";
 
-import Link from "next/link";
 import { useState, useEffect } from "react";
-import { Menu, X, Globe, LogOut, LayoutDashboard, ArrowRight, Shield, User, Globe2, BookOpen, Flag, ChevronDown } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Globe, Menu, X, Shield, User, LogOut, ChevronDown, LayoutDashboard, Globe2, FileText, AlertTriangle } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Badge } from "@/components/ui/badge";
 
 export default function Navbar() {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [session, setSession] = useState<any>(null);
-  const [userEmail, setUserEmail] = useState<string>("");
-  const [userName, setUserName] = useState<string>("");
-  const [isAdmin, setIsAdmin] = useState<boolean>(false);
-
-  const router = useRouter();
-  const supabase = createClient();
+  const [loading, setLoading] = useState(true);
+  const [profile, setProfile] = useState<any>(null);
 
   useEffect(() => {
-    const fetchUser = async (currentSession: any) => {
-      if (currentSession?.user) {
-        const u = currentSession.user;
-        setUserEmail(u.email || "");
-        setUserName(u.user_metadata?.full_name || u.email?.split("@")[0] || "User");
-        
-        try {
-          const { data } = await supabase
-            .from("profiles")
-            .select("role")
-            .eq("id", u.id)
-            .single();
-          if (data?.role === "admin") {
-            setIsAdmin(true);
-          }
-        } catch {
-          // ignore if table profile not populated yet
-        }
-      } else {
-        setUserEmail("");
-        setUserName("");
-        setIsAdmin(false);
-      }
-    };
-
+    const supabase = createClient();
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
-      fetchUser(session);
+      if (session?.user) {
+        fetchProfile(session.user.id);
+      } else {
+        setLoading(false);
+      }
     });
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
-      fetchUser(session);
+      if (session?.user) {
+        fetchProfile(session.user.id);
+      } else {
+        setProfile(null);
+        setLoading(false);
+      }
     });
 
     return () => subscription.unsubscribe();
-  }, [supabase]);
+  }, []);
+
+  const fetchProfile = async (userId: string) => {
+    try {
+      const supabase = createClient();
+      const { data } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", userId)
+        .single();
+      setProfile(data);
+    } catch {
+      // Fallback if profile fetch fails
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSignOut = async () => {
+    const supabase = createClient();
     await supabase.auth.signOut();
     router.push("/");
     router.refresh();
   };
 
-  const getInitials = (nameStr: string) => {
-    if (!nameStr) return "U";
-    return nameStr.slice(0, 2).toUpperCase();
+  const userName = profile?.full_name || session?.user?.email?.split("@")[0] || "User";
+  const userEmail = session?.user?.email || "";
+  const isAdmin = profile?.role === "admin";
+
+  const getInitials = (name: string) => {
+    if (!name) return "U";
+    const parts = name.trim().split(" ");
+    if (parts.length >= 2) {
+      return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+    }
+    return name.slice(0, 2).toUpperCase();
   };
 
   return (
-    <nav className="sticky top-0 z-50 bg-background/90 backdrop-blur-md border-b border-white/10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="size-8 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 group-hover:bg-blue-500/20 transition-all">
-              <Globe className="size-4 text-blue-400" />
-            </div>
-            <span className="text-base font-bold text-white tracking-tight">
-              ARC<span className="text-blue-400 font-mono">.BD</span>
-            </span>
-          </Link>
-
-          {/* Desktop Nav Links */}
-          <div className="hidden md:flex items-center space-x-8 text-xs font-medium text-slate-300">
-            <Link href="/" className="hover:text-white transition-colors">Home</Link>
-            <Link href="/docs" className="hover:text-white transition-colors">Documentation</Link>
-            <Link href="/report" className="hover:text-white transition-colors">Report Abuse</Link>
+    <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-background/80 backdrop-blur-xl">
+      <div className="max-w-7xl mx-auto flex h-16 items-center justify-between px-4 sm:px-6">
+        {/* Brand Logo */}
+        <Link href="/" className="flex items-center space-x-2.5 group">
+          <div className="size-8 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 group-hover:scale-105 transition-transform">
+            <Globe className="size-4" />
           </div>
+          <span className="font-extrabold text-lg tracking-tight text-foreground">
+            ARC<span className="text-blue-400 font-mono">.BD</span>
+          </span>
+        </Link>
 
-          {/* Desktop User Profile Dropdown / Sign In Button */}
-          <div className="hidden md:flex items-center gap-3">
-            {session ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button className="skeuo-button skeuo-button-outline px-3.5 py-1.5 h-9 text-xs gap-2 text-white">
-                    <Avatar className="size-5 border border-white/20">
-                      <AvatarImage src="" alt={userName} />
-                      <AvatarFallback className="bg-blue-500/20 text-blue-400 text-[9px] font-bold font-mono">
-                        {getInitials(userName)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <span className="max-w-[100px] truncate text-slate-200">
-                      {userName}
-                    </span>
-                    <ChevronDown className="size-3 text-slate-400" />
-                  </button>
-                </DropdownMenuTrigger>
+        {/* Desktop Navigation Links */}
+        <nav className="hidden md:flex items-center space-x-8 text-sm font-medium">
+          <Link href="/" className="text-muted-foreground hover:text-foreground transition-colors">
+            Home
+          </Link>
+          <Link href="/docs" className="text-muted-foreground hover:text-foreground transition-colors">
+            Docs
+          </Link>
+          <Link href="/report" className="text-muted-foreground hover:text-foreground transition-colors">
+            Report Abuse
+          </Link>
+        </nav>
 
-                <DropdownMenuContent align="end" className="w-56 p-2 space-y-1 bg-card border-white/15 shadow-xl">
-                  <DropdownMenuLabel className="font-normal p-2">
-                    <div className="flex flex-col space-y-1">
-                      <div className="flex items-center justify-between">
-                        <p className="text-xs font-semibold text-foreground truncate">{userName}</p>
-                        {isAdmin ? (
-                          <Badge variant="destructive" className="text-[9px] px-1.5 py-0 h-4">Admin</Badge>
-                        ) : (
-                          <Badge variant="outline" className="text-[9px] px-1.5 py-0 h-4 text-blue-400 border-blue-500/30">Developer</Badge>
-                        )}
-                      </div>
-                      <p className="text-[11px] text-muted-foreground truncate">{userEmail}</p>
+        {/* Desktop Auth Controls */}
+        <div className="hidden md:flex items-center space-x-3">
+          {loading ? (
+            <div className="size-8 rounded-full bg-white/5 animate-pulse" />
+          ) : session ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="skeuo-button px-3.5 py-1.5 h-9 text-xs gap-2 text-white border-0 outline-none">
+                  <Avatar className="size-5">
+                    <AvatarImage src="" alt={userName} />
+                    <AvatarFallback className="bg-blue-500/20 text-blue-400 text-[9px] font-bold font-mono">
+                      {getInitials(userName)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="max-w-[100px] truncate text-slate-200">
+                    {userName}
+                  </span>
+                  <ChevronDown className="size-3 text-slate-400" />
+                </button>
+              </DropdownMenuTrigger>
+
+              <DropdownMenuContent align="end" className="w-56 p-2 space-y-1 bg-card border-white/15 shadow-xl">
+                <DropdownMenuLabel className="font-normal p-2">
+                  <div className="flex flex-col space-y-1">
+                    <div className="flex items-center justify-between">
+                      <p className="text-xs font-semibold text-foreground truncate">{userName}</p>
+                      {isAdmin ? (
+                        <Badge variant="destructive" className="text-[9px] px-1.5 py-0 h-4">Admin</Badge>
+                      ) : (
+                        <Badge variant="outline" className="text-[9px] px-1.5 py-0 h-4 text-blue-400 border-blue-500/30">Developer</Badge>
+                      )}
                     </div>
-                  </DropdownMenuLabel>
+                    <p className="text-[11px] text-muted-foreground truncate">{userEmail}</p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator className="bg-white/10" />
 
-                  <DropdownMenuSeparator className="bg-white/10" />
-
-                  <DropdownMenuItem asChild className="cursor-pointer text-xs focus:bg-white/10 focus:text-white rounded-lg">
-                    <Link href="/dashboard" className="flex items-center gap-2">
-                      <LayoutDashboard className="size-3.5 text-blue-400" />
-                      <span>Dashboard Overview</span>
+                <DropdownMenuGroup>
+                  <DropdownMenuItem asChild className="text-xs cursor-pointer focus:bg-white/10">
+                    <Link href="/dashboard" className="flex items-center">
+                      <LayoutDashboard className="size-3.5 mr-2 text-blue-400" />
+                      Dashboard Overview
                     </Link>
                   </DropdownMenuItem>
-
-                  <DropdownMenuItem asChild className="cursor-pointer text-xs focus:bg-white/10 focus:text-white rounded-lg">
-                    <Link href="/dashboard/domains" className="flex items-center gap-2">
-                      <Globe2 className="size-3.5 text-slate-400" />
-                      <span>My Subdomains</span>
+                  <DropdownMenuItem asChild className="text-xs cursor-pointer focus:bg-white/10">
+                    <Link href="/dashboard/domains" className="flex items-center">
+                      <Globe2 className="size-3.5 mr-2 text-blue-400" />
+                      My Subdomains
                     </Link>
                   </DropdownMenuItem>
-
                   {isAdmin && (
-                    <DropdownMenuItem asChild className="cursor-pointer text-xs focus:bg-purple-500/10 focus:text-purple-400 rounded-lg">
-                      <Link href="/admin" className="flex items-center gap-2">
-                        <Shield className="size-3.5 text-purple-400" />
-                        <span>Admin Control Panel</span>
+                    <DropdownMenuItem asChild className="text-xs cursor-pointer focus:bg-white/10">
+                      <Link href="/admin" className="flex items-center">
+                        <Shield className="size-3.5 mr-2 text-destructive" />
+                        Admin Panel
                       </Link>
                     </DropdownMenuItem>
                   )}
+                </DropdownMenuGroup>
 
-                  <DropdownMenuSeparator className="bg-white/10" />
+                <DropdownMenuSeparator className="bg-white/10" />
 
-                  <DropdownMenuItem asChild className="cursor-pointer text-xs focus:bg-white/10 rounded-lg">
-                    <Link href="/docs" className="flex items-center gap-2">
-                      <BookOpen className="size-3.5 text-muted-foreground" />
-                      <span>Documentation</span>
+                <DropdownMenuGroup>
+                  <DropdownMenuItem asChild className="text-xs cursor-pointer focus:bg-white/10">
+                    <Link href="/docs" className="flex items-center">
+                      <FileText className="size-3.5 mr-2 text-muted-foreground" />
+                      Documentation
                     </Link>
                   </DropdownMenuItem>
-
-                  <DropdownMenuItem asChild className="cursor-pointer text-xs focus:bg-white/10 rounded-lg">
-                    <Link href="/report" className="flex items-center gap-2">
-                      <Flag className="size-3.5 text-muted-foreground" />
-                      <span>Report Abuse</span>
+                  <DropdownMenuItem asChild className="text-xs cursor-pointer focus:bg-white/10">
+                    <Link href="/report" className="flex items-center">
+                      <AlertTriangle className="size-3.5 mr-2 text-muted-foreground" />
+                      Report Abuse
                     </Link>
                   </DropdownMenuItem>
+                </DropdownMenuGroup>
 
-                  <DropdownMenuSeparator className="bg-white/10" />
+                <DropdownMenuSeparator className="bg-white/10" />
 
-                  <DropdownMenuItem
-                    onClick={handleSignOut}
-                    className="cursor-pointer text-xs text-destructive focus:bg-destructive/10 focus:text-destructive rounded-lg"
-                  >
-                    <LogOut className="size-3.5 mr-2" />
-                    <span>Sign Out</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                <DropdownMenuItem
+                  onClick={handleSignOut}
+                  className="text-xs text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer"
+                >
+                  <LogOut className="size-3.5 mr-2" />
+                  Sign Out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Button
+              asChild
+              variant="default"
+              size="sm"
+            >
+              <Link href="/login">Sign In</Link>
+            </Button>
+          )}
+        </div>
+
+        {/* Mobile Hamburger Button */}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="md:hidden p-2 text-muted-foreground hover:text-foreground transition-colors"
+          aria-label="Toggle Menu"
+        >
+          {isOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+        </button>
+      </div>
+
+      {/* Mobile Menu Drawer */}
+      {isOpen && (
+        <div className="md:hidden border-b border-white/10 bg-card/95 backdrop-blur-xl px-4 pt-3 pb-6 space-y-4 animate-slide-up">
+          <nav className="flex flex-col space-y-3 font-medium text-sm">
+            <Link
+              href="/"
+              onClick={() => setIsOpen(false)}
+              className="text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Home
+            </Link>
+            <Link
+              href="/docs"
+              onClick={() => setIsOpen(false)}
+              className="text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Docs
+            </Link>
+            <Link
+              href="/report"
+              onClick={() => setIsOpen(false)}
+              className="text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Report Abuse
+            </Link>
+          </nav>
+          <div className="pt-2 border-t border-white/10 flex flex-col space-y-2">
+            {session ? (
+              <>
+                <div className="flex items-center justify-between px-2 py-1">
+                  <div className="text-xs">
+                    <p className="font-semibold text-foreground">{userName}</p>
+                    <p className="text-muted-foreground">{userEmail}</p>
+                  </div>
+                  {isAdmin && <Badge variant="destructive" className="text-[9px]">Admin</Badge>}
+                </div>
+                <Button
+                  asChild
+                  variant="default"
+                  size="sm"
+                  className="w-full justify-center"
+                >
+                  <Link href="/dashboard" onClick={() => setIsOpen(false)}>
+                    Dashboard
+                  </Link>
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleSignOut}
+                  className="w-full justify-center text-destructive hover:text-destructive hover:bg-destructive/10"
+                >
+                  Sign Out
+                </Button>
+              </>
             ) : (
-              <Button size="sm" variant="outline" asChild className="text-xs font-semibold rounded-full border-white/15">
-                <Link href="/login">
-                  Sign In <ArrowRight className="size-3 ml-1" />
+              <Button
+                asChild
+                variant="default"
+                size="sm"
+                className="w-full justify-center"
+              >
+                <Link href="/login" onClick={() => setIsOpen(false)}>
+                  Sign In
                 </Link>
               </Button>
             )}
           </div>
-
-          {/* Mobile menu button */}
-          <div className="md:hidden flex items-center">
-            <button onClick={() => setIsOpen(!isOpen)} className="text-muted-foreground hover:text-foreground p-2">
-              {isOpen ? <X className="size-5" /> : <Menu className="size-5" />}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile Drawer */}
-      {isOpen && (
-        <div className="md:hidden bg-background/95 border-b border-white/10 px-4 pt-2 pb-4 space-y-2 text-sm font-medium">
-          <Link href="/" className="block py-2 text-foreground hover:text-white">Home</Link>
-          <Link href="/docs" className="block py-2 text-foreground hover:text-white">Documentation</Link>
-          <Link href="/report" className="block py-2 text-foreground hover:text-white">Report Abuse</Link>
-
-          <div className="pt-2 border-t border-white/10">
-            {session ? (
-              <div className="space-y-2 pt-1">
-                <div className="flex items-center gap-2 pb-2">
-                  <Avatar className="size-7 border border-white/20">
-                    <AvatarFallback className="bg-blue-500/20 text-blue-400 text-xs font-bold font-mono">
-                      {getInitials(userName)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <p className="text-xs font-semibold text-foreground">{userName}</p>
-                    <p className="text-[10px] text-muted-foreground">{userEmail}</p>
-                  </div>
-                </div>
-
-                <Link href="/dashboard" className="block text-blue-400 font-semibold py-1.5">
-                  Dashboard Overview
-                </Link>
-                <Link href="/dashboard/domains" className="block text-slate-300 py-1.5">
-                  My Subdomains
-                </Link>
-                {isAdmin && (
-                  <Link href="/admin" className="block text-purple-400 font-semibold py-1.5">
-                    Admin Panel
-                  </Link>
-                )}
-                <button onClick={handleSignOut} className="text-destructive text-xs block py-1.5">
-                  Sign Out
-                </button>
-              </div>
-            ) : (
-              <Link href="/login" className="text-blue-400 font-semibold block pt-1">Sign In</Link>
-            )}
-          </div>
         </div>
       )}
-    </nav>
+    </header>
   );
 }

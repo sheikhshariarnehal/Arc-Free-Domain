@@ -172,7 +172,7 @@
   }
 }
 
-/* Pure CSS - Skeuomorphic Button System (No Outer Glow) */
+/* Pure CSS - Skeuomorphic Button System (No Border Line, Top Rim Only) */
 .skeuo-button {
   position: relative;
   display: inline-flex;
@@ -181,7 +181,7 @@
   padding: 8px 16px;
   border-radius: 9999px;
   background-image: linear-gradient(180deg, #2d2d30, #18181b);
-  border: none;
+  border: none !important;
   box-shadow: none;
   color: #ffffff;
   font-size: 13px;
@@ -212,22 +212,25 @@
 
 .skeuo-button-primary {
   background-image: linear-gradient(180deg, #3b82f6, #1d4ed8);
+  border: none !important;
   box-shadow: none;
 }
 
 .skeuo-button-emerald {
   background-image: linear-gradient(180deg, #10b981, #047857);
+  border: none !important;
   box-shadow: none;
 }
 
 .skeuo-button-destructive {
   background-image: linear-gradient(180deg, #ef4444, #b91c1c);
+  border: none !important;
   box-shadow: none;
 }
 
 .skeuo-button-outline {
   background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03));
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: none !important;
   box-shadow: none;
 }
 
