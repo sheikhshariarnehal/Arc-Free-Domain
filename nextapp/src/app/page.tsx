@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
-import { Search, CheckCircle, XCircle, Gift, Zap, Code, Shield, Settings, Globe, Loader2, X, Sparkles, ArrowRight, Check, Activity, Lock, Cpu } from "lucide-react";
+import { Search, CheckCircle, XCircle, Gift, Zap, Code, Shield, Settings, Globe, Loader2, X, Sparkles, ArrowRight, Lock, Cpu } from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -91,7 +91,7 @@ export default function LandingPage() {
 
   return (
     <div className="flex-1 flex flex-col min-h-screen bg-background text-foreground selection:bg-emerald-500/20 selection:text-emerald-400">
-      {/* Minimal Background Radial Gradients */}
+      {/* Background Radial Ambient Spot */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute -top-40 left-1/2 -translate-x-1/2 size-[650px] rounded-full bg-emerald-500/5 blur-[150px]" />
       </div>
@@ -99,9 +99,9 @@ export default function LandingPage() {
       <Navbar />
 
       <main className="flex-1 flex flex-col items-center">
-        {/* Polished High-Craft Hero Section */}
+        {/* Polished Hero Section with Theme Variables */}
         <section className="w-full max-w-4xl mx-auto text-center pt-16 pb-16 sm:pt-24 sm:pb-24 px-4 flex flex-col items-center">
-          {/* Live Telemetry Status Pill */}
+          {/* Status Badge Pill */}
           <Badge
             variant="outline"
             className="mb-6 border-emerald-500/30 bg-emerald-500/10 text-emerald-400 text-xs font-mono py-1.5 px-4 rounded-full shadow-sm flex items-center gap-2"
@@ -122,7 +122,7 @@ export default function LandingPage() {
             Claim a free <code className="text-emerald-400 font-mono font-semibold">.arc.bd</code> subdomain in seconds. Direct routing to Vercel, GitHub Pages, or any VPS.
           </p>
 
-          {/* Polished Hero Search Box */}
+          {/* Theme-Grounded Search Box */}
           <div className="w-full max-w-xl group">
             <form onSubmit={checkAvailability} className="flex flex-col sm:flex-row items-stretch gap-2.5">
               <div className="relative flex-1 flex items-center">
@@ -167,7 +167,7 @@ export default function LandingPage() {
                 <button
                   key={sugg}
                   onClick={() => handleSuggestionClick(sugg)}
-                  className="px-2.5 py-0.5 rounded-md bg-secondary/60 hover:bg-secondary text-muted-foreground hover:text-emerald-400 font-mono text-[11px] transition-colors border border-border/40"
+                  className="px-2.5 py-0.5 rounded-md bg-secondary/80 hover:bg-secondary text-muted-foreground hover:text-emerald-400 font-mono text-[11px] transition-colors border border-border/50"
                 >
                   {sugg}
                 </button>
@@ -217,7 +217,7 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Minimal Feature Grid */}
+        {/* Feature Grid using Theme Cards */}
         <section className="w-full max-w-6xl mx-auto py-16 px-4 border-t border-border/50">
           <div className="text-center mb-12">
             <h2 className="text-2xl font-bold tracking-tight text-foreground">Minimal Infrastructure</h2>
@@ -233,7 +233,7 @@ export default function LandingPage() {
               { icon: Settings, title: "Clean DNS Controls", desc: "Full control over A, CNAME, and TXT records right from your dashboard." },
               { icon: Globe, title: "Developer Community", desc: "Designed for Bangladesh and global builders bringing ideas online." }
             ].map((item, i) => (
-              <Card key={i} className="bg-card/40 border-border/60 hover:border-emerald-500/30 hover:bg-card/80 transition-all duration-300">
+              <Card key={i} className="bg-card border-border/60 hover:border-emerald-500/30 hover:bg-card/90 transition-all duration-300 shadow-sm">
                 <CardContent className="p-5 flex flex-col gap-2.5">
                   <div className="size-9 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400">
                     <item.icon className="size-4" />
@@ -246,7 +246,7 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Minimal 3-Step Process */}
+        {/* 3-Step Process using Theme Cards */}
         <section className="w-full max-w-4xl mx-auto py-16 px-4 border-t border-border/50 text-center">
           <h2 className="text-2xl font-bold tracking-tight text-foreground mb-12">Three Simple Steps</h2>
 
@@ -256,18 +256,20 @@ export default function LandingPage() {
               { num: "02", title: "Claim Free", desc: "Sign up in seconds to lock your subdomain into your account." },
               { num: "03", title: "Configure DNS", desc: "Point your domain to Vercel, GitHub Pages, or any IPv4 server." }
             ].map((step, i) => (
-              <div key={i} className="flex flex-col items-center text-center p-6 rounded-xl border border-border/50 bg-card/20">
-                <span className="font-mono text-xl font-bold text-emerald-400 mb-3">{step.num}</span>
-                <h3 className="font-semibold text-sm text-foreground mb-1.5">{step.title}</h3>
-                <p className="text-xs text-muted-foreground leading-relaxed">{step.desc}</p>
-              </div>
+              <Card key={i} className="bg-card/50 border-border/60 text-center p-6 rounded-xl">
+                <CardContent className="p-0 flex flex-col items-center">
+                  <span className="font-mono text-xl font-bold text-emerald-400 mb-3">{step.num}</span>
+                  <h3 className="font-semibold text-sm text-foreground mb-1.5">{step.title}</h3>
+                  <p className="text-xs text-muted-foreground leading-relaxed">{step.desc}</p>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </section>
       </main>
 
-      {/* Minimal Modern Footer */}
-      <footer className="border-t border-border/50 bg-background/50 text-xs text-muted-foreground">
+      {/* Footer grounded in Theme Tokens */}
+      <footer className="border-t border-border/50 bg-background text-xs text-muted-foreground">
         <div className="max-w-7xl mx-auto px-4 py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <div className="size-5 rounded bg-emerald-500/10 flex items-center justify-center text-emerald-400">
