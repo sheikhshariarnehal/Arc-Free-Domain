@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Globe, Plus, Search, Loader2, ExternalLink, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { formatDate } from "@/lib/utils";
@@ -67,6 +68,8 @@ function StatusBadge({ status }: { status: string }) {
 const MAX_SUBDOMAINS = 5;
 
 export default function DomainsList() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const [subdomains, setSubdomains] = useState<SubdomainRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -77,6 +80,8 @@ export default function DomainsList() {
   const [claimError, setClaimError] = useState<string | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [autoClaiming, setAutoClaiming] = useState(false);
+  const [autoClaimMsg, setAutoClaimMsg] = useState<string | null>(null);
 
   const fetchSubdomains = async () => {
     try {
@@ -92,7 +97,45 @@ export default function DomainsList() {
     }
   };
 
-  useEffect(() => { fetchSubdomains(); }, []);
+  // Auto-claim a domain passed via ?claim= after OAuth redirect
+  useEffect(() => {
+    const claimName = searchParams.get("claim");
+    if (!claimName) {
+      fetchSubdomains();
+      return;
+    }
+
+    // Remove ?claim= from URL immediately so refresh doesn't re-trigger
+    router.replace("/dashboard/domains");
+
+    const autoClaim = async () => {
+      setAutoClaiming(true);
+      setAutoClaimMsg(`Claiming ${claimName}.arc.bd for you...`);
+      try {
+        const res = await fetch("/api/subdomains/claim", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: claimName }),
+        });
+        const data = await res.json();
+        if (res.ok) {
+          setAutoClaimMsg(`✓ ${claimName}.arc.bd claimed successfully!`);
+        } else {
+          setAutoClaimMsg(`Could not claim ${claimName}.arc.bd: ${data.error || "Already taken"}`);
+        }
+      } catch {
+        setAutoClaimMsg(`Could not claim ${claimName}.arc.bd. Please try again.`);
+      } finally {
+        setAutoClaiming(false);
+        fetchSubdomains();
+        // Clear message after 5 seconds
+        setTimeout(() => setAutoClaimMsg(null), 5000);
+      }
+    };
+
+    autoClaim();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleClaim = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -155,8 +198,23 @@ export default function DomainsList() {
         >
           <Plus className="size-4 mr-1.5" />
           {usedSlots >= MAX_SUBDOMAINS ? "Limit Reached" : "Claim New"}
+
         </Button>
       </div>
+
+      {/* Auto-claim status banner (shown after OAuth redirect) */}
+      {autoClaimMsg && (
+        <div className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium border ${
+          autoClaiming
+            ? "bg-blue-500/10 border-blue-500/30 text-blue-400"
+            : autoClaimMsg.startsWith("✓")
+            ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
+            : "bg-destructive/10 border-destructive/30 text-destructive"
+        }`}>
+          {autoClaiming && <Loader2 className="size-4 animate-spin shrink-0" />}
+          {autoClaimMsg}
+        </div>
+      )}
 
       {/* Claim Dialog */}
       <Dialog open={showClaimDialog} onOpenChange={setShowClaimDialog}>
