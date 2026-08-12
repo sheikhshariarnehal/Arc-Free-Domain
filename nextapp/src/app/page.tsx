@@ -166,24 +166,24 @@ export default function LandingPage() {
               </div>
             </form>
 
-            {/* Instant Slide-Down Availability Result Card (DIRECTLY BELOW SEARCH BAR) */}
+            {/* Polished Borderless Skeuomorphic Availability Result Card */}
             {availability !== 'idle' && (
               <div className="w-full mt-3 animate-slide-up">
                 {availability === 'available' && (
                   <div
-                    className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 bg-blue-500/20 p-3.5 sm:px-4 sm:py-3 rounded-xl w-full text-left border border-blue-400/30 shadow-lg backdrop-blur-md"
-                    style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.3)" }}
+                    className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 bg-blue-500/15 p-3.5 sm:px-5 sm:py-3.5 rounded-full w-full text-left border-none backdrop-blur-md"
+                    style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.25)" }}
                   >
-                    <div className="flex items-center gap-2 text-xs sm:text-sm text-blue-300 font-semibold font-mono">
-                      <CheckCircle className="size-4 shrink-0 text-blue-400" />
-                      <span>{searchQuery}.arc.bd is available!</span>
+                    <div className="flex items-center gap-2.5 text-xs sm:text-sm text-white font-semibold font-mono pl-2">
+                      <CheckCircle className="size-4.5 shrink-0 text-blue-400" />
+                      <span><strong className="text-blue-400">{searchQuery}</strong>.arc.bd is available!</span>
                     </div>
                     <Button
                       variant="default"
                       size="default"
                       onClick={handleClaimClick}
                       disabled={claiming}
-                      className="w-full sm:w-auto shrink-0 font-semibold"
+                      className="w-full sm:w-auto shrink-0 font-semibold text-xs px-5 h-9 sm:h-10 rounded-full"
                     >
                       {claiming && <Loader2 className="size-3 mr-1 animate-spin" />}
                       Claim Free Now <ArrowRight className="size-3 ml-1" />
@@ -193,12 +193,12 @@ export default function LandingPage() {
 
                 {availability === 'taken' && (
                   <div
-                    className="flex flex-col gap-2.5 bg-destructive/20 p-3.5 sm:p-4 rounded-xl w-full text-left border border-destructive/30 shadow-lg backdrop-blur-md"
+                    className="flex flex-col gap-2.5 bg-destructive/15 p-3.5 sm:p-4 rounded-2xl w-full text-left border-none backdrop-blur-md"
                     style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.25)" }}
                   >
-                    <div className="flex items-center gap-2 text-xs text-destructive-foreground font-semibold font-mono">
+                    <div className="flex items-center gap-2 text-xs text-white font-semibold font-mono">
                       <XCircle className="size-4 shrink-0 text-destructive" />
-                      <span>{searchQuery}.arc.bd is unavailable ({reason || 'Taken'}).</span>
+                      <span><strong className="text-destructive font-bold">{searchQuery}</strong>.arc.bd is unavailable ({reason || 'Taken'}).</span>
                     </div>
 
                     {/* Smart Alternative Suggestions */}
@@ -211,7 +211,7 @@ export default function LandingPage() {
                           <button
                             key={alt}
                             onClick={() => handleSuggestionClick(alt)}
-                            className="px-2.5 py-1 rounded-md bg-white/15 hover:bg-blue-500/30 text-white hover:text-blue-300 border-none transition-all cursor-pointer text-xs font-mono font-medium shadow-[inset_0_1px_0px_0_rgba(255,255,255,0.2)]"
+                            className="px-3 py-1 rounded-full bg-white/15 hover:bg-blue-500/30 text-white hover:text-blue-300 border-none transition-all cursor-pointer text-xs font-mono font-medium shadow-[inset_0_1px_0px_0_rgba(255,255,255,0.2)]"
                           >
                             {alt}.arc.bd
                           </button>
