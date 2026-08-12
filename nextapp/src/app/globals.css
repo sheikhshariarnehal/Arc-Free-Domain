@@ -251,3 +251,8 @@ input:-webkit-autofill:active {
   height: 22px;
   margin-right: 10px;
 }
+
+/* Rect modifier — overrides pill radius to rounded-lg (8px) */
+.skeuo-button-rect {
+  border-radius: 8px !important;
+}
