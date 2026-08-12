@@ -44,14 +44,10 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
-  gradientStyle?: string
-  rimOpacity?: string
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = "default", size = "default", asChild = false, children, style, ...props }, ref) => {
-    const Comp = asChild ? Slot : "button"
-
     // Default gradient backgrounds matching skeuomorphic spec
     let bgStyle: React.CSSProperties = {
       backgroundImage: "linear-gradient(180deg, #10b981, #047857)",
@@ -73,8 +69,21 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     const mergedStyle = { ...bgStyle, ...style }
 
+    if (asChild) {
+      return (
+        <Slot
+          className={cn(buttonVariants({ variant, size, className }))}
+          style={mergedStyle}
+          ref={ref}
+          {...props}
+        >
+          {children}
+        </Slot>
+      )
+    }
+
     return (
-      <Comp
+      <button
         className={cn(buttonVariants({ variant, size, className }))}
         style={mergedStyle}
         ref={ref}
@@ -94,7 +103,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         <span className="relative z-10 flex items-center justify-center gap-2">
           {children}
         </span>
-      </Comp>
+      </button>
     )
   }
 )
