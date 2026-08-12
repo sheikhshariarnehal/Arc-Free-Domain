@@ -160,6 +160,14 @@ export function validateDNSContent(
       return validateIPv4(content);
     case "CNAME":
       return validateHostname(content);
+    case "TXT":
+      if (!content || content.trim().length === 0) {
+        return { valid: false, error: "TXT record value cannot be empty" };
+      }
+      if (content.length > 512) {
+        return { valid: false, error: "TXT record value must be 512 characters or less" };
+      }
+      return { valid: true };
     default:
       return { valid: false, error: `Unsupported record type: ${type}` };
   }

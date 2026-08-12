@@ -35,22 +35,26 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: valError }, { status: 400 })
   }
 
-  // Clean up any existing conflicting DNS records (e.g. previous default placeholder A or CNAME records)
-  const { data: existingRecords } = await supabase
-    .from('dns_records')
-    .select('id, cloudflare_record_id')
-    .eq('subdomain_id', subdomain.id)
+  // For A/CNAME records: replace any existing routing records (they conflict)
+  // For TXT records: coexist — TXT is used for verification and stacks alongside routing records
+  if (type !== 'TXT') {
+    const { data: existingRecords } = await supabase
+      .from('dns_records')
+      .select('id, cloudflare_record_id')
+      .eq('subdomain_id', subdomain.id)
+      .neq('type', 'TXT')
 
-  if (existingRecords && existingRecords.length > 0) {
-    for (const rec of existingRecords) {
-      if (rec.cloudflare_record_id) {
-        try {
-          await deleteDNSRecord(rec.cloudflare_record_id)
-        } catch (e) {
-          console.error('[Cloudflare Delete Error]', e)
+    if (existingRecords && existingRecords.length > 0) {
+      for (const rec of existingRecords) {
+        if (rec.cloudflare_record_id) {
+          try {
+            await deleteDNSRecord(rec.cloudflare_record_id)
+          } catch (e) {
+            console.error('[Cloudflare Delete Error]', e)
+          }
         }
+        await supabase.from('dns_records').delete().eq('id', rec.id)
       }
-      await supabase.from('dns_records').delete().eq('id', rec.id)
     }
   }
 

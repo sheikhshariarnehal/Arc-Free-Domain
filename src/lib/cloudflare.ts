@@ -55,7 +55,7 @@ function mockRecordId(): string {
 // ============================================================
 
 export async function createDNSRecord(params: {
-  type: "A" | "CNAME";
+  type: "A" | "CNAME" | "TXT";
   name: string;
   content: string;
   ttl?: number;
@@ -80,8 +80,9 @@ export async function createDNSRecord(params: {
           type: params.type,
           name: params.name,
           content: params.content,
-          ttl: params.ttl ?? 1, // 1 = automatic
-          proxied: params.proxied ?? false,
+          ttl: params.ttl ?? 1,
+          // TXT records cannot be proxied
+          proxied: params.type === "TXT" ? false : (params.proxied ?? false),
         }),
       }
     );
@@ -107,7 +108,7 @@ export async function createDNSRecord(params: {
 
 export async function updateDNSRecord(params: {
   recordId: string;
-  type: "A" | "CNAME";
+  type: "A" | "CNAME" | "TXT";
   name: string;
   content: string;
   ttl?: number;

@@ -63,7 +63,7 @@ export default function DomainDetail() {
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
   // New DNS Record form
-  const [recordType, setRecordType] = useState<"A" | "CNAME">("CNAME");
+  const [recordType, setRecordType] = useState<"A" | "CNAME" | "TXT">("CNAME");
   const [recordTarget, setRecordTarget] = useState("");
   const [addingRecord, setAddingRecord] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -288,24 +288,29 @@ export default function DomainDetail() {
             <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 items-end">
               <div>
                 <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Record Type</label>
-                <Select value={recordType} onValueChange={(val) => setRecordType(val as "A" | "CNAME")}>
+                <Select value={recordType} onValueChange={(val) => setRecordType(val as "A" | "CNAME" | "TXT")}>
                   <SelectTrigger className="w-full h-9">
                     <SelectValue placeholder="Select type" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="CNAME">CNAME (Hostname)</SelectItem>
                     <SelectItem value="A">A (IPv4 Address)</SelectItem>
+                    <SelectItem value="TXT">TXT (Verification)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div className="sm:col-span-2">
                 <label className="text-xs font-medium text-muted-foreground mb-1.5 block">
-                  {recordType === "A" ? "IPv4 Target Address" : "Target Hostname"}
+                  {recordType === "A" ? "IPv4 Target Address" : recordType === "TXT" ? "TXT Record Value" : "Target Hostname"}
                 </label>
                 <Input
                   required
-                  placeholder={recordType === "A" ? "185.199.108.153" : "cname.vercel-dns.com"}
+                  placeholder={
+                    recordType === "A" ? "185.199.108.153" :
+                    recordType === "TXT" ? "vc-domain-verify=..." :
+                    "cname.vercel-dns.com"
+                  }
                   value={recordTarget}
                   onChange={(e) => setRecordTarget(e.target.value)}
                   className="h-9"
@@ -317,6 +322,7 @@ export default function DomainDetail() {
                 Save Record
               </Button>
             </div>
+
           </form>
         )}
 
