@@ -100,7 +100,7 @@ export default function LandingPage() {
 
       <main className="flex-1 flex flex-col items-center">
         {/* Fully Responsive & Impeccably Spaced Hero Section */}
-        <section className="w-full max-w-5xl mx-auto text-center pt-10 pb-12 sm:pt-16 sm:pb-16 md:pt-20 md:pb-20 lg:pt-24 lg:pb-24 px-3 sm:px-6 lg:px-8 flex flex-col items-center overflow-x-hidden">
+        <section className="w-full max-w-5xl mx-auto text-center pt-8 pb-12 sm:pt-14 sm:pb-16 md:pt-18 md:pb-20 lg:pt-20 lg:pb-24 px-3 sm:px-6 lg:px-8 flex flex-col items-center overflow-x-hidden">
           {/* Public Beta Status Badge Pill */}
           <Badge
             variant="outline"
@@ -119,7 +119,7 @@ export default function LandingPage() {
           </h1>
 
           {/* Balanced Subheadline */}
-          <p className="text-xs sm:text-base md:text-lg text-slate-200 font-medium max-w-xs sm:max-w-xl md:max-w-2xl mb-7 sm:mb-10 leading-relaxed px-2 sm:px-0">
+          <p className="text-xs sm:text-base md:text-lg text-slate-200 font-medium max-w-xs sm:max-w-xl md:max-w-2xl mb-6 sm:mb-9 leading-relaxed px-2 sm:px-0">
             Claim your free <code className="text-blue-400 font-mono font-semibold">.arc.bd</code> subdomain in seconds. Direct routing to Vercel, GitHub Pages, or any custom VPS.
           </p>
 
@@ -166,14 +166,71 @@ export default function LandingPage() {
               </div>
             </form>
 
+            {/* Instant Slide-Down Availability Result Card (DIRECTLY BELOW SEARCH BAR) */}
+            {availability !== 'idle' && (
+              <div className="w-full mt-3 animate-slide-up">
+                {availability === 'available' && (
+                  <div
+                    className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 bg-blue-500/20 p-3.5 sm:px-4 sm:py-3 rounded-xl w-full text-left border border-blue-400/30 shadow-lg backdrop-blur-md"
+                    style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.3)" }}
+                  >
+                    <div className="flex items-center gap-2 text-xs sm:text-sm text-blue-300 font-semibold font-mono">
+                      <CheckCircle className="size-4 shrink-0 text-blue-400" />
+                      <span>{searchQuery}.arc.bd is available!</span>
+                    </div>
+                    <Button
+                      variant="default"
+                      size="default"
+                      onClick={handleClaimClick}
+                      disabled={claiming}
+                      className="w-full sm:w-auto shrink-0 font-semibold"
+                    >
+                      {claiming && <Loader2 className="size-3 mr-1 animate-spin" />}
+                      Claim Free Now <ArrowRight className="size-3 ml-1" />
+                    </Button>
+                  </div>
+                )}
+
+                {availability === 'taken' && (
+                  <div
+                    className="flex flex-col gap-2.5 bg-destructive/20 p-3.5 sm:p-4 rounded-xl w-full text-left border border-destructive/30 shadow-lg backdrop-blur-md"
+                    style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.25)" }}
+                  >
+                    <div className="flex items-center gap-2 text-xs text-destructive-foreground font-semibold font-mono">
+                      <XCircle className="size-4 shrink-0 text-destructive" />
+                      <span>{searchQuery}.arc.bd is unavailable ({reason || 'Taken'}).</span>
+                    </div>
+
+                    {/* Smart Alternative Suggestions */}
+                    <div className="flex items-center gap-2 pt-2 border-t border-destructive/20 text-xs font-mono text-slate-200">
+                      <span className="flex items-center gap-1.5 text-white font-medium shrink-0">
+                        <Lightbulb className="size-3.5 text-amber-400" /> Try instead:
+                      </span>
+                      <div className="flex flex-wrap gap-1.5">
+                        {getAlternatives(searchQuery).map((alt) => (
+                          <button
+                            key={alt}
+                            onClick={() => handleSuggestionClick(alt)}
+                            className="px-2.5 py-1 rounded-md bg-white/15 hover:bg-blue-500/30 text-white hover:text-blue-300 border-none transition-all cursor-pointer text-xs font-mono font-medium shadow-[inset_0_1px_0px_0_rgba(255,255,255,0.2)]"
+                          >
+                            {alt}.arc.bd
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
             {/* Responsive Popular Suggestion Micro-Pills */}
-            <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mt-3 sm:mt-4 text-xs">
+            <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mt-3.5 sm:mt-4 text-xs">
               <span className="font-semibold text-[10px] sm:text-xs text-slate-300 mr-0.5">Try popular:</span>
               {SUGGESTIONS.map((sugg) => (
                 <button
                   key={sugg}
                   onClick={() => handleSuggestionClick(sugg)}
-                  className="px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-mono font-medium text-white bg-white/12 hover:bg-blue-500/25 hover:text-blue-300 transition-all duration-200 active:scale-95 cursor-pointer border-none shadow-[inset_0_1px_0px_0_rgba(255,255,255,0.25)]"
+                  className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-mono font-medium text-white bg-white/12 hover:bg-blue-500/25 hover:text-blue-300 transition-all duration-200 active:scale-95 cursor-pointer border-none shadow-[inset_0_1px_0px_0_rgba(255,255,255,0.25)]"
                 >
                   {sugg}
                 </button>
@@ -191,61 +248,6 @@ export default function LandingPage() {
               <span className="flex items-center gap-1.5">
                 <Cpu className="size-3 sm:size-3.5 text-blue-400 shrink-0" /> Vercel &amp; GitHub Ready
               </span>
-            </div>
-
-            {/* Availability Result Card with Smart Alternatives */}
-            <div className="min-h-14 mt-4 sm:mt-5 flex items-center justify-center w-full">
-              {availability === 'available' && (
-                <div
-                  className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 bg-blue-500/15 p-3 sm:px-4 sm:py-3 rounded-lg w-full text-left animate-fade-in border-none"
-                  style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.25)" }}
-                >
-                  <div className="flex items-center gap-2 text-xs sm:text-sm text-blue-400 font-semibold font-mono">
-                    <CheckCircle className="size-4 shrink-0 text-blue-400" />
-                    <span>{searchQuery}.arc.bd is available!</span>
-                  </div>
-                  <Button
-                    variant="default"
-                    size="default"
-                    onClick={handleClaimClick}
-                    disabled={claiming}
-                    className="w-full sm:w-auto shrink-0"
-                  >
-                    {claiming && <Loader2 className="size-3 mr-1 animate-spin" />}
-                    Claim Free Now <ArrowRight className="size-3 ml-1" />
-                  </Button>
-                </div>
-              )}
-
-              {availability === 'taken' && (
-                <div
-                  className="flex flex-col gap-2.5 bg-destructive/15 p-3.5 sm:p-4 rounded-lg w-full text-left animate-fade-in border-none"
-                  style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.25)" }}
-                >
-                  <div className="flex items-center gap-2 text-xs text-destructive font-semibold font-mono">
-                    <XCircle className="size-4 shrink-0 text-destructive" />
-                    <span>{searchQuery}.arc.bd is unavailable ({reason || 'Taken'}).</span>
-                  </div>
-
-                  {/* Smart Alternative Suggestions */}
-                  <div className="flex items-center gap-2 pt-1.5 border-t border-destructive/20 text-xs font-mono text-slate-200">
-                    <span className="flex items-center gap-1.5 text-white font-medium shrink-0">
-                      <Lightbulb className="size-3.5 text-amber-400" /> Try instead:
-                    </span>
-                    <div className="flex flex-wrap gap-1.5">
-                      {getAlternatives(searchQuery).map((alt) => (
-                        <button
-                          key={alt}
-                          onClick={() => handleSuggestionClick(alt)}
-                          className="px-2.5 py-1 rounded-md bg-white/15 hover:bg-blue-500/30 text-white hover:text-blue-300 border-none transition-all cursor-pointer text-xs font-mono font-medium shadow-[inset_0_1px_0px_0_rgba(255,255,255,0.2)]"
-                        >
-                          {alt}.arc.bd
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         </section>
