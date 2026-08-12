@@ -99,37 +99,37 @@ export default function LandingPage() {
       <Navbar />
 
       <main className="flex-1 flex flex-col items-center">
-        {/* Humanized & Meaningful Hero Section */}
+        {/* High-Contrast Skeuomorphic Hero Section */}
         <section className="w-full max-w-4xl mx-auto text-center pt-16 pb-16 sm:pt-24 sm:pb-24 px-4 flex flex-col items-center">
-          {/* Minimal White Status Badge Pill */}
+          {/* Public Beta Status Badge Pill */}
           <Badge
             variant="outline"
-            className="mb-6 border-none bg-white/8 backdrop-blur-md text-slate-200 text-[11px] font-mono py-1 px-3.5 rounded-full shadow-[inset_0_1px_0px_0_rgba(255,255,255,0.2)] flex items-center gap-2 hover:bg-white/12 transition-all cursor-default"
+            className="mb-6 border-none bg-blue-500/15 backdrop-blur-md text-blue-400 font-semibold text-[11px] font-mono py-1.5 px-4 rounded-full shadow-[inset_0_1px_0px_0_rgba(255,255,255,0.2)] flex items-center gap-2 hover:bg-blue-500/25 transition-all cursor-default"
           >
-            <span className="size-1.5 rounded-full bg-blue-400 animate-pulse inline-block" />
-            <span>Cloudflare Edge DNS &bull; Instant Free Subdomains</span>
+            <span className="size-2 rounded-full bg-blue-400 animate-pulse inline-block" />
+            <span>Public Beta &bull; Limited Time Offer</span>
           </Badge>
 
-          {/* Meaningful & Inspiring Hero Headline */}
-          <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.05] mb-5 text-foreground">
-            Launch your project with a free <br />
-            <span className="font-mono text-blue-400 font-extrabold">
-              .arc.bd
-            </span> domain
+          {/* User Requested Hero Headline */}
+          <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.05] mb-5 text-white">
+            Your Professional <br />
+            <span className="text-blue-400 font-extrabold">
+              Domain Identity
+            </span>
           </h1>
 
-          <p className="text-sm sm:text-base text-muted-foreground/90 max-w-xl mb-10 leading-relaxed font-normal">
-            Instant Cloudflare Edge DNS for your Vercel, GitHub Pages, or VPS projects. Free forever for developers, creators, and students.
+          <p className="text-base sm:text-lg text-slate-200 font-medium max-w-xl mb-10 leading-relaxed">
+            Claim your free <code className="text-blue-400 font-mono font-semibold">.arc.bd</code> subdomain in seconds. Direct routing to Vercel, GitHub Pages, or any custom VPS.
           </p>
 
           {/* Unified Floating Search Bar Container */}
           <div className="w-full max-w-xl">
             <form onSubmit={checkAvailability} className="w-full">
               <div
-                className="relative flex items-center bg-card/90 rounded-full p-1.5 pl-4 transition-all group overflow-hidden"
-                style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.2)" }}
+                className="relative flex items-center bg-card/95 rounded-full p-1.5 pl-4 transition-all group overflow-hidden"
+                style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.25)" }}
               >
-                <Search className="size-4 text-muted-foreground shrink-0 mr-2.5 transition-colors group-focus-within:text-blue-400" />
+                <Search className="size-4 text-slate-400 shrink-0 mr-2.5 transition-colors group-focus-within:text-blue-400" />
                 <input
                   type="text"
                   placeholder="your-project-name"
@@ -139,18 +139,18 @@ export default function LandingPage() {
                     setAvailability('idle');
                     setReason(null);
                   }}
-                  className="w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none font-mono"
+                  className="w-full bg-transparent text-sm text-white placeholder:text-slate-400 focus:outline-none font-mono font-medium"
                 />
                 {searchQuery && (
                   <button
                     type="button"
                     onClick={clearSearch}
-                    className="p-1 text-muted-foreground hover:text-foreground transition-colors mr-1 shrink-0"
+                    className="p-1 text-slate-400 hover:text-white transition-colors mr-1 shrink-0"
                   >
                     <X className="size-3.5" />
                   </button>
                 )}
-                <span className="text-xs text-muted-foreground/70 font-mono font-medium mr-3 shrink-0 select-none">
+                <span className="text-xs text-slate-300 font-mono font-semibold mr-3 shrink-0 select-none">
                   .arc.bd
                 </span>
                 <Button
@@ -165,15 +165,14 @@ export default function LandingPage() {
               </div>
             </form>
 
-            {/* Meaningful Popular Suggestion Micro-Pills */}
-            <div className="flex flex-wrap items-center justify-center gap-1.5 mt-3.5 text-xs text-muted-foreground">
-              <span className="font-medium text-[10px] text-slate-400 mr-0.5">Try popular:</span>
+            {/* High-Contrast Popular Suggestion Micro-Pills */}
+            <div className="flex flex-wrap items-center justify-center gap-1.5 mt-4 text-xs">
+              <span className="font-semibold text-xs text-slate-300 mr-1">Try popular:</span>
               {SUGGESTIONS.map((sugg) => (
                 <button
                   key={sugg}
                   onClick={() => handleSuggestionClick(sugg)}
-                  className="px-2.5 py-0.5 rounded-full text-[10px] font-mono text-slate-200 bg-white/8 hover:bg-blue-500/15 hover:text-blue-300 transition-all duration-200 active:scale-95 cursor-pointer border-none"
-                  style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.15)" }}
+                  className="px-3 py-1 rounded-full text-xs font-mono font-medium text-white bg-white/12 hover:bg-blue-500/25 hover:text-blue-300 transition-all duration-200 active:scale-95 cursor-pointer border-none shadow-[inset_0_1px_0px_0_rgba(255,255,255,0.25)]"
                 >
                   {sugg}
                 </button>
@@ -181,26 +180,26 @@ export default function LandingPage() {
             </div>
 
             {/* Platform Feature Telemetry Tags */}
-            <div className="flex items-center justify-center gap-5 mt-6 text-[11px] font-mono text-slate-300">
+            <div className="flex items-center justify-center gap-6 mt-7 text-xs font-mono text-slate-200 font-medium">
               <span className="flex items-center gap-1.5">
-                <Zap className="size-3 text-white" /> &lt; 50ms Edge DNS
+                <Zap className="size-3.5 text-blue-400" /> &lt; 50ms Edge DNS
               </span>
               <span className="flex items-center gap-1.5">
-                <Lock className="size-3 text-white" /> Free SSL Included
+                <Lock className="size-3.5 text-blue-400" /> Free SSL Included
               </span>
               <span className="flex items-center gap-1.5">
-                <Cpu className="size-3 text-white" /> Vercel &amp; GitHub Ready
+                <Cpu className="size-3.5 text-blue-400" /> Vercel &amp; GitHub Ready
               </span>
             </div>
 
             {/* Availability Result Card with Smart Alternatives */}
-            <div className="min-h-14 mt-4 flex items-center justify-center">
+            <div className="min-h-14 mt-5 flex items-center justify-center">
               {availability === 'available' && (
                 <div
-                  className="flex items-center justify-between gap-4 bg-blue-500/10 px-4 py-2.5 rounded-lg w-full text-left animate-fade-in border-none"
-                  style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.18)" }}
+                  className="flex items-center justify-between gap-4 bg-blue-500/15 px-4 py-3 rounded-lg w-full text-left animate-fade-in border-none"
+                  style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.25)" }}
                 >
-                  <div className="flex items-center gap-2 text-sm text-blue-400 font-medium font-mono">
+                  <div className="flex items-center gap-2 text-sm text-blue-400 font-semibold font-mono">
                     <CheckCircle className="size-4 shrink-0 text-blue-400" />
                     <span>{searchQuery}.arc.bd is available!</span>
                   </div>
@@ -219,26 +218,25 @@ export default function LandingPage() {
 
               {availability === 'taken' && (
                 <div
-                  className="flex flex-col gap-2 bg-destructive/10 p-3.5 rounded-lg w-full text-left animate-fade-in border-none"
-                  style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.18)" }}
+                  className="flex flex-col gap-2.5 bg-destructive/15 p-4 rounded-lg w-full text-left animate-fade-in border-none"
+                  style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.25)" }}
                 >
-                  <div className="flex items-center gap-2 text-xs text-destructive font-medium font-mono">
+                  <div className="flex items-center gap-2 text-xs text-destructive font-semibold font-mono">
                     <XCircle className="size-4 shrink-0 text-destructive" />
                     <span>{searchQuery}.arc.bd is unavailable ({reason || 'Taken'}).</span>
                   </div>
 
                   {/* Smart Alternative Suggestions */}
-                  <div className="flex items-center gap-2 pt-1 border-t border-destructive/20 text-[11px] font-mono text-muted-foreground">
-                    <span className="flex items-center gap-1 text-slate-300">
-                      <Lightbulb className="size-3 text-amber-400" /> Try instead:
+                  <div className="flex items-center gap-2 pt-1.5 border-t border-destructive/20 text-xs font-mono text-slate-200">
+                    <span className="flex items-center gap-1.5 text-white font-medium">
+                      <Lightbulb className="size-3.5 text-amber-400" /> Try instead:
                     </span>
                     <div className="flex flex-wrap gap-1.5">
                       {getAlternatives(searchQuery).map((alt) => (
                         <button
                           key={alt}
                           onClick={() => handleSuggestionClick(alt)}
-                          className="px-2 py-0.5 rounded-md bg-white/10 hover:bg-blue-500/20 text-slate-200 hover:text-blue-300 border-none transition-all cursor-pointer text-[10px]"
-                          style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.15)" }}
+                          className="px-2.5 py-1 rounded-md bg-white/15 hover:bg-blue-500/30 text-white hover:text-blue-300 border-none transition-all cursor-pointer text-xs font-mono font-medium shadow-[inset_0_1px_0px_0_rgba(255,255,255,0.2)]"
                         >
                           {alt}.arc.bd
                         </button>
@@ -254,8 +252,8 @@ export default function LandingPage() {
         {/* Feature Grid */}
         <section className="w-full max-w-6xl mx-auto py-16 px-4 border-t border-white/10">
           <div className="text-center mb-12">
-            <h2 className="text-2xl font-bold tracking-tight text-foreground">Minimal Infrastructure</h2>
-            <p className="text-sm text-muted-foreground mt-1">Built for speed, reliability, and modern web developer workflows.</p>
+            <h2 className="text-2xl font-bold tracking-tight text-white">Minimal Infrastructure</h2>
+            <p className="text-sm text-slate-300 mt-1 font-medium">Built for speed, reliability, and modern web developer workflows.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -270,13 +268,13 @@ export default function LandingPage() {
               <Card key={i} className="p-5 flex flex-col gap-2.5">
                 <CardContent className="p-0 flex flex-col gap-2.5">
                   <div
-                    className="size-8 rounded-md bg-white/8 flex items-center justify-center text-white"
-                    style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.2)" }}
+                    className="size-8 rounded-md bg-white/12 flex items-center justify-center text-white"
+                    style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.25)" }}
                   >
                     <item.icon className="size-4 text-white" />
                   </div>
-                  <h3 className="font-semibold text-sm text-foreground">{item.title}</h3>
-                  <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
+                  <h3 className="font-semibold text-sm text-white">{item.title}</h3>
+                  <p className="text-xs text-slate-300 leading-relaxed">{item.desc}</p>
                 </CardContent>
               </Card>
             ))}
@@ -285,7 +283,7 @@ export default function LandingPage() {
 
         {/* 3-Step Process */}
         <section className="w-full max-w-4xl mx-auto py-16 px-4 border-t border-white/10 text-center">
-          <h2 className="text-2xl font-bold tracking-tight text-foreground mb-12">Three Simple Steps</h2>
+          <h2 className="text-2xl font-bold tracking-tight text-white mb-12">Three Simple Steps</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
@@ -296,8 +294,8 @@ export default function LandingPage() {
               <Card key={i} className="text-center p-6">
                 <CardContent className="p-0 flex flex-col items-center">
                   <span className="font-mono text-xl font-bold text-white mb-3">{step.num}</span>
-                  <h3 className="font-semibold text-sm text-foreground mb-1.5">{step.title}</h3>
-                  <p className="text-xs text-muted-foreground leading-relaxed">{step.desc}</p>
+                  <h3 className="font-semibold text-sm text-white mb-1.5">{step.title}</h3>
+                  <p className="text-xs text-slate-300 leading-relaxed">{step.desc}</p>
                 </CardContent>
               </Card>
             ))}
@@ -306,22 +304,22 @@ export default function LandingPage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-white/10 bg-background text-xs text-muted-foreground">
+      <footer className="border-t border-white/10 bg-background text-xs text-slate-300">
         <div className="max-w-7xl mx-auto px-4 py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <div
-              className="size-5 rounded bg-white/8 flex items-center justify-center text-white"
-              style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.2)" }}
+              className="size-5 rounded bg-white/12 flex items-center justify-center text-white"
+              style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.25)" }}
             >
               <Globe className="size-3 text-white" />
             </div>
-            <span className="font-medium text-foreground">ARC.BD</span>
-            <span>&copy; {new Date().getFullYear()}</span>
+            <span className="font-semibold text-white">ARC.BD</span>
+            <span className="text-slate-300">&copy; {new Date().getFullYear()}</span>
           </div>
 
-          <div className="flex items-center space-x-6 text-xs text-muted-foreground">
-            <Link href="/docs" className="hover:text-foreground transition-colors">Docs</Link>
-            <Link href="/report" className="hover:text-foreground transition-colors">Report Abuse</Link>
+          <div className="flex items-center space-x-6 text-xs text-slate-300 font-medium">
+            <Link href="/docs" className="hover:text-white transition-colors">Docs</Link>
+            <Link href="/report" className="hover:text-white transition-colors">Report Abuse</Link>
           </div>
         </div>
       </footer>
