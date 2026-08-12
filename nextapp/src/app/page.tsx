@@ -91,11 +91,6 @@ export default function LandingPage() {
 
   return (
     <div className="flex-1 flex flex-col min-h-screen bg-background text-foreground selection:bg-blue-500/20 selection:text-blue-400">
-      {/* Primary Radial Ambient Glow */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute -top-40 left-1/2 -translate-x-1/2 size-[650px] rounded-full bg-blue-500/5 blur-[160px]" />
-      </div>
-
       <Navbar />
 
       <main className="flex-1 flex flex-col items-center">
@@ -169,16 +164,8 @@ export default function LandingPage() {
                 <button
                   key={sugg}
                   onClick={() => handleSuggestionClick(sugg)}
-                  className="relative inline-flex items-center justify-center transition-all duration-200 active:scale-95 hover:brightness-[125%] cursor-pointer px-3 py-1 rounded-full text-[11px] font-mono text-slate-300 border-none overflow-hidden"
-                  style={{
-                    backgroundImage: "linear-gradient(180deg, #2d2d30, #18181b)",
-                    boxShadow: "0 0px 0px -2px rgba(0, 0, 0, 0.5)",
-                  }}
+                  className="skeuo-button skeuo-button-dark px-3 py-1 text-[11px] font-mono text-slate-300"
                 >
-                  <span
-                    className="absolute inset-0 pointer-events-none rounded-full"
-                    style={{ boxShadow: "inset 0 1.5px 0px 0 rgba(255, 255, 255, 0.25)" }}
-                  />
                   <span className="relative z-10 flex items-center gap-1 hover:text-blue-400 transition-colors">
                     {sugg}
                   </span>
