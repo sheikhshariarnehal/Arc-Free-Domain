@@ -172,14 +172,14 @@
   }
 }
 
-/* Chrome & Webkit Auto-fill Dark Theme Override */
+/* Chrome & Webkit Auto-fill Match Page Background Override */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
   -webkit-text-fill-color: #ffffff !important;
-  -webkit-box-shadow: 0 0 0px 1000px #0f172a inset !important;
-  box-shadow: 0 0 0px 1000px #0f172a inset !important;
+  -webkit-box-shadow: 0 0 0px 1000px oklch(0.145 0 0) inset !important;
+  box-shadow: 0 0 0px 1000px oklch(0.145 0 0) inset !important;
   transition: background-color 50000s ease-in-out 0s !important;
   border-color: rgba(255, 255, 255, 0.15) !important;
 }
