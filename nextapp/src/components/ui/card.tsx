@@ -13,7 +13,7 @@ const Card = React.forwardRef<
       ...style,
     }}
     className={cn(
-      "relative rounded-xl border-none bg-card text-card-foreground backdrop-blur-md transition-all duration-300 group overflow-hidden",
+      "relative rounded-lg border-none bg-card text-card-foreground backdrop-blur-md transition-all duration-300 group overflow-hidden",
       className
     )}
     {...props}

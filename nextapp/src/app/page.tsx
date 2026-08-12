@@ -197,7 +197,7 @@ export default function LandingPage() {
             <div className="min-h-14 mt-4 flex items-center justify-center">
               {availability === 'available' && (
                 <div
-                  className="flex items-center justify-between gap-4 bg-blue-500/10 px-4 py-2.5 rounded-xl w-full text-left animate-fade-in border-none"
+                  className="flex items-center justify-between gap-4 bg-blue-500/10 px-4 py-2.5 rounded-lg w-full text-left animate-fade-in border-none"
                   style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.18)" }}
                 >
                   <div className="flex items-center gap-2 text-sm text-blue-400 font-medium font-mono">
@@ -219,7 +219,7 @@ export default function LandingPage() {
 
               {availability === 'taken' && (
                 <div
-                  className="flex flex-col gap-2 bg-destructive/10 p-3.5 rounded-xl w-full text-left animate-fade-in border-none"
+                  className="flex flex-col gap-2 bg-destructive/10 p-3.5 rounded-lg w-full text-left animate-fade-in border-none"
                   style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.18)" }}
                 >
                   <div className="flex items-center gap-2 text-xs text-destructive font-medium font-mono">
@@ -269,8 +269,11 @@ export default function LandingPage() {
             ].map((item, i) => (
               <Card key={i} className="p-5 flex flex-col gap-2.5">
                 <CardContent className="p-0 flex flex-col gap-2.5">
-                  <div className="size-9 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-400">
-                    <item.icon className="size-4" />
+                  <div
+                    className="size-8 rounded-md bg-white/8 flex items-center justify-center text-white"
+                    style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.2)" }}
+                  >
+                    <item.icon className="size-4 text-white" />
                   </div>
                   <h3 className="font-semibold text-sm text-foreground">{item.title}</h3>
                   <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
@@ -292,7 +295,7 @@ export default function LandingPage() {
             ].map((step, i) => (
               <Card key={i} className="text-center p-6">
                 <CardContent className="p-0 flex flex-col items-center">
-                  <span className="font-mono text-xl font-bold text-blue-400 mb-3">{step.num}</span>
+                  <span className="font-mono text-xl font-bold text-white mb-3">{step.num}</span>
                   <h3 className="font-semibold text-sm text-foreground mb-1.5">{step.title}</h3>
                   <p className="text-xs text-muted-foreground leading-relaxed">{step.desc}</p>
                 </CardContent>
@@ -306,8 +309,11 @@ export default function LandingPage() {
       <footer className="border-t border-white/10 bg-background text-xs text-muted-foreground">
         <div className="max-w-7xl mx-auto px-4 py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <div className="size-5 rounded bg-blue-500/10 flex items-center justify-center text-blue-400">
-              <Globe className="size-3" />
+            <div
+              className="size-5 rounded bg-white/8 flex items-center justify-center text-white"
+              style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.2)" }}
+            >
+              <Globe className="size-3 text-white" />
             </div>
             <span className="font-medium text-foreground">ARC.BD</span>
             <span>&copy; {new Date().getFullYear()}</span>
