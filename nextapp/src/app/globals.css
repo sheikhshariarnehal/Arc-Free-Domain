@@ -172,19 +172,19 @@
   }
 }
 
-/* Pure CSS - Skeuomorphic Button System (No hover scale zoom) */
+/* Pure CSS - Skeuomorphic Button System */
 .skeuo-button {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 20px;
+  padding: 8px 16px;
   border-radius: 9999px;
   background-image: linear-gradient(180deg, #2d2d30, #18181b);
   border: none;
   box-shadow: 0 0px 0px -2px rgba(0, 0, 0, 0.5);
   color: #ffffff;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);

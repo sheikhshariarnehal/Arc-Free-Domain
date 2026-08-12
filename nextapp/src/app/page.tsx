@@ -157,18 +157,16 @@ export default function LandingPage() {
               </div>
             </form>
 
-            {/* Quick Skeuomorphic Suggestion Pills */}
-            <div className="flex flex-wrap items-center justify-center gap-2 mt-4 text-xs text-muted-foreground">
-              <span className="font-medium text-[11px]">Popular:</span>
+            {/* Compact Minimal Popular Suggestion Micro-Pills */}
+            <div className="flex flex-wrap items-center justify-center gap-1.5 mt-3.5 text-xs text-muted-foreground">
+              <span className="font-medium text-[10px] text-muted-foreground/80 mr-0.5">Popular:</span>
               {SUGGESTIONS.map((sugg) => (
                 <button
                   key={sugg}
                   onClick={() => handleSuggestionClick(sugg)}
-                  className="skeuo-button skeuo-button-dark px-3 py-1 text-[11px] font-mono text-slate-300"
+                  className="px-2.5 py-0.5 rounded-full text-[10px] font-mono text-slate-300 bg-white/5 border border-white/10 hover:border-blue-500/40 hover:bg-blue-500/10 hover:text-blue-400 transition-all duration-200 active:scale-95 cursor-pointer shadow-2xs"
                 >
-                  <span className="relative z-10 flex items-center gap-1 hover:text-blue-400 transition-colors">
-                    {sugg}
-                  </span>
+                  {sugg}
                 </button>
               ))}
             </div>
