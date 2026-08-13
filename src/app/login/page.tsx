@@ -116,9 +116,8 @@ function LoginForm() {
     setLoading(true);
     setError(null);
     try {
-      // Build callback URL — include `claim` so the server-side callback
-      // can auto-claim the domain immediately after OAuth completes.
-      const callbackUrl = new URL(`${window.location.origin}/auth/callback`);
+      const origin = typeof window !== "undefined" && window.location.origin ? window.location.origin : "https://arc.bd";
+      const callbackUrl = new URL(`${origin}/auth/callback`);
       callbackUrl.searchParams.set("next", redirect);
       if (claimName) callbackUrl.searchParams.set("claim", claimName);
 
