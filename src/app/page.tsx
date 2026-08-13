@@ -198,7 +198,7 @@ export default function LandingPage() {
             {availability !== 'idle' && (
               <div className="w-full mt-3 animate-slide-up">
                 {availability === 'available' && (
-                  <div className="flex items-center justify-between gap-4 p-4 rounded-xl w-full border border-blue-400/30 bg-blue-400/10">
+                  <div className="flex items-center justify-between gap-4 p-4 rounded-lg w-full border border-blue-400/30 bg-blue-400/10">
                     <div className="flex items-center gap-2.5 text-sm text-white font-mono">
                       <CheckCircle className="size-4 text-blue-400 shrink-0" />
                       <span><strong className="font-semibold">{searchQuery}</strong>.arc.bd</span>
@@ -215,7 +215,7 @@ export default function LandingPage() {
                 )}
 
                 {availability === 'taken' && (
-                  <div className="flex flex-col gap-2.5 p-4 rounded-xl w-full border border-destructive/30 bg-destructive/10">
+                  <div className="flex flex-col gap-2.5 p-4 rounded-lg w-full border border-destructive/30 bg-destructive/10">
                     <div className="flex items-center gap-2 text-sm text-white font-mono">
                       <XCircle className="size-4 shrink-0 text-destructive" />
                       <span><strong className="font-semibold">{searchQuery}</strong>.arc.bd unavailable</span>
