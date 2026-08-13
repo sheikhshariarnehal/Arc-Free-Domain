@@ -1,7 +1,7 @@
 "use client";
 
 import Navbar from "@/components/Navbar";
-import { BookOpen, Triangle, GitBranch, Server, ArrowRight } from "lucide-react";
+import { BookOpen, Triangle, GitBranch, Server, Zap, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -14,6 +14,13 @@ export default function DocsPage() {
       icon: Triangle,
       badge: "CNAME",
       desc: "Connect your .arc.bd subdomain to Vercel deployments using target cname.vercel-dns.com.",
+    },
+    {
+      name: "Netlify Deployment",
+      href: "/docs/netlify",
+      icon: Zap,
+      badge: "CNAME / A",
+      desc: "Deploy your site to Netlify and configure your ARC.BD subdomain with automatic SSL.",
     },
     {
       name: "GitHub Pages",
@@ -48,7 +55,7 @@ export default function DocsPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
           {guides.map((guide, i) => (
             <Link key={i} href={guide.href} className="group">
               <Card className="bg-card/40 border-border/60 hover:border-emerald-500/30 hover:bg-card/80 transition-all duration-300 h-full">
