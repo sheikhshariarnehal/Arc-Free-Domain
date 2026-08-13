@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "ARC.BD | Free Subdomain Platform",
-  description: "Claim your free .arc.bd subdomain in seconds. Built for developers and creators in Bangladesh.",
+  description: "Free .arc.bd subdomains with instant Cloudflare DNS. Connect your project to Vercel, Netlify, GitHub Pages, or any server.",
   keywords: ["arc.bd", "free subdomain", "bangladesh domain", "developer tools"],
   icons: {
     icon: "/arc.png",

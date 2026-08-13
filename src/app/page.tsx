@@ -93,15 +93,19 @@ export default function LandingPage() {
         <section className="mx-auto flex w-full min-w-0 max-w-5xl flex-1 flex-col items-center justify-center px-4 py-12 text-center sm:px-6 sm:py-16 md:min-h-[calc(100dvh-4rem)] md:py-20 lg:px-8">
 
           {/* Headline */}
-          <h1 className="mb-4 w-full max-w-4xl text-[clamp(2.25rem,5vw,4rem)] font-extrabold leading-[0.98] tracking-[-0.035em] text-white sm:mb-5">
-            <span className="block">Get Your Free</span>
-            <span className="mt-1 block text-blue-400 sm:mt-2">.arc.bd Domain</span>
+          <h1 className="mb-4 w-full max-w-3xl text-[clamp(2.25rem,5.5vw,3.75rem)] font-extrabold leading-[1.15] tracking-[-0.03em] text-white sm:mb-5">
+            <span>Free </span>
+            <span className="inline-block bg-[#0e1d36] text-[#3b82f6] px-2 py-0.5 rounded-md border-0 border-transparent shadow-none ring-0 outline-none">
+              .arc.bd
+            </span>
+            <span> domains</span>
+            <span className="block mt-1">for developers.</span>
           </h1>
 
           {/* Subheadline */}
-          <p className="mb-6 w-full max-w-2xl px-2 text-sm font-medium leading-relaxed text-slate-300 sm:mb-8 sm:px-0 sm:text-base">
-            Claim your free <code className="font-mono font-semibold text-blue-400">.arc.bd</code> subdomain in seconds.{" "}
-            <span className="inline-block sm:inline">Point it directly to Vercel, Netlify, GitHub&nbsp;Pages, or any VPS.</span>
+          <p className="mb-6 w-full max-w-xl px-2 text-sm font-normal leading-relaxed text-slate-300 sm:mb-8 sm:px-0 sm:text-base">
+            <span className="block">Reserve your custom address and point it anywhere</span>
+            <span className="block">—Vercel, GitHub Pages, Netlify, or your own server.</span>
           </p>
 
           {/* Search Bar */}
@@ -113,7 +117,7 @@ export default function LandingPage() {
                   <Search className="size-4 text-slate-400 shrink-0 mr-2.5 group-focus-within:text-blue-400 transition-colors" />
                   <input
                     type="text"
-                    placeholder="myproject"
+                    placeholder="your-project"
                     aria-label="Subdomain name to check"
                     value={searchQuery}
                     onChange={(e) => {
@@ -138,7 +142,7 @@ export default function LandingPage() {
                   className="w-full h-11 text-xs font-semibold rounded-full"
                 >
                   {loading ? <Loader2 className="size-3.5 animate-spin mr-1.5" /> : <Search className="size-3.5 mr-1.5" />}
-                  {loading ? "Checking..." : "Check Availability"}
+                  {loading ? "Checking..." : "Check availability"}
                 </Button>
               </div>
 
@@ -146,7 +150,7 @@ export default function LandingPage() {
                 <Search className="size-4 text-slate-400 shrink-0 mr-2.5 transition-colors group-focus-within:text-blue-400" />
                 <input
                   type="text"
-                  placeholder="myproject"
+                  placeholder="your-project"
                   aria-label="Subdomain name to check"
                   value={searchQuery}
                   onChange={(e) => {
@@ -168,7 +172,7 @@ export default function LandingPage() {
                   className="h-10 px-5 text-xs font-semibold shrink-0 rounded-full"
                 >
                   {loading ? <Loader2 className="size-3.5 animate-spin mr-1" /> : <Search className="size-3.5 mr-1" />}
-                  {loading ? "Checking..." : "Check Availability"}
+                  {loading ? "Checking..." : "Check availability"}
                 </Button>
               </div>
             </form>
@@ -180,7 +184,7 @@ export default function LandingPage() {
                   <div className="flex w-full flex-col items-stretch gap-3 rounded-lg border border-blue-400/30 bg-blue-400/10 p-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
                     <div className="flex items-center gap-2.5 text-sm text-white font-mono">
                       <CheckCircle className="size-4 text-blue-400 shrink-0" />
-                      <span><strong className="font-semibold">{searchQuery}</strong>.arc.bd</span>
+                      <span><strong className="font-semibold">{searchQuery}</strong>.arc.bd is available</span>
                     </div>
                     <Button
                       onClick={handleClaimClick}
@@ -188,7 +192,7 @@ export default function LandingPage() {
                       className="h-8 w-full shrink-0 rounded-full px-4 text-xs whitespace-nowrap sm:w-auto"
                     >
                       {claiming && <Loader2 className="size-3 mr-1.5 animate-spin" />}
-                      {claiming ? "Claiming..." : "Claim Free"}
+                      {claiming ? "Claiming..." : "Claim subdomain"}
                     </Button>
                   </div>
                 )}
@@ -197,12 +201,12 @@ export default function LandingPage() {
                   <div className="flex flex-col gap-2.5 p-4 rounded-lg w-full border border-destructive/30 bg-destructive/10">
                     <div className="flex items-center gap-2 text-sm text-white font-mono">
                       <XCircle className="size-4 shrink-0 text-destructive" />
-                      <span><strong className="font-semibold">{searchQuery}</strong>.arc.bd unavailable</span>
+                      <span><strong className="font-semibold">{searchQuery}</strong>.arc.bd is already taken</span>
                     </div>
 
                     <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-destructive/20 text-xs font-mono text-slate-200">
                       <span className="flex items-center gap-1.5 text-white font-medium shrink-0">
-                        <Lightbulb className="size-3.5 text-amber-400" /> Try instead:
+                        <Lightbulb className="size-3.5 text-amber-400" /> Suggested:
                       </span>
                       <div className="flex flex-wrap gap-1.5">
                         {getAlternatives(searchQuery).map((alt) => (
@@ -242,18 +246,18 @@ export default function LandingPage() {
           style={{ contentVisibility: "auto", containIntrinsicSize: "800px" }}
         >
           <div className="text-center mb-8 sm:mb-12">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-white">Minimal Infrastructure</h2>
-            <p className="text-xs sm:text-sm text-slate-300 mt-1 font-medium max-w-md mx-auto">Built for speed, reliability, and modern web developer workflows.</p>
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-white">Built for fast deployment</h2>
+            <p className="text-xs sm:text-sm text-slate-300 mt-1 font-medium max-w-md mx-auto">Automated DNS management with zero configuration overhead.</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
-              { icon: Gift, title: "Free Forever", desc: "No credit card required. 100% free subdomains for personal and commercial projects." },
-              { icon: Zap, title: "Instant Cloudflare DNS", desc: "Global edge propagation in seconds via Cloudflare DNS API v4 integration." },
-              { icon: Code, title: "Deploy Anywhere", desc: "Native support for Vercel, Netlify, GitHub Pages, Render, Railway, or VPS." },
-              { icon: Shield, title: "99.9% High Availability", desc: "Backed by Cloudflare global anycast network for rock-solid uptime." },
-              { icon: Settings, title: "Clean DNS Controls", desc: "Full control over A, CNAME, and TXT records right from your dashboard." },
-              { icon: Globe, title: "Developer Community", desc: "Designed for Bangladesh and global builders bringing ideas online." }
+              { icon: Gift, title: "Zero Cost", desc: "No credit card or recurring charges. Free for personal, student, and production projects." },
+              { icon: Zap, title: "Instant Propagation", desc: "Records sync to Cloudflare's global edge network within seconds of saving." },
+              { icon: Code, title: "Connect Any Host", desc: "Native setup guides for Vercel, Netlify, GitHub Pages, Render, Railway, or VPS." },
+              { icon: Shield, title: "Global Anycast Edge", desc: "Backed by Cloudflare's resilient global infrastructure for reliable DNS uptime." },
+              { icon: Settings, title: "Full Record Control", desc: "Manage root and subdomain A, CNAME, and TXT records right from your dashboard." },
+              { icon: Globe, title: "Up to 5 Subdomains", desc: "Claim and manage multiple project addresses from one unified developer account." }
             ].map((item, i) => (
               <Card key={i} className="p-5 flex flex-col gap-2.5 border border-white/10 bg-card/90">
                 <CardContent className="p-0 flex flex-col gap-2.5">
@@ -271,24 +275,27 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* 3-Step Process */}
+        {/* How it works */}
         <section
           className="w-full max-w-4xl mx-auto py-10 sm:py-16 px-4 sm:px-6 lg:px-8 border-t border-white/10 text-center"
           style={{ contentVisibility: "auto", containIntrinsicSize: "500px" }}
         >
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-white mb-8 sm:mb-12">Three Simple Steps</h2>
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-white mb-2">How it works</h2>
+          <p className="text-xs sm:text-sm text-slate-300 mb-8 sm:mb-12 max-w-md mx-auto">Get your domain live in three straightforward steps.</p>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
             {[
-              { num: "01", title: "Search Domain", desc: "Type your preferred name and verify real-time availability." },
-              { num: "02", title: "Claim Free", desc: "Sign up in seconds to lock your subdomain into your account." },
-              { num: "03", title: "Configure DNS", desc: "Point your domain to Vercel, Netlify, GitHub Pages, or any server." }
-            ].map((step, i) => (
+              { step: "1", title: "Find a name", desc: "Search for your preferred subdomain and verify availability in real time." },
+              { step: "2", title: "Claim your address", desc: "Sign in with GitHub or email to link the subdomain to your account." },
+              { step: "3", title: "Route your traffic", desc: "Add your host's CNAME target or VPS IP address to start receiving requests." }
+            ].map((item, i) => (
               <Card key={i} className="text-center p-5 sm:p-6 border border-white/10 bg-card/90">
                 <CardContent className="p-0 flex flex-col items-center">
-                  <span className="font-mono text-lg sm:text-xl font-bold text-blue-400 mb-2">{step.num}</span>
-                  <h3 className="font-semibold text-sm text-white mb-1.5">{step.title}</h3>
-                  <p className="text-xs text-slate-300 leading-relaxed">{step.desc}</p>
+                  <div className="flex size-7 items-center justify-center rounded-full bg-blue-500/15 text-blue-400 font-mono text-xs font-bold mb-3 border border-blue-400/20">
+                    {item.step}
+                  </div>
+                  <h3 className="font-semibold text-sm text-white mb-1.5">{item.title}</h3>
+                  <p className="text-xs text-slate-300 leading-relaxed">{item.desc}</p>
                 </CardContent>
               </Card>
             ))}
