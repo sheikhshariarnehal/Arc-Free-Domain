@@ -12,14 +12,17 @@ export async function GET(request: NextRequest) {
     await supabase.auth.exchangeCodeForSession(code);
   }
 
-  // If a domain claim was pending, pass it to the dashboard page as a query
-  // param. The dashboard handles the actual claim client-side once the session
-  // cookies are fully established in the browser.
+  // Sanitize destination to ensure redirects stay strictly on current origin
+  let targetPath = "/dashboard/domains";
+  if (next && next.startsWith("/") && !next.startsWith("//")) {
+    targetPath = next;
+  }
+
   if (claimName) {
     const destination = new URL("/dashboard/domains", requestUrl.origin);
     destination.searchParams.set("claim", claimName);
     return NextResponse.redirect(destination);
   }
 
-  return NextResponse.redirect(new URL(next, requestUrl.origin));
+  return NextResponse.redirect(new URL(targetPath, requestUrl.origin));
 }
