@@ -20,18 +20,39 @@ export async function GET(request: Request) {
   // bypassing RLS entirely regardless of the caller's auth state.
   // This ensures anonymous users get accurate availability results.
   const supabase = await createClient()
+
+  // Try SECURITY DEFINER RPC first if present
   const { data, error: rpcError } = await supabase
     .rpc('check_subdomain_availability', { subdomain_name: name })
 
-  if (rpcError) {
-    console.error('[check availability RPC error]', rpcError)
-    return NextResponse.json({ error: 'Failed to check availability' }, { status: 500 })
+  if (!rpcError && data) {
+    const result = data as { available: boolean; reason?: string }
+    if (!result.available) {
+      return NextResponse.json({ name, available: false, reason: result.reason || 'Already taken' })
+    }
+    return NextResponse.json({ name, domain: getFullDomain(name), available: true })
   }
 
-  const result = data as { available: boolean; reason?: string }
+  // Fallback: Direct table queries (safe for anonymous read access)
+  const { data: reserved } = await supabase
+    .from('reserved_subdomains')
+    .select('id, reason')
+    .eq('name', name)
+    .maybeSingle()
 
-  if (!result.available) {
-    return NextResponse.json({ name, available: false, reason: result.reason || 'Already taken' })
+  if (reserved) {
+    return NextResponse.json({ name, available: false, reason: `"${name}" is a reserved system name.` })
+  }
+
+  const { data: existing } = await supabase
+    .from('subdomains')
+    .select('id')
+    .eq('name', name)
+    .in('status', ['active', 'pending', 'suspended'])
+    .maybeSingle()
+
+  if (existing) {
+    return NextResponse.json({ name, available: false, reason: `"${name}.arc.bd" is already taken.` })
   }
 
   return NextResponse.json({ name, domain: getFullDomain(name), available: true })
