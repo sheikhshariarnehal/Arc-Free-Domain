@@ -1,8 +1,11 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Privacy Policy - ARC.BD',
-  description: 'Privacy Policy for the ARC.BD free subdomain platform.',
+  title: 'Privacy Policy',
+  description: 'Privacy Policy and data governance for the ARC.BD free subdomain platform.',
+  alternates: {
+    canonical: '/privacy',
+  },
 };
 
 export default function PrivacyPage() {

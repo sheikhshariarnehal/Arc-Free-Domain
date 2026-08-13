@@ -1,8 +1,22 @@
-"use client";
-
+import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
-import { ArrowLeft, Triangle, AlertTriangle, CheckCircle2, HelpCircle } from "lucide-react";
+import { ArrowLeft, Triangle, AlertTriangle, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "How to Connect .arc.bd Domain to Vercel",
+  description:
+    "Step-by-step tutorial on connecting your free .arc.bd subdomain to Vercel projects with CNAME DNS records and automated SSL certificate verification.",
+  alternates: {
+    canonical: "/docs/vercel",
+  },
+  openGraph: {
+    title: "How to Connect .arc.bd Domain to Vercel | ARC.BD Docs",
+    description:
+      "Step-by-step tutorial on connecting your free .arc.bd subdomain to Vercel projects with CNAME DNS records and automated SSL certificate verification.",
+    url: "https://arc.bd/docs/vercel",
+  },
+};
 
 export default function VercelDoc() {
   return (
@@ -27,10 +41,10 @@ export default function VercelDoc() {
         <div className="space-y-8">
           {/* Step 1 */}
           <div className="p-6 rounded-2xl border border-border bg-card space-y-3">
-            <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+            <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
               <span className="size-6 rounded-full bg-primary/20 text-primary text-xs flex items-center justify-center font-bold">1</span>
               Add Subdomain in Vercel
-            </h3>
+            </h2>
             <ol className="text-sm text-muted-foreground space-y-2 list-disc list-inside ml-2">
               <li>Open your Vercel Project Dashboard → <strong>Settings</strong> → <strong>Domains</strong>.</li>
               <li>Type your claimed ARC.BD domain (e.g., <code className="text-foreground bg-muted px-1.5 py-0.5 rounded font-mono">myproject.arc.bd</code>) and click <strong>Add</strong>.</li>
@@ -39,10 +53,10 @@ export default function VercelDoc() {
 
           {/* Step 2 */}
           <div className="p-6 rounded-2xl border border-border bg-card space-y-3">
-            <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+            <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
               <span className="size-6 rounded-full bg-primary/20 text-primary text-xs flex items-center justify-center font-bold">2</span>
               Configure DNS in ARC.BD Dashboard
-            </h3>
+            </h2>
             <p className="text-sm text-muted-foreground">
               Go to your <Link href="/dashboard/domains" className="text-primary underline">ARC.BD Domain Dashboard</Link>, open your domain, and use the <strong>Vercel CNAME</strong> preset, or manually add:
             </p>
@@ -98,10 +112,10 @@ export default function VercelDoc() {
 
           {/* Step 3 */}
           <div className="p-6 rounded-2xl border border-border bg-card space-y-3">
-            <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+            <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
               <span className="size-6 rounded-full bg-primary/20 text-primary text-xs flex items-center justify-center font-bold">3</span>
-              Verify & Live
-            </h3>
+              Verify &amp; Live
+            </h2>
             <p className="text-sm text-muted-foreground">
               Once configured, click <strong>Verify</strong> in Vercel. SSL certificates are provisioned automatically by Vercel and Cloudflare, and your site will be live within seconds!
             </p>

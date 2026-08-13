@@ -1,8 +1,22 @@
-"use client";
-
+import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import { ArrowLeft, GitBranch, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "How to Point .arc.bd Domain to GitHub Pages",
+  description:
+    "Complete step-by-step guide to configuring CNAME records and hosting your GitHub Pages repositories on a free .arc.bd custom subdomain.",
+  alternates: {
+    canonical: "/docs/github-pages",
+  },
+  openGraph: {
+    title: "How to Point .arc.bd Domain to GitHub Pages | ARC.BD Docs",
+    description:
+      "Complete step-by-step guide to configuring CNAME records and hosting your GitHub Pages repositories on a free .arc.bd custom subdomain.",
+    url: "https://arc.bd/docs/github-pages",
+  },
+};
 
 export default function GithubPagesDoc() {
   return (
@@ -27,10 +41,10 @@ export default function GithubPagesDoc() {
         <div className="space-y-8">
           {/* Step 1 */}
           <div className="p-6 rounded-2xl border border-border bg-card space-y-3">
-            <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+            <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
               <span className="size-6 rounded-full bg-blue-500/20 text-blue-400 text-xs flex items-center justify-center font-bold">1</span>
               Configure DNS in ARC.BD Dashboard
-            </h3>
+            </h2>
             <p className="text-sm text-muted-foreground">
               Go to your <Link href="/dashboard/domains" className="text-blue-400 hover:underline">ARC.BD Domain Dashboard</Link>, open your domain, and add a CNAME record:
             </p>
@@ -43,10 +57,10 @@ export default function GithubPagesDoc() {
 
           {/* Step 2 */}
           <div className="p-6 rounded-2xl border border-border bg-card space-y-3">
-            <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+            <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
               <span className="size-6 rounded-full bg-blue-500/20 text-blue-400 text-xs flex items-center justify-center font-bold">2</span>
               Add Custom Domain in GitHub Repository
-            </h3>
+            </h2>
             <ol className="text-sm text-muted-foreground space-y-2 list-disc list-inside ml-2">
               <li>Open your repository on GitHub and go to <strong>Settings</strong> → <strong>Pages</strong>.</li>
               <li>Under <strong>Custom domain</strong>, enter your claimed ARC.BD subdomain (e.g., <code className="text-foreground bg-muted px-1.5 py-0.5 rounded font-mono">myproject.arc.bd</code>).</li>

@@ -1,8 +1,11 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Terms of Service - ARC.BD',
+  title: 'Terms of Service',
   description: 'Terms of Service and conditions for using the ARC.BD free subdomain platform.',
+  alternates: {
+    canonical: '/terms',
+  },
 };
 
 export default function TermsPage() {

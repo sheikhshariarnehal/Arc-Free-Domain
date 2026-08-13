@@ -1,10 +1,24 @@
-"use client";
-
+import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import { Triangle, GitBranch, Server, Zap, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+
+export const metadata: Metadata = {
+  title: "Documentation & Deployment Guides",
+  description:
+    "Step-by-step DNS configuration guides to connect your free .arc.bd subdomain to Vercel, Netlify, GitHub Pages, or any custom VPS.",
+  alternates: {
+    canonical: "/docs",
+  },
+  openGraph: {
+    title: "Documentation & Deployment Guides | ARC.BD",
+    description:
+      "Step-by-step DNS configuration guides to connect your free .arc.bd subdomain to Vercel, Netlify, GitHub Pages, or any custom VPS.",
+    url: "https://arc.bd/docs",
+  },
+};
 
 export default function DocsPage() {
   const guides = [

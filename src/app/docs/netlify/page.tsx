@@ -1,8 +1,22 @@
-"use client";
-
+import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import { ArrowLeft, Zap, CheckCircle2, HelpCircle } from "lucide-react";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "How to Connect .arc.bd Domain to Netlify",
+  description:
+    "Comprehensive guide to connecting your free .arc.bd subdomain to Netlify sites with TXT verification, CNAME DNS records, and Let's Encrypt SSL.",
+  alternates: {
+    canonical: "/docs/netlify",
+  },
+  openGraph: {
+    title: "How to Connect .arc.bd Domain to Netlify | ARC.BD Docs",
+    description:
+      "Comprehensive guide to connecting your free .arc.bd subdomain to Netlify sites with TXT verification, CNAME DNS records, and Let's Encrypt SSL.",
+    url: "https://arc.bd/docs/netlify",
+  },
+};
 
 export default function NetlifyDoc() {
   return (
@@ -27,10 +41,10 @@ export default function NetlifyDoc() {
         <div className="space-y-8">
           {/* STEP 1: Connect Git Repo */}
           <div className="p-6 rounded-2xl border border-border bg-card space-y-4">
-            <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+            <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
               <span className="size-6 rounded-full bg-primary/20 text-primary text-xs flex items-center justify-center font-bold">1</span>
               Connect Your Repository to Netlify
-            </h3>
+            </h2>
             <ol className="text-sm text-muted-foreground space-y-2 list-disc list-inside ml-2">
               <li>Go to <strong>netlify.com</strong> and sign in to your account.</li>
               <li>Click <strong>Add new site</strong> → <strong>Import an existing project</strong>.</li>
@@ -42,10 +56,10 @@ export default function NetlifyDoc() {
 
           {/* STEP 2: Go to Domain Management */}
           <div className="p-6 rounded-2xl border border-border bg-card space-y-4">
-            <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+            <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
               <span className="size-6 rounded-full bg-primary/20 text-primary text-xs flex items-center justify-center font-bold">2</span>
               Access Domain Management in Netlify
-            </h3>
+            </h2>
             
             <p className="text-sm text-muted-foreground">From your project dashboard:</p>
             <ol className="text-sm text-muted-foreground space-y-2 list-disc list-inside ml-2">
@@ -58,16 +72,17 @@ export default function NetlifyDoc() {
                 src="/doc/netlify/screen1.png" 
                 alt="Netlify project dashboard showing Custom domain button"
                 className="w-full h-auto"
+                loading="lazy"
               />
             </div>
           </div>
 
           {/* STEP 3: Add Custom Domain */}
           <div className="p-6 rounded-2xl border border-border bg-card space-y-4">
-            <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+            <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
               <span className="size-6 rounded-full bg-primary/20 text-primary text-xs flex items-center justify-center font-bold">3</span>
               Add Your ARC.BD Subdomain
-            </h3>
+            </h2>
             
             <p className="text-sm text-muted-foreground">In the Domain management section:</p>
             <ol className="text-sm text-muted-foreground space-y-2 list-disc list-inside ml-2">
@@ -82,6 +97,7 @@ export default function NetlifyDoc() {
                   src="/doc/netlify/screen2.png" 
                   alt="Domain management page with Add a domain options"
                   className="w-full h-auto"
+                  loading="lazy"
                 />
               </div>
               <div className="bg-muted border border-border rounded-lg overflow-hidden">
@@ -89,6 +105,7 @@ export default function NetlifyDoc() {
                   src="/doc/netlify/screen3.png" 
                   alt="Enter your ARC.BD subdomain dialog"
                   className="w-full h-auto"
+                  loading="lazy"
                 />
               </div>
             </div>
@@ -118,6 +135,7 @@ export default function NetlifyDoc() {
                 src="/doc/netlify/screen4.png" 
                 alt="Netlify TXT verification record details"
                 className="w-full h-auto"
+                loading="lazy"
               />
             </div>
 
@@ -128,10 +146,10 @@ export default function NetlifyDoc() {
 
           {/* STEP 5: Add TXT Record in ARC.BD */}
           <div className="p-6 rounded-2xl border border-border bg-card space-y-4">
-            <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+            <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
               <span className="size-6 rounded-full bg-primary/20 text-primary text-xs flex items-center justify-center font-bold">4</span>
               Add TXT Verification Record in ARC.BD Dashboard
-            </h3>
+            </h2>
             
             <ol className="text-sm text-muted-foreground space-y-2 list-disc list-inside ml-2">
               <li>Go to your <Link href="/dashboard/domains" className="text-primary underline">ARC.BD Domain Dashboard</Link>.</li>
@@ -154,6 +172,7 @@ export default function NetlifyDoc() {
                   src="/doc/netlify/screen7.png" 
                   alt="ARC.BD My Subdomains page showing Manage button"
                   className="w-full h-auto"
+                  loading="lazy"
                 />
               </div>
               <div className="bg-muted border border-border rounded-lg overflow-hidden">
@@ -161,6 +180,7 @@ export default function NetlifyDoc() {
                   src="/doc/netlify/screen8.png" 
                   alt="ARC.BD DNS configuration with Quick Setup Presets and Add Record"
                   className="w-full h-auto"
+                  loading="lazy"
                 />
               </div>
             </div>
@@ -170,16 +190,17 @@ export default function NetlifyDoc() {
                 src="/doc/netlify/screen9.png" 
                 alt="Adding CNAME record in ARC.BD for Netlify"
                 className="w-full h-auto"
+                loading="lazy"
               />
             </div>
           </div>
 
           {/* STEP 6: Netlify Detects TXT Verification */}
           <div className="p-6 rounded-2xl border border-border bg-card space-y-4">
-            <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+            <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
               <span className="size-6 rounded-full bg-primary/20 text-primary text-xs flex items-center justify-center font-bold">5</span>
               Wait for Netlify to Detect TXT Record
-            </h3>
+            </h2>
             
             <p className="text-sm text-muted-foreground">
               After adding the TXT record in ARC.BD:
@@ -196,16 +217,17 @@ export default function NetlifyDoc() {
                 src="/doc/netlify/screen6.png" 
                 alt="Netlify pending external DNS verification status"
                 className="w-full h-auto"
+                loading="lazy"
               />
             </div>
           </div>
 
           {/* STEP 7: Add CNAME Record for Routing */}
           <div className="p-6 rounded-2xl border border-border bg-card space-y-4">
-            <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+            <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
               <span className="size-6 rounded-full bg-primary/20 text-primary text-xs flex items-center justify-center font-bold">6</span>
               Configure CNAME Record in ARC.BD
-            </h3>
+            </h2>
             
             <p className="text-sm text-muted-foreground">
               Once Netlify verifies ownership, go back to your ARC.BD domain and add the CNAME record to route traffic to Netlify:
@@ -228,6 +250,7 @@ export default function NetlifyDoc() {
                 src="/doc/netlify/screen9.png" 
                 alt="Adding CNAME record pointing to Netlify"
                 className="w-full h-auto"
+                loading="lazy"
               />
             </div>
 
@@ -260,6 +283,7 @@ export default function NetlifyDoc() {
                   src="/doc/netlify/screen5.png" 
                   alt="Netlify production domains showing Pending DNS verification"
                   className="w-full h-auto"
+                  loading="lazy"
                 />
               </div>
               <div className="bg-muted border border-border rounded-lg overflow-hidden">
@@ -267,6 +291,7 @@ export default function NetlifyDoc() {
                   src="/doc/netlify/screen11.png" 
                   alt="Netlify SSL certificate waiting on DNS propagation"
                   className="w-full h-auto"
+                  loading="lazy"
                 />
               </div>
             </div>
@@ -276,6 +301,7 @@ export default function NetlifyDoc() {
                 src="/doc/netlify/screen10.png" 
                 alt="Netlify domain successfully configured and live"
                 className="w-full h-auto"
+                loading="lazy"
               />
             </div>
           </div>
@@ -313,7 +339,7 @@ export default function NetlifyDoc() {
 
           {/* Summary Timeline */}
           <div className="p-6 rounded-2xl border border-border bg-card space-y-4">
-            <h3 className="text-lg font-semibold text-foreground">Quick Timeline</h3>
+            <h2 className="text-lg font-semibold text-foreground">Quick Timeline</h2>
             
             <div className="space-y-3 text-sm text-muted-foreground">
               <div className="flex items-start gap-3">

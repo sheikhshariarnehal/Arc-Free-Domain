@@ -1,8 +1,22 @@
-"use client";
-
+import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import { ArrowLeft, Server, Terminal } from "lucide-react";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "How to Point .arc.bd Domain to a Custom VPS / Server",
+  description:
+    "Learn how to configure A records and point your free .arc.bd subdomain to any custom VPS, Linux cloud server, or dedicated machine with Nginx setup instructions.",
+  alternates: {
+    canonical: "/docs/vps",
+  },
+  openGraph: {
+    title: "How to Point .arc.bd Domain to a Custom VPS / Server | ARC.BD Docs",
+    description:
+      "Learn how to configure A records and point your free .arc.bd subdomain to any custom VPS, Linux cloud server, or dedicated machine with Nginx setup instructions.",
+    url: "https://arc.bd/docs/vps",
+  },
+};
 
 export default function VPSDoc() {
   return (
@@ -27,10 +41,10 @@ export default function VPSDoc() {
         <div className="space-y-8">
           {/* Step 1 */}
           <div className="p-6 rounded-2xl border border-border bg-card space-y-3">
-            <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+            <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
               <span className="size-6 rounded-full bg-blue-500/20 text-blue-400 text-xs flex items-center justify-center font-bold">1</span>
               Configure A-Record in ARC.BD Dashboard
-            </h3>
+            </h2>
             <p className="text-sm text-muted-foreground">
               Go to your <Link href="/dashboard/domains" className="text-blue-400 hover:underline">ARC.BD Domain Dashboard</Link>, open your domain, and add an A record:
             </p>
@@ -43,10 +57,10 @@ export default function VPSDoc() {
 
           {/* Step 2 */}
           <div className="p-6 rounded-2xl border border-border bg-card space-y-3">
-            <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+            <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
               <span className="size-6 rounded-full bg-blue-500/20 text-blue-400 text-xs flex items-center justify-center font-bold">2</span>
               Configure Your Web Server (Nginx Example)
-            </h3>
+            </h2>
             <p className="text-sm text-muted-foreground">
               Ensure your web server (Nginx, Caddy, Apache) is configured to listen for your claimed subdomain:
             </p>
