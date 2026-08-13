@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Save, Plus, Trash2, ShieldAlert, Loader2, CheckCircle2, Globe, Server, Code } from "lucide-react";
+import { ArrowLeft, Save, Plus, Trash2, ShieldAlert, Loader2, CheckCircle2, Globe, Server, Code, GitBranch } from "lucide-react";
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -203,7 +203,7 @@ export default function DomainDetail() {
   }
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto pb-12">
+    <div className="space-y-6 pb-12">
       {/* Navigation & Header */}
       <div>
         <Button variant="ghost" size="sm" asChild className="mb-3 text-muted-foreground hover:text-foreground">
@@ -217,7 +217,7 @@ export default function DomainDetail() {
               <Globe className="size-5 text-muted-foreground" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold tracking-tight text-foreground">{subdomain?.full_domain}</h1>
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground break-words">{subdomain?.full_domain}</h1>
               <p className="text-xs text-muted-foreground">Manage Cloudflare DNS and routing configuration</p>
             </div>
           </div>
@@ -247,43 +247,43 @@ export default function DomainDetail() {
           <CardTitle className="text-base font-semibold">Quick Setup Presets</CardTitle>
           <CardDescription>One-click presets for popular hosting platforms.</CardDescription>
         </CardHeader>
-        <CardContent className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <CardContent className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <button
             onClick={() => applyPreset("CNAME", "cname.vercel-dns.com", "@")}
-            className="flex items-start gap-3 p-4 rounded-xl border border-border bg-card hover:bg-secondary/50 transition-all text-left group"
+            className="flex flex-col items-start gap-3 p-3 rounded-lg border border-border bg-card/50 hover:bg-card hover:border-primary/50 transition-all text-left group"
           >
-            <div className="size-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20">
+            <div className="size-8 rounded-md bg-primary/15 flex items-center justify-center group-hover:bg-primary/25 transition-colors">
               <Server className="size-4 text-primary" />
             </div>
-            <div>
-              <h3 className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors">Vercel CNAME</h3>
-              <p className="text-xs text-muted-foreground mt-0.5">CNAME <code className="text-foreground">@</code> → <code className="text-foreground">cname.vercel-dns.com</code></p>
+            <div className="w-full">
+              <h3 className="font-semibold text-sm text-foreground">Vercel CNAME</h3>
+              <p className="text-[11px] text-muted-foreground mt-1.5 break-words font-mono">@ → cname.vercel-dns.com</p>
             </div>
           </button>
 
           <button
             onClick={() => applyPreset("TXT", "vc-domain-verify=...", "_vercel")}
-            className="flex items-start gap-3 p-4 rounded-xl border border-border bg-card hover:bg-secondary/50 transition-all text-left group"
+            className="flex flex-col items-start gap-3 p-3 rounded-lg border border-border bg-card/50 hover:bg-card hover:border-primary/50 transition-all text-left group"
           >
-            <div className="size-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20">
+            <div className="size-8 rounded-md bg-primary/15 flex items-center justify-center group-hover:bg-primary/25 transition-colors">
               <Code className="size-4 text-primary" />
             </div>
-            <div>
-              <h3 className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors">Vercel Verification</h3>
-              <p className="text-xs text-muted-foreground mt-0.5">TXT <code className="text-foreground">_vercel</code> → verification code</p>
+            <div className="w-full">
+              <h3 className="font-semibold text-sm text-foreground">Vercel Verification</h3>
+              <p className="text-[11px] text-muted-foreground mt-1.5 break-words font-mono">_vercel → verification code</p>
             </div>
           </button>
 
           <button
             onClick={() => applyPreset("CNAME", "your-username.github.io", "@")}
-            className="flex items-start gap-3 p-4 rounded-xl border border-border bg-card hover:bg-secondary/50 transition-all text-left group"
+            className="flex flex-col items-start gap-3 p-3 rounded-lg border border-border bg-card/50 hover:bg-card hover:border-primary/50 transition-all text-left group"
           >
-            <div className="size-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20">
-              <Code className="size-4 text-primary" />
+            <div className="size-8 rounded-md bg-primary/15 flex items-center justify-center group-hover:bg-primary/25 transition-colors">
+              <GitBranch className="size-4 text-primary" />
             </div>
-            <div>
-              <h3 className="font-semibold text-sm text-foreground group-hover:text-primary transition-colors">GitHub Pages</h3>
-              <p className="text-xs text-muted-foreground mt-0.5">CNAME <code className="text-foreground">@</code> → <code className="text-foreground">username.github.io</code></p>
+            <div className="w-full">
+              <h3 className="font-semibold text-sm text-foreground">GitHub Pages</h3>
+              <p className="text-[11px] text-muted-foreground mt-1.5 break-words font-mono">@ → username.github.io</p>
             </div>
           </button>
         </CardContent>
@@ -291,12 +291,12 @@ export default function DomainDetail() {
 
       {/* DNS Records */}
       <Card className="border-border">
-        <CardHeader className="flex flex-row items-center justify-between border-b border-border pb-4">
+        <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-border pb-4 gap-4">
           <div>
             <CardTitle className="text-base font-semibold">DNS Records</CardTitle>
             <CardDescription>Manage active DNS routing entries for this domain.</CardDescription>
           </div>
-          <Button variant="outline" size="sm" onClick={() => setShowAddForm(!showAddForm)}>
+          <Button variant="outline" size="sm" onClick={() => setShowAddForm(!showAddForm)} className="w-full sm:w-auto">
             <Plus className="size-4 mr-1.5" /> {showAddForm ? "Close Form" : "Add Record"}
           </Button>
         </CardHeader>
@@ -358,32 +358,32 @@ export default function DomainDetail() {
           </form>
         )}
 
-        <CardContent className="p-0">
-          <Table>
+        <CardContent className="p-0 overflow-x-auto">
+          <Table className="min-w-full">
             <TableHeader>
               <TableRow className="hover:bg-transparent border-border">
-                <TableHead className="text-xs uppercase text-muted-foreground font-semibold">Type</TableHead>
-                <TableHead className="text-xs uppercase text-muted-foreground font-semibold">Name / Host</TableHead>
-                <TableHead className="text-xs uppercase text-muted-foreground font-semibold">Target Content</TableHead>
-                <TableHead className="text-xs uppercase text-muted-foreground font-semibold">TTL</TableHead>
-                <TableHead className="text-xs uppercase text-muted-foreground font-semibold text-right">Actions</TableHead>
+                <TableHead className="text-xs uppercase text-muted-foreground font-semibold whitespace-nowrap">Type</TableHead>
+                <TableHead className="text-xs uppercase text-muted-foreground font-semibold whitespace-nowrap">Name / Host</TableHead>
+                <TableHead className="text-xs uppercase text-muted-foreground font-semibold whitespace-nowrap">Target Content</TableHead>
+                <TableHead className="text-xs uppercase text-muted-foreground font-semibold whitespace-nowrap">TTL</TableHead>
+                <TableHead className="text-xs uppercase text-muted-foreground font-semibold text-right whitespace-nowrap">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {subdomain?.dns_records && subdomain.dns_records.length > 0 ? (
                 subdomain.dns_records.map((rec) => (
                   <TableRow key={rec.id} className="border-border hover:bg-muted/30">
-                    <TableCell className="font-semibold text-primary">{rec.type}</TableCell>
-                    <TableCell className="font-mono text-xs text-foreground font-medium">
+                    <TableCell className="font-semibold text-primary whitespace-nowrap">{rec.type}</TableCell>
+                    <TableCell className="font-mono text-xs text-foreground font-medium whitespace-nowrap">
                       {rec.name || subdomain?.full_domain}
                     </TableCell>
-                    <TableCell className="font-mono text-xs text-muted-foreground max-w-xs truncate">{rec.content}</TableCell>
-                    <TableCell className="text-xs text-muted-foreground">Auto</TableCell>
+                    <TableCell className="font-mono text-xs text-muted-foreground max-w-xs truncate whitespace-nowrap">{rec.content}</TableCell>
+                    <TableCell className="text-xs text-muted-foreground whitespace-nowrap">Auto</TableCell>
                     <TableCell className="text-right">
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="h-7 text-xs text-destructive hover:text-destructive hover:bg-destructive/10"
+                        className="h-7 text-xs text-destructive hover:text-destructive hover:bg-destructive/10 whitespace-nowrap"
                         onClick={() => setDeleteRecordId(rec.id)}
                       >
                         <Trash2 className="size-3.5" />

@@ -19,7 +19,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -232,7 +231,7 @@ function DomainsListInner() {
                 {claimError}
               </div>
             )}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 px-3 py-2.5 rounded-md border border-input bg-background ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
               <Input
                 required
                 placeholder="my-cool-site"
@@ -240,19 +239,19 @@ function DomainsListInner() {
                 onChange={(e) =>
                   setClaimInput(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""))
                 }
-                className="flex-1"
+                className="flex-1 border-0 bg-transparent focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 p-0"
               />
-              <span className="text-sm text-muted-foreground font-mono whitespace-nowrap">.arc.bd</span>
+              <span className="text-sm text-muted-foreground font-mono font-semibold shrink-0">.arc.bd</span>
             </div>
-            <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => setShowClaimDialog(false)}>
+            <div className="flex flex-col-reverse sm:flex-row gap-2 pt-2">
+              <Button type="button" variant="outline" onClick={() => setShowClaimDialog(false)} className="flex-1">
                 Cancel
               </Button>
-              <Button type="submit" disabled={claiming}>
+              <Button type="submit" disabled={claiming} className="flex-1">
                 {claiming && <Loader2 className="size-4 mr-2 animate-spin" />}
                 Claim Free
               </Button>
-            </DialogFooter>
+            </div>
           </form>
         </DialogContent>
       </Dialog>

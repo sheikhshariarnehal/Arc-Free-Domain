@@ -261,19 +261,19 @@ export default function DashboardOverview() {
 
       {/* Recent Subdomains Table */}
       <Card className="border-border">
-        <CardHeader className="flex flex-row items-center justify-between border-b border-border pb-4">
+        <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-border pb-4 gap-4">
           <div>
             <CardTitle className="text-base font-semibold">Recent Subdomains</CardTitle>
             <CardDescription>Your latest claimed .arc.bd subdomains</CardDescription>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
             <div className="relative">
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
               <Input
                 placeholder="Search..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-8 h-8 w-48 text-sm"
+                className="pl-8 h-8 w-full sm:w-48 text-sm"
               />
             </div>
             <Button variant="outline" size="sm" asChild>

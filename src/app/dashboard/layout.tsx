@@ -11,6 +11,8 @@ import {
   Shield,
   ChevronsUpDown,
   ChevronRight,
+  Menu,
+  X,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -44,6 +46,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [userEmail, setUserEmail] = useState("User");
   const [userName, setUserName] = useState("User");
   const [isAdmin, setIsAdmin] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   const supabase = createClient();
 
@@ -77,8 +80,20 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <div className="min-h-screen flex bg-background">
+      {/* Mobile overlay */}
+      {mobileNavOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/60 md:hidden"
+          onClick={() => setMobileNavOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <aside className="hidden md:flex flex-col w-64 h-screen sticky top-0 bg-sidebar border-r border-border">
+      <aside
+        className={`fixed md:sticky top-0 left-0 z-50 flex flex-col w-64 h-screen bg-sidebar border-r border-border transition-transform duration-200 md:translate-x-0 ${
+          mobileNavOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
         {/* Brand Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-border">
           <div className="flex items-center gap-2.5">
@@ -88,7 +103,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <span className="text-[11px] text-muted-foreground">Free Subdomain Platform</span>
             </div>
           </div>
-          <ChevronsUpDown className="size-4 text-muted-foreground" />
+          <button
+            onClick={() => setMobileNavOpen(false)}
+            className="md:hidden text-muted-foreground hover:text-foreground transition-colors"
+            aria-label="Close menu"
+          >
+            <X className="size-5" />
+          </button>
+          <ChevronsUpDown className="hidden md:block size-4 text-muted-foreground" />
         </div>
 
         {/* Navigation */}
@@ -101,6 +123,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           {isAdmin && (
             <Link
               href="/admin"
+              onClick={() => setMobileNavOpen(false)}
               className="flex items-center justify-between gap-2.5 px-3 py-2 rounded-md text-sm font-medium text-amber-400 hover:bg-secondary hover:text-amber-400 transition-colors mb-2"
             >
               <span className="flex items-center gap-2.5">
@@ -119,6 +142,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <Link
                 key={item.name}
                 href={item.href}
+                onClick={() => setMobileNavOpen(false)}
                 className={`flex items-center justify-between gap-2.5 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   isActive
                     ? "bg-secondary text-sidebar-foreground font-semibold"
@@ -180,6 +204,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <main className="flex-1 flex flex-col min-w-0 h-screen overflow-y-auto">
         {/* Mobile topbar */}
         <header className="md:hidden flex items-center gap-3 px-4 py-3 border-b border-border bg-background sticky top-0 z-30">
+          <button
+            onClick={() => setMobileNavOpen(true)}
+            className="text-foreground hover:text-primary transition-colors"
+            aria-label="Open menu"
+          >
+            <Menu className="size-5" />
+          </button>
           <Image src="/arc.png" alt="ARC.BD Logo" width={24} height={24} className="size-6 object-contain rounded" />
           <span className="font-semibold text-foreground">ARC.BD Dashboard</span>
         </header>
