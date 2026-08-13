@@ -35,6 +35,19 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: valError }, { status: 400 })
   }
 
+  // Quota Safeguard: Limit to max 3 DNS records per subdomain to preserve Cloudflare 200 zone limit
+  const { count: subdomainRecordCount } = await supabase
+    .from('dns_records')
+    .select('id', { count: 'exact', head: true })
+    .eq('subdomain_id', subdomain.id)
+
+  if (subdomainRecordCount !== null && subdomainRecordCount >= 3) {
+    return NextResponse.json(
+      { error: 'Maximum limit of 3 DNS records per subdomain reached. Please delete an existing record to create a new one.' },
+      { status: 400 }
+    )
+  }
+
   // For A/CNAME records: replace any existing routing records (they conflict)
   // For TXT records: coexist — TXT is used for verification and stacks alongside routing records
   if (type !== 'TXT') {
