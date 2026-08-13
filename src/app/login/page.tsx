@@ -8,6 +8,7 @@ import { createClient } from "@/lib/supabase/client";
 
 function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const rawRedirect = searchParams.get("redirect") || "/dashboard/domains";
   const redirect = (rawRedirect.startsWith("/") && !rawRedirect.startsWith("//")) ? rawRedirect : "/dashboard/domains";
   const claimName = searchParams.get("claim");
