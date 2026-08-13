@@ -39,47 +39,51 @@ export default function DocsPage() {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground">
+    <div className="flex min-h-dvh min-w-0 flex-col overflow-x-hidden bg-background text-foreground">
       <Navbar />
 
-      <main className="flex-1 max-w-5xl mx-auto w-full px-4 py-12 sm:py-20">
-        <div className="mb-12">
-          <Badge variant="outline" className="mb-4 border-emerald-500/30 bg-emerald-500/5 text-emerald-400 text-xs font-mono py-1 px-3.5 rounded-full">
-            <BookOpen className="size-3 mr-1.5 inline" /> Knowledge Base
+      <main className="mx-auto w-full min-w-0 max-w-6xl flex-1 px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-20">
+        <div className="mb-8 sm:mb-10 lg:mb-12">
+          <Badge variant="outline" className="mb-4 min-h-8 rounded-full border-emerald-500/30 bg-emerald-500/5 px-3.5 py-1 font-mono text-xs text-emerald-400">
+            <BookOpen className="mr-1.5 size-3.5" /> Knowledge Base
           </Badge>
-          <h1 className="text-3xl sm:text-5xl font-bold tracking-tight text-foreground mb-3">
+          <h1 className="mb-3 max-w-3xl text-[clamp(2rem,7vw,3.5rem)] font-bold leading-[1.05] tracking-[-0.03em] text-foreground text-balance">
             Documentation &amp; Guides
           </h1>
-          <p className="text-sm sm:text-base text-muted-foreground max-w-xl leading-relaxed">
+          <p className="max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
             Step-by-step guides to connect your ARC.BD subdomain with hosting providers and cloud servers.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-          {guides.map((guide, i) => (
-            <Link key={i} href={guide.href} className="group">
-              <Card className="bg-card/40 border-border/60 hover:border-emerald-500/30 hover:bg-card/80 transition-all duration-300 h-full">
-                <CardContent className="p-6 flex flex-col justify-between h-full">
-                  <div>
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="size-10 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400 group-hover:scale-105 transition-transform">
-                        <guide.icon className="size-5" />
+        <div className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 xl:grid-cols-4">
+          {guides.map((guide) => (
+            <Link
+              key={guide.href}
+              href={guide.href}
+              className="group block min-w-0 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+            >
+              <Card className="h-full min-w-0 border border-border/60 bg-card/40 transition-colors duration-200 group-hover:border-emerald-500/30 group-hover:bg-card/80">
+                <CardContent className="flex h-full min-h-56 min-w-0 flex-col justify-between p-5 sm:min-h-64 sm:p-6">
+                  <div className="min-w-0">
+                    <div className="mb-5 flex min-w-0 items-center justify-between gap-3">
+                      <div className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-400 transition-transform duration-200 group-hover:scale-105 group-active:scale-95">
+                        <guide.icon className="size-5" aria-hidden="true" />
                       </div>
-                      <Badge variant="secondary" className="font-mono text-[10px] text-muted-foreground border-border/40">
+                      <Badge variant="secondary" className="min-w-0 max-w-full shrink truncate border-border/40 font-mono text-[10px] text-muted-foreground">
                         {guide.badge}
                       </Badge>
                     </div>
 
-                    <h2 className="text-base font-semibold text-foreground mb-1.5 group-hover:text-emerald-400 transition-colors">
+                    <h2 className="mb-2 text-lg font-semibold leading-snug text-foreground transition-colors group-hover:text-emerald-400">
                       {guide.name}
                     </h2>
-                    <p className="text-xs text-muted-foreground leading-relaxed">
+                    <p className="break-words text-sm leading-relaxed text-muted-foreground">
                       {guide.desc}
                     </p>
                   </div>
 
-                  <div className="flex items-center text-xs font-medium text-emerald-400 mt-6 group-hover:translate-x-1 transition-transform">
-                    Read Guide <ArrowRight className="size-3 ml-1" />
+                  <div className="mt-6 flex min-h-11 items-center text-sm font-medium text-emerald-400">
+                    Read Guide <ArrowRight className="ml-1.5 size-4 transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true" />
                   </div>
                 </CardContent>
               </Card>
@@ -88,7 +92,7 @@ export default function DocsPage() {
         </div>
       </main>
 
-      <footer className="border-t border-border/50 py-6 text-center text-xs text-muted-foreground mt-auto">
+      <footer className="mt-auto border-t border-border/50 px-4 py-6 text-center text-xs leading-relaxed text-muted-foreground sm:px-6">
         ARC.BD Knowledge Base &copy; {new Date().getFullYear()}
       </footer>
     </div>
