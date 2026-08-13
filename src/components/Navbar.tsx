@@ -77,6 +77,7 @@ export default function Navbar() {
 
   const userName = profile?.full_name || session?.user?.email?.split("@")[0] || "User";
   const userEmail = session?.user?.email || "";
+  const avatarUrl = profile?.avatar_url || session?.user?.user_metadata?.avatar_url || session?.user?.user_metadata?.picture;
   const isAdmin = profile?.role === "admin";
 
   const getInitials = (name: string) => {
@@ -126,7 +127,7 @@ export default function Navbar() {
               <DropdownMenuTrigger asChild>
                 <button className="skeuo-button px-3.5 py-1.5 h-9 text-xs gap-2 text-white border-0 outline-none">
                   <Avatar className="size-5">
-                    <AvatarImage src="" alt={userName} />
+                    {avatarUrl && <AvatarImage src={avatarUrl} alt={`${userName}'s profile`} className="object-cover" />}
                     <AvatarFallback className="bg-blue-500/30 text-blue-400 text-[9px] font-bold font-mono">
                       {getInitials(userName)}
                     </AvatarFallback>

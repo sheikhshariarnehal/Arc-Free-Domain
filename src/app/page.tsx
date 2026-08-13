@@ -198,35 +198,27 @@ export default function LandingPage() {
             {availability !== 'idle' && (
               <div className="w-full mt-3 animate-slide-up">
                 {availability === 'available' && (
-                  <div
-                    className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 bg-blue-500/15 p-3.5 sm:px-5 sm:py-3.5 rounded-2xl w-full text-left border border-blue-400/20 backdrop-blur-md"
-                    style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.25)" }}
-                  >
-                    <div className="flex items-center gap-2 text-xs sm:text-sm text-white font-semibold font-mono text-center sm:text-left">
-                      <CheckCircle className="size-4 shrink-0 text-blue-400" />
-                      <span><strong className="text-blue-400">{searchQuery}</strong>.arc.bd is available!</span>
+                  <div className="flex items-center justify-between gap-4 p-4 rounded-xl w-full border border-blue-400/30 bg-blue-400/10">
+                    <div className="flex items-center gap-2.5 text-sm text-white font-mono">
+                      <CheckCircle className="size-4 text-blue-400 shrink-0" />
+                      <span><strong className="font-semibold">{searchQuery}</strong>.arc.bd</span>
                     </div>
                     <Button
-                      variant="default"
-                      size="default"
                       onClick={handleClaimClick}
                       disabled={claiming}
-                      className="w-full sm:w-auto shrink-0 font-semibold text-xs px-5 h-9 sm:h-10 rounded-full"
+                      className="shrink-0 text-xs px-4 h-8 rounded-full whitespace-nowrap"
                     >
-                      {claiming && <Loader2 className="size-3 mr-1 animate-spin" />}
-                      Claim Free Now <ArrowRight className="size-3 ml-1" />
+                      {claiming && <Loader2 className="size-3 mr-1.5 animate-spin" />}
+                      {claiming ? "Claiming..." : "Claim Free"}
                     </Button>
                   </div>
                 )}
 
                 {availability === 'taken' && (
-                  <div
-                    className="flex flex-col gap-2.5 bg-destructive/15 p-3.5 sm:p-4 rounded-2xl w-full text-left border border-destructive/20 backdrop-blur-md"
-                    style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.25)" }}
-                  >
-                    <div className="flex items-center gap-2 text-xs text-white font-semibold font-mono">
+                  <div className="flex flex-col gap-2.5 p-4 rounded-xl w-full border border-destructive/30 bg-destructive/10">
+                    <div className="flex items-center gap-2 text-sm text-white font-mono">
                       <XCircle className="size-4 shrink-0 text-destructive" />
-                      <span><strong className="text-destructive font-bold">{searchQuery}</strong>.arc.bd is unavailable ({reason || 'Taken'}).</span>
+                      <span><strong className="font-semibold">{searchQuery}</strong>.arc.bd unavailable</span>
                     </div>
 
                     <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-destructive/20 text-xs font-mono text-slate-200">
