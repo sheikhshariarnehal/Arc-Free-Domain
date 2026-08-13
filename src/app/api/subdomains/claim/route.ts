@@ -84,58 +84,30 @@ export async function POST(request: Request) {
 
   const fullDomain = getFullDomain(name)
 
-  // Insert subdomain
+  // Insert subdomain with 'active' status directly (Wildcard *.arc.bd in Cloudflare handles routing)
   const { data: subdomain, error: insertError } = await supabase
     .from('subdomains')
-    .insert({ user_id: userId, name, full_domain: fullDomain, status: 'pending' })
+    .insert({ user_id: userId, name, full_domain: fullDomain, status: 'active' })
     .select()
     .single()
 
   if (insertError || !subdomain) {
     console.error('[Claim Subdomain Error]', insertError)
-    // Unique constraint violation — subdomain was taken between the check and the insert
     if (insertError?.code === '23505' || insertError?.message?.includes('unique')) {
       return NextResponse.json({ error: `"${name}.arc.bd" is already taken.` }, { status: 400 })
     }
     return NextResponse.json({ error: 'Failed to register subdomain. Please try again.' }, { status: 500 })
   }
 
-  try {
-    // Provision initial A record in Cloudflare
-    const cfResult = await createDNSRecord({ type: 'A', name: fullDomain, content: '192.0.2.1' })
+  await supabase.from('audit_logs').insert({
+    user_id: userId,
+    action: 'claim_subdomain',
+    resource_type: 'subdomain',
+    resource_id: subdomain.id,
+    metadata: { name, fullDomain }
+  })
 
-    const { data: activeSubdomain } = await supabase
-      .from('subdomains')
-      .update({ status: 'active' })
-      .eq('id', subdomain.id)
-      .select()
-      .single()
-
-    if (cfResult.success && cfResult.recordId) {
-      await supabase.from('dns_records').insert({
-        subdomain_id: subdomain.id,
-        type: 'A',
-        name: fullDomain,
-        content: '192.0.2.1',
-        cloudflare_record_id: cfResult.recordId,
-        status: 'active'
-      })
-    }
-
-    await supabase.from('audit_logs').insert({
-      user_id: userId,
-      action: 'claim_subdomain',
-      resource_type: 'subdomain',
-      resource_id: subdomain.id,
-      metadata: { name, fullDomain }
-    })
-
-    return NextResponse.json(activeSubdomain || subdomain)
-  } catch (err: any) {
-    console.error('[Cloudflare Provisioning Error]', err)
-    await supabase.from('subdomains').update({ status: 'active' }).eq('id', subdomain.id)
-    return NextResponse.json(subdomain)
-  }
+  return NextResponse.json(subdomain)
 }
 
 
