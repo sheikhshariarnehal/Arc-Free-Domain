@@ -36,6 +36,59 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
+  // Subdomain Proxy Router for Wildcard *.arc.bd Traffic
+  const host = (request.headers.get("x-forwarded-host") || request.headers.get("host") || "").toLowerCase().split(":")[0];
+
+  if (host && host.endsWith(".arc.bd")) {
+    const subdomainName = host.replace(".arc.bd", "").trim();
+
+    // Ignore core platform subdomains (www, admin, api, app)
+    const systemSubdomains = ["www", "admin", "api", "app", "dashboard"];
+    if (subdomainName && !systemSubdomains.includes(subdomainName)) {
+      try {
+        const { data: subdomain } = await supabase
+          .from("subdomains")
+          .select("id, name, status")
+          .eq("name", subdomainName)
+          .eq("status", "active")
+          .single();
+
+        if (subdomain) {
+          // Fetch target DNS record for this subdomain
+          const { data: records } = await supabase
+            .from("dns_records")
+            .select("type, content")
+            .eq("subdomain_id", subdomain.id)
+            .eq("status", "active");
+
+          const routingRecord = records?.find((r) => r.type === "CNAME" || r.type === "A");
+
+          if (routingRecord && routingRecord.content) {
+            let target = routingRecord.content.trim();
+            if (!target.startsWith("http://") && !target.startsWith("https://")) {
+              target = `https://${target}`;
+            }
+
+            const targetUrl = new URL(target);
+            targetUrl.pathname = request.nextUrl.pathname;
+            targetUrl.search = request.nextUrl.search;
+
+            const requestHeaders = new Headers(request.headers);
+            requestHeaders.set("host", targetUrl.host);
+
+            return NextResponse.rewrite(targetUrl, {
+              request: {
+                headers: requestHeaders,
+              },
+            });
+          }
+        }
+      } catch (e) {
+        console.error("[Subdomain Proxy Error]", e);
+      }
+    }
+  }
+
   // Refresh the session - important for Server Components
   const {
     data: { user },
