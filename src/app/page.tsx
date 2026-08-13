@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
-import { Search, CheckCircle, XCircle, Gift, Zap, Code, Shield, Settings, Globe, Loader2, X, Sparkles, ArrowRight, Lock, Cpu, Lightbulb } from "lucide-react";
+import { Search, CheckCircle, XCircle, Gift, Zap, Code, Shield, Settings, Loader2, Lock, Lightbulb, Globe, X } from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,6 @@ export default function LandingPage() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [availability, setAvailability] = useState<'idle' | 'available' | 'taken'>('idle');
-  const [reason, setReason] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [claiming, setClaiming] = useState(false);
 
@@ -24,7 +23,6 @@ export default function LandingPage() {
     if (!query) return;
     setLoading(true);
     setAvailability('idle');
-    setReason(null);
 
     try {
       const res = await fetch(`/api/subdomains/check?name=${encodeURIComponent(query)}`);
@@ -33,11 +31,9 @@ export default function LandingPage() {
         setAvailability('available');
       } else {
         setAvailability('taken');
-        setReason(data.reason || 'Already taken or reserved');
       }
     } catch {
       setAvailability('taken');
-      setReason('Failed to check availability');
     } finally {
       setLoading(false);
     }
@@ -46,14 +42,12 @@ export default function LandingPage() {
   const handleSuggestionClick = (suggestion: string) => {
     setSearchQuery(suggestion);
     setAvailability('idle');
-    setReason(null);
     checkAvailability(undefined, suggestion);
   };
 
   const clearSearch = () => {
     setSearchQuery("");
     setAvailability('idle');
-    setReason(null);
   };
 
   const handleClaimClick = async () => {
@@ -74,11 +68,9 @@ export default function LandingPage() {
           router.push(`/dashboard/domains/${data.id || ''}`);
         } else {
           setAvailability('taken');
-          setReason(data.error || 'Failed to claim subdomain');
         }
-      } catch (err: any) {
+      } catch {
         setAvailability('taken');
-        setReason('Failed to claim subdomain');
       } finally {
         setClaiming(false);
       }
@@ -96,33 +88,30 @@ export default function LandingPage() {
     <div className="flex-1 flex flex-col min-h-screen bg-background text-foreground selection:bg-blue-500/20 selection:text-blue-400 overflow-x-hidden">
       <Navbar />
 
-      <main className="flex-1 flex flex-col items-center w-full">
+      <main className="flex-1 flex min-w-0 w-full flex-col items-center">
         {/* Hero Section */}
-        <section className="w-full max-w-5xl mx-auto text-center pt-6 pb-8 sm:pt-12 sm:pb-16 px-4 sm:px-6 lg:px-8 flex flex-col items-center">
+        <section className="mx-auto flex w-full min-w-0 max-w-5xl flex-col items-center px-4 py-[clamp(2.5rem,7vh,4.5rem)] text-center sm:px-6 lg:px-8">
 
           {/* Beta Badge */}
-          <div className="mb-3 sm:mb-5 text-xs text-blue-400 font-mono font-semibold flex items-center justify-center gap-1.5">
-            <span className="size-1.5 rounded-full bg-blue-400 animate-pulse inline-block" />
+          <div className="mb-4 flex items-center justify-center gap-1.5 font-mono text-[11px] font-medium text-blue-400 sm:mb-5 sm:text-xs">
+            <span className="size-1.5 rounded-full bg-blue-400" />
             <span>Public Beta</span>
           </div>
 
           {/* Headline */}
-          <h1 className="text-xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight sm:leading-[1.1] mb-2 sm:mb-3 text-white max-w-4xl px-1">
-            Get Your Free{" "}
-            <br className="hidden sm:inline" />
-            <span className="text-blue-400 font-extrabold block sm:inline mt-0.5 sm:mt-0">
-              .arc.bd Domain
-            </span>
+          <h1 className="mb-4 w-full max-w-4xl text-[clamp(2.25rem,5vw,4rem)] font-extrabold leading-[0.98] tracking-[-0.035em] text-white sm:mb-5">
+            <span className="block">Get Your Free</span>
+            <span className="mt-1 block text-blue-400 sm:mt-2">.arc.bd Domain</span>
           </h1>
 
           {/* Subheadline */}
-          <p className="text-xs sm:text-sm text-slate-300 font-medium max-w-md sm:max-w-lg mb-4 sm:mb-6 leading-relaxed px-2 sm:px-0">
-            Claim your free <code className="text-blue-400 font-mono font-semibold">.arc.bd</code> subdomain in seconds.{" "}
+          <p className="mb-6 w-full max-w-2xl px-2 text-sm font-medium leading-relaxed text-slate-300 sm:mb-8 sm:px-0 sm:text-base">
+            Claim your free <code className="font-mono font-semibold text-blue-400">.arc.bd</code> subdomain in seconds.{" "}
             <span className="inline">Direct routing to Vercel, Netlify, GitHub Pages, or custom VPS.</span>
           </p>
 
           {/* Search Bar */}
-          <div className="w-full max-w-md sm:max-w-xl px-1">
+          <div className="w-full min-w-0 max-w-xl px-0 sm:px-1">
             <form onSubmit={checkAvailability} className="w-full">
               {/* Mobile Input Container */}
               <div className="flex flex-col gap-2.5 sm:hidden w-full">
@@ -135,7 +124,6 @@ export default function LandingPage() {
                     onChange={(e) => {
                       setSearchQuery(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''));
                       setAvailability('idle');
-                      setReason(null);
                     }}
                     className="w-full min-w-0 bg-transparent text-sm text-white placeholder:text-slate-500 focus:outline-none font-mono font-medium pr-2"
                   />
@@ -168,7 +156,6 @@ export default function LandingPage() {
                   onChange={(e) => {
                     setSearchQuery(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''));
                     setAvailability('idle');
-                    setReason(null);
                   }}
                   className="w-full min-w-0 bg-transparent text-sm text-white placeholder:text-slate-400 focus:outline-none font-mono font-medium"
                 />
@@ -194,7 +181,7 @@ export default function LandingPage() {
             {availability !== 'idle' && (
               <div className="w-full mt-3 animate-slide-up">
                 {availability === 'available' && (
-                  <div className="flex items-center justify-between gap-4 p-4 rounded-lg w-full border border-blue-400/30 bg-blue-400/10">
+                  <div className="flex w-full flex-col items-stretch gap-3 rounded-lg border border-blue-400/30 bg-blue-400/10 p-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
                     <div className="flex items-center gap-2.5 text-sm text-white font-mono">
                       <CheckCircle className="size-4 text-blue-400 shrink-0" />
                       <span><strong className="font-semibold">{searchQuery}</strong>.arc.bd</span>
@@ -202,7 +189,7 @@ export default function LandingPage() {
                     <Button
                       onClick={handleClaimClick}
                       disabled={claiming}
-                      className="shrink-0 text-xs px-4 h-8 rounded-full whitespace-nowrap"
+                      className="h-8 w-full shrink-0 rounded-full px-4 text-xs whitespace-nowrap sm:w-auto"
                     >
                       {claiming && <Loader2 className="size-3 mr-1.5 animate-spin" />}
                       {claiming ? "Claiming..." : "Claim Free"}
@@ -239,7 +226,7 @@ export default function LandingPage() {
             )}
 
             {/* Platform Feature Pills */}
-            <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-5 mt-6 sm:mt-8 text-[11px] sm:text-xs text-slate-300 font-medium">
+            <div className="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[11px] font-medium text-slate-300 sm:mt-7 sm:gap-x-5 sm:text-xs">
               <span className="flex items-center gap-1.5">
                 <Globe className="size-3.5 text-white shrink-0" /> Free Forever
               </span>

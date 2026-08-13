@@ -5,7 +5,6 @@ import {
   Globe,
   Plus,
   Activity,
-  Loader2,
   ArrowUpRight,
   ChartColumn,
   ExternalLink,
@@ -107,7 +106,7 @@ export default function DashboardOverview() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-foreground">Welcome back 👋</h1>
-          <p className="text-sm text-muted-foreground mt-0.5">Here's an overview of your ARC.BD subdomains.</p>
+          <p className="text-sm text-muted-foreground mt-0.5">Here&apos;s an overview of your ARC.BD subdomains.</p>
         </div>
         <Button asChild>
           <Link href="/dashboard/domains">

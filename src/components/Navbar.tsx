@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Globe, Menu, X, Shield, User, LogOut, ChevronDown, LayoutDashboard, Globe2, FileText, AlertTriangle, BookOpen, Sparkles } from "lucide-react";
+import { Menu, X, Shield, LogOut, ChevronDown, LayoutDashboard, Globe2, AlertTriangle, BookOpen } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -22,9 +22,25 @@ import {
 export default function Navbar() {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
-  const [session, setSession] = useState<any>(null);
+  const [session, setSession] = useState<{ user?: { id: string; email?: string; user_metadata?: Record<string, string> } } | null>(null);
   const [loading, setLoading] = useState(true);
-  const [profile, setProfile] = useState<any>(null);
+  const [profile, setProfile] = useState<{ full_name?: string; avatar_url?: string; role?: string } | null>(null);
+
+  const fetchProfile = async (userId: string) => {
+    try {
+      const supabase = createClient();
+      const { data } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", userId)
+        .single();
+      setProfile(data);
+    } catch {
+      // Fallback profile
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     const supabase = createClient();
@@ -51,22 +67,6 @@ export default function Navbar() {
 
     return () => subscription.unsubscribe();
   }, []);
-
-  const fetchProfile = async (userId: string) => {
-    try {
-      const supabase = createClient();
-      const { data } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", userId)
-        .single();
-      setProfile(data);
-    } catch {
-      // Fallback profile
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleSignOut = async () => {
     const supabase = createClient();
@@ -103,7 +103,7 @@ export default function Navbar() {
         </Link>
 
         {/* High-Contrast Desktop Navigation Links */}
-        <nav className="hidden md:flex items-center space-x-8 text-sm font-semibold">
+        <nav className="hidden md:flex items-center gap-4 lg:gap-6 xl:gap-8 text-sm font-semibold">
           <Link href="/" className="text-slate-200 hover:text-white transition-colors">
             Overview
           </Link>
@@ -119,7 +119,7 @@ export default function Navbar() {
         </nav>
 
         {/* Desktop Auth Controls */}
-        <div className="hidden md:flex items-center space-x-3">
+        <div className="hidden md:flex items-center gap-3">
           {loading ? (
             <div className="size-8 rounded-full bg-white/10 animate-pulse" />
           ) : session ? (
@@ -220,7 +220,7 @@ export default function Navbar() {
         {/* Mobile Hamburger Button */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden p-2 text-slate-300 hover:text-white transition-colors"
+          className="p-2 text-slate-300 transition-colors hover:text-white md:hidden"
           aria-label="Toggle Menu"
         >
           {isOpen ? <X className="size-5 text-white" /> : <Menu className="size-5 text-white" />}
@@ -229,7 +229,7 @@ export default function Navbar() {
 
       {/* Mobile Drawer */}
       {isOpen && (
-        <div className="md:hidden border-b border-white/10 bg-card/95 backdrop-blur-xl px-4 pt-3 pb-6 space-y-4 animate-slide-up">
+        <div className="border-b border-white/10 bg-card/95 px-4 pt-3 pb-6 space-y-4 backdrop-blur-xl animate-slide-up md:hidden">
           <nav className="flex flex-col space-y-3 font-semibold text-sm">
             <Link
               href="/"
