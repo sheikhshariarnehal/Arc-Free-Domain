@@ -105,16 +105,13 @@ export default function Navbar() {
         {/* High-Contrast Desktop Navigation Links */}
         <nav className="hidden md:flex items-center gap-4 lg:gap-6 xl:gap-8 text-sm font-semibold">
           <Link href="/" className="text-slate-200 hover:text-white transition-colors">
-            Overview
+            Home
           </Link>
           <Link href="/docs" className="text-slate-200 hover:text-white transition-colors">
-            Documentation
-          </Link>
-          <Link href="/docs/vercel" className="text-slate-200 hover:text-white transition-colors">
-            Deployment Guides
+            Docs
           </Link>
           <Link href="/report" className="text-slate-200 hover:text-white transition-colors">
-            Abuse Center
+            Report Abuse
           </Link>
         </nav>
 
@@ -236,28 +233,21 @@ export default function Navbar() {
               onClick={() => setIsOpen(false)}
               className="text-slate-200 hover:text-white transition-colors"
             >
-              Overview
+              Home
             </Link>
             <Link
               href="/docs"
               onClick={() => setIsOpen(false)}
               className="text-slate-200 hover:text-white transition-colors"
             >
-              Documentation
-            </Link>
-            <Link
-              href="/docs/vercel"
-              onClick={() => setIsOpen(false)}
-              className="text-slate-200 hover:text-white transition-colors"
-            >
-              Deployment Guides
+              Docs
             </Link>
             <Link
               href="/report"
               onClick={() => setIsOpen(false)}
               className="text-slate-200 hover:text-white transition-colors"
             >
-              Abuse Center
+              Report Abuse
             </Link>
           </nav>
           <div className="pt-2 border-t border-white/10 flex flex-col space-y-2">

@@ -23,7 +23,7 @@ const Card = React.forwardRef<
       className="absolute inset-0 pointer-events-none rounded-[inherit]"
       style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.18)" }}
     />
-    <div className="relative z-10">{children}</div>
+    <div className="relative z-10 flex flex-col h-full">{children}</div>
   </div>
 ))
 Card.displayName = "Card"

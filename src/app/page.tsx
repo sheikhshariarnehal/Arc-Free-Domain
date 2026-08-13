@@ -90,13 +90,7 @@ export default function LandingPage() {
 
       <main className="flex-1 flex min-w-0 w-full flex-col items-center">
         {/* Hero Section */}
-        <section className="mx-auto flex w-full min-w-0 max-w-5xl flex-col items-center px-4 py-[clamp(2.5rem,7vh,4.5rem)] text-center sm:px-6 lg:px-8">
-
-          {/* Beta Badge */}
-          <div className="mb-4 flex items-center justify-center gap-1.5 font-mono text-[11px] font-medium text-blue-400 sm:mb-5 sm:text-xs">
-            <span className="size-1.5 rounded-full bg-blue-400" />
-            <span>Public Beta</span>
-          </div>
+        <section className="mx-auto flex w-full min-w-0 max-w-5xl flex-1 flex-col items-center justify-center px-4 py-12 text-center sm:px-6 sm:py-16 md:min-h-[calc(100dvh-4rem)] md:py-20 lg:px-8">
 
           {/* Headline */}
           <h1 className="mb-4 w-full max-w-4xl text-[clamp(2.25rem,5vw,4rem)] font-extrabold leading-[0.98] tracking-[-0.035em] text-white sm:mb-5">
@@ -107,7 +101,7 @@ export default function LandingPage() {
           {/* Subheadline */}
           <p className="mb-6 w-full max-w-2xl px-2 text-sm font-medium leading-relaxed text-slate-300 sm:mb-8 sm:px-0 sm:text-base">
             Claim your free <code className="font-mono font-semibold text-blue-400">.arc.bd</code> subdomain in seconds.{" "}
-            <span className="inline">Direct routing to Vercel, Netlify, GitHub Pages, or custom VPS.</span>
+            <span className="inline-block sm:inline">Point it directly to Vercel, Netlify, GitHub&nbsp;Pages, or any VPS.</span>
           </p>
 
           {/* Search Bar */}
@@ -120,6 +114,7 @@ export default function LandingPage() {
                   <input
                     type="text"
                     placeholder="myproject"
+                    aria-label="Subdomain name to check"
                     value={searchQuery}
                     onChange={(e) => {
                       setSearchQuery(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''));
@@ -128,11 +123,11 @@ export default function LandingPage() {
                     className="w-full min-w-0 bg-transparent text-sm text-white placeholder:text-slate-500 focus:outline-none font-mono font-medium pr-2"
                   />
                   {searchQuery && (
-                    <button type="button" onClick={clearSearch} className="p-1 text-slate-400 hover:text-white transition-colors mr-1 shrink-0">
+                    <button type="button" onClick={clearSearch} aria-label="Clear subdomain search" className="p-1 text-slate-400 hover:text-white transition-colors mr-1 shrink-0">
                       <X className="size-3.5" />
                     </button>
                   )}
-                  <span className="text-xs text-blue-400 font-mono font-bold shrink-0 select-none bg-blue-500/10 px-2.5 py-1 rounded-full border border-blue-400/20">
+                  <span className="text-xs text-slate-300 font-mono font-semibold mr-1.5 shrink-0 select-none">
                     .arc.bd
                   </span>
                 </div>
@@ -152,6 +147,7 @@ export default function LandingPage() {
                 <input
                   type="text"
                   placeholder="myproject"
+                  aria-label="Subdomain name to check"
                   value={searchQuery}
                   onChange={(e) => {
                     setSearchQuery(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''));
@@ -160,7 +156,7 @@ export default function LandingPage() {
                   className="w-full min-w-0 bg-transparent text-sm text-white placeholder:text-slate-400 focus:outline-none font-mono font-medium"
                 />
                 {searchQuery && (
-                  <button type="button" onClick={clearSearch} className="p-1 text-slate-400 hover:text-white transition-colors mr-1 shrink-0">
+                  <button type="button" onClick={clearSearch} aria-label="Clear subdomain search" className="p-1 text-slate-400 hover:text-white transition-colors mr-1 shrink-0">
                     <X className="size-3.5" />
                   </button>
                 )}

@@ -1,42 +1,69 @@
 "use client";
 
 import Navbar from "@/components/Navbar";
-import { ArrowLeft, GitBranch } from "lucide-react";
+import { ArrowLeft, GitBranch, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 
 export default function GithubPagesDoc() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-background text-foreground">
       <Navbar />
       
-      <main className="flex-1 max-w-3xl mx-auto w-full p-6 md:p-12 animate-fade-in">
-        <Link href="/docs" className="text-sm text-emerald-400 hover:text-emerald-300 flex items-center gap-1 mb-8 w-fit">
+      <main className="flex-1 max-w-4xl mx-auto w-full p-6 md:p-12">
+        <Link href="/docs" className="text-sm text-blue-400 hover:text-blue-300 flex items-center gap-1 mb-8 w-fit transition-colors">
           <ArrowLeft className="h-4 w-4" /> Back to Docs
         </Link>
         
         <div className="flex items-center gap-3 mb-8">
-          <GitBranch className="h-8 w-8 text-white" />
-          <h1 className="text-3xl font-bold text-white">Connect to GitHub Pages</h1>
+          <div className="size-10 rounded-xl bg-white/10 text-white flex items-center justify-center font-bold">
+            <GitBranch className="h-5 w-5" />
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight text-foreground">Connect to GitHub Pages</h1>
+            <p className="text-sm text-muted-foreground">Step-by-step guide to pointing your .arc.bd subdomain to a GitHub Pages repository with automated SSL.</p>
+          </div>
         </div>
 
-        <div className="prose prose-invert prose-emerald max-w-none">
-          <p className="text-slate-300 text-lg">Use your ARC.BD subdomain as a custom domain for your GitHub Pages repository.</p>
-          
-          <h3 className="text-white text-xl font-semibold mt-8 mb-4">Step 1: Configure ARC.BD DNS</h3>
-          <p className="text-slate-300 mb-2">Go to your ARC.BD Dashboard, select your domain, and add a CNAME record pointing to your GitHub pages URL:</p>
-          <div className="bg-slate-900 border border-white/10 rounded-lg p-4 font-mono text-sm mb-4">
-            Type: CNAME<br/>
-            Target: &lt;your-username&gt;.github.io
+        <div className="space-y-8">
+          {/* Step 1 */}
+          <div className="p-6 rounded-2xl border border-border bg-card space-y-3">
+            <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+              <span className="size-6 rounded-full bg-blue-500/20 text-blue-400 text-xs flex items-center justify-center font-bold">1</span>
+              Configure DNS in ARC.BD Dashboard
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              Go to your <Link href="/dashboard/domains" className="text-blue-400 hover:underline">ARC.BD Domain Dashboard</Link>, open your domain, and add a CNAME record:
+            </p>
+            <div className="bg-muted/50 border border-border rounded-xl p-4 font-mono text-xs space-y-1">
+              <div><strong className="text-blue-400">Type:</strong> CNAME</div>
+              <div><strong className="text-blue-400">Name / Host:</strong> @</div>
+              <div><strong className="text-blue-400">Target Hostname:</strong> &lt;username&gt;.github.io</div>
+            </div>
           </div>
 
-          <h3 className="text-white text-xl font-semibold mt-8 mb-4">Step 2: Add Custom Domain in GitHub</h3>
-          <ul className="text-slate-300 space-y-2 list-disc list-inside">
-            <li>Go to your repository on GitHub.</li>
-            <li>Navigate to <strong>Settings {'>'} Pages</strong>.</li>
-            <li>Under "Custom domain", type your ARC.BD subdomain (e.g., <code>repo.arc.bd</code>).</li>
-            <li>Click Save. GitHub will perform a DNS check.</li>
-            <li>Once the DNS check passes, check the "Enforce HTTPS" box.</li>
-          </ul>
+          {/* Step 2 */}
+          <div className="p-6 rounded-2xl border border-border bg-card space-y-3">
+            <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+              <span className="size-6 rounded-full bg-blue-500/20 text-blue-400 text-xs flex items-center justify-center font-bold">2</span>
+              Add Custom Domain in GitHub Repository
+            </h3>
+            <ol className="text-sm text-muted-foreground space-y-2 list-disc list-inside ml-2">
+              <li>Open your repository on GitHub and go to <strong>Settings</strong> → <strong>Pages</strong>.</li>
+              <li>Under <strong>Custom domain</strong>, enter your claimed ARC.BD subdomain (e.g., <code className="text-foreground bg-muted px-1.5 py-0.5 rounded font-mono">myproject.arc.bd</code>).</li>
+              <li>Click <strong>Save</strong>. GitHub will perform an automated DNS verification check.</li>
+            </ol>
+          </div>
+
+          {/* Step 3 */}
+          <div className="p-6 rounded-2xl border border-emerald-500/30 bg-emerald-500/5 space-y-3">
+            <div className="flex items-center gap-2 text-emerald-400 font-semibold text-base">
+              <CheckCircle2 className="size-5 shrink-0" />
+              Enforce HTTPS
+            </div>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Once the DNS check passes in GitHub Pages settings, check the <strong>Enforce HTTPS</strong> checkbox to enable automatic SSL encryption.
+            </p>
+          </div>
         </div>
       </main>
     </div>

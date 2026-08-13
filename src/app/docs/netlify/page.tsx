@@ -10,8 +10,8 @@ export default function NetlifyDoc() {
       <Navbar />
       
       <main className="flex-1 max-w-5xl mx-auto w-full p-6 md:p-12">
-        <Link href="/docs" className="text-sm text-primary hover:underline flex items-center gap-1 mb-8 w-fit">
-          <ArrowLeft className="h-4 w-4" /> Back to Documentation
+        <Link href="/docs" className="text-sm text-blue-400 hover:text-blue-300 flex items-center gap-1 mb-8 w-fit transition-colors">
+          <ArrowLeft className="h-4 w-4" /> Back to Docs
         </Link>
         
         <div className="flex items-center gap-3 mb-8">
