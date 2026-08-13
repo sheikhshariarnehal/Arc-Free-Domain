@@ -130,28 +130,25 @@ export default function LandingPage() {
             <form onSubmit={checkAvailability} className="w-full">
               {/* Mobile Input Container */}
               <div className="flex flex-col gap-2.5 sm:hidden w-full">
-                <div
-                  className="relative flex items-center bg-card/95 rounded-xl px-3 py-2.5 transition-all group w-full border border-white/10"
-                  style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.2)" }}
-                >
-                  <Search className="size-4 text-slate-400 shrink-0 mr-2 group-focus-within:text-blue-400 transition-colors" />
+                <div className="relative flex items-center skeuo-input rounded-full px-4.5 py-3 transition-all group w-full overflow-hidden">
+                  <Search className="size-4 text-slate-400 shrink-0 mr-2.5 group-focus-within:text-blue-400 transition-colors" />
                   <input
                     type="text"
-                    placeholder="your-project-name"
+                    placeholder="myproject"
                     value={searchQuery}
                     onChange={(e) => {
                       setSearchQuery(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''));
                       setAvailability('idle');
                       setReason(null);
                     }}
-                    className="w-full min-w-0 bg-transparent text-xs text-white placeholder:text-slate-500 focus:outline-none font-mono font-medium pr-1"
+                    className="w-full min-w-0 bg-transparent text-sm text-white placeholder:text-slate-500 focus:outline-none font-mono font-medium pr-2"
                   />
                   {searchQuery && (
                     <button type="button" onClick={clearSearch} className="p-1 text-slate-400 hover:text-white transition-colors mr-1 shrink-0">
                       <X className="size-3.5" />
                     </button>
                   )}
-                  <span className="text-xs text-blue-400 font-mono font-bold shrink-0 select-none bg-blue-500/10 px-2 py-0.5 rounded border border-blue-400/20">
+                  <span className="text-xs text-blue-400 font-mono font-bold shrink-0 select-none bg-blue-500/10 px-2.5 py-1 rounded-full border border-blue-400/20">
                     .arc.bd
                   </span>
                 </div>
@@ -159,22 +156,18 @@ export default function LandingPage() {
                   type="submit"
                   disabled={loading}
                   variant="default"
-                  className="w-full h-10 text-xs font-semibold rounded-xl"
+                  className="w-full h-11 text-xs font-semibold rounded-full"
                 >
                   {loading ? <Loader2 className="size-3.5 animate-spin mr-1.5" /> : <Search className="size-3.5 mr-1.5" />}
                   {loading ? "Checking..." : "Check Availability"}
                 </Button>
               </div>
 
-              {/* Desktop Input Container */}
-              <div
-                className="hidden sm:flex relative items-center bg-card/95 rounded-full p-1.5 pl-4 transition-all group overflow-hidden border border-white/10"
-                style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.25)" }}
-              >
+              <div className="hidden sm:flex relative items-center skeuo-input rounded-full p-1.5 pl-4 transition-all group overflow-hidden">
                 <Search className="size-4 text-slate-400 shrink-0 mr-2.5 transition-colors group-focus-within:text-blue-400" />
                 <input
                   type="text"
-                  placeholder="your-project-name"
+                  placeholder="myproject"
                   value={searchQuery}
                   onChange={(e) => {
                     setSearchQuery(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''));
@@ -258,15 +251,15 @@ export default function LandingPage() {
             )}
 
             {/* Platform Feature Pills */}
-            <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 mt-6 sm:mt-8 text-[11px] sm:text-xs font-mono text-slate-200 font-medium">
-              <span className="flex items-center gap-1.5 bg-white/5 border border-white/10 px-3 py-1.5 rounded-full">
-                <Zap className="size-3.5 text-blue-400 shrink-0" /> &lt; 50ms Edge DNS
+            <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-5 mt-6 sm:mt-8 text-[11px] sm:text-xs text-slate-300 font-medium">
+              <span className="flex items-center gap-1.5">
+                <Globe className="size-3.5 text-white shrink-0" /> Free Forever
               </span>
-              <span className="flex items-center gap-1.5 bg-white/5 border border-white/10 px-3 py-1.5 rounded-full">
-                <Lock className="size-3.5 text-blue-400 shrink-0" /> Free SSL Included
+              <span className="flex items-center gap-1.5">
+                <Zap className="size-3.5 text-white shrink-0" /> DNS Ready
               </span>
-              <span className="flex items-center gap-1.5 bg-white/5 border border-white/10 px-3 py-1.5 rounded-full">
-                <Cpu className="size-3.5 text-blue-400 shrink-0" /> Vercel &amp; Netlify Ready
+              <span className="flex items-center gap-1.5">
+                <Lock className="size-3.5 text-white shrink-0" /> SSL Enabled
               </span>
             </div>
           </div>
