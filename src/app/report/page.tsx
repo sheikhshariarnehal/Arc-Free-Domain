@@ -60,7 +60,7 @@ export default function ReportAbuse() {
 
       <main className="flex-1 flex items-center justify-center px-4 py-12 sm:py-20">
         <div className="w-full max-w-lg">
-          <Card className="border-border/60 shadow-sm bg-card/60 backdrop-blur-md">
+          <Card className="border-border/60 shadow-sm bg-card/60">
             <CardHeader>
               <div className="flex items-center gap-3 mb-2">
                 <div className="size-10 rounded-lg bg-destructive/10 border border-destructive/20 flex items-center justify-center text-destructive">

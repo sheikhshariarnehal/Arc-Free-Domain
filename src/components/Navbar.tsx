@@ -90,7 +90,7 @@ export default function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-background/80 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-background/80 backdrop-blur-md transform-gpu will-change-transform">
       <div className="max-w-7xl mx-auto flex h-16 items-center justify-between px-4 sm:px-6">
         {/* Brand Logo */}
         <Link href="/" className="flex items-center space-x-2.5 group">
@@ -229,7 +229,7 @@ export default function Navbar() {
 
       {/* Mobile Drawer */}
       {isOpen && (
-        <div className="border-b border-white/10 bg-card/95 px-4 pt-3 pb-6 space-y-4 backdrop-blur-xl animate-slide-up md:hidden">
+        <div className="border-b border-white/10 bg-card/95 px-4 pt-3 pb-6 space-y-4 backdrop-blur-md animate-slide-up md:hidden">
           <nav className="flex flex-col space-y-3 font-semibold text-sm">
             <Link
               href="/"

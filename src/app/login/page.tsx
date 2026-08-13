@@ -147,7 +147,7 @@ function LoginForm() {
 
   return (
     <div
-      className="bg-card/95 p-5 sm:p-8 rounded-xl border border-white/10 backdrop-blur-xl transition-all"
+      className="bg-card/95 p-5 sm:p-8 rounded-xl border border-white/10 transition-colors"
       style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.2)" }}
     >
       {/* First-Timer Claim Banner */}

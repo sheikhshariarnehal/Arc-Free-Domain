@@ -241,7 +241,10 @@ export default function LandingPage() {
         </section>
 
         {/* Feature Grid */}
-        <section className="w-full max-w-6xl mx-auto py-10 sm:py-16 px-4 sm:px-6 lg:px-8 border-t border-white/10">
+        <section
+          className="w-full max-w-6xl mx-auto py-10 sm:py-16 px-4 sm:px-6 lg:px-8 border-t border-white/10"
+          style={{ contentVisibility: "auto", containIntrinsicSize: "800px" }}
+        >
           <div className="text-center mb-8 sm:mb-12">
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-white">Minimal Infrastructure</h2>
             <p className="text-xs sm:text-sm text-slate-300 mt-1 font-medium max-w-md mx-auto">Built for speed, reliability, and modern web developer workflows.</p>
@@ -273,7 +276,10 @@ export default function LandingPage() {
         </section>
 
         {/* 3-Step Process */}
-        <section className="w-full max-w-4xl mx-auto py-10 sm:py-16 px-4 sm:px-6 lg:px-8 border-t border-white/10 text-center">
+        <section
+          className="w-full max-w-4xl mx-auto py-10 sm:py-16 px-4 sm:px-6 lg:px-8 border-t border-white/10 text-center"
+          style={{ contentVisibility: "auto", containIntrinsicSize: "500px" }}
+        >
           <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-white mb-8 sm:mb-12">Three Simple Steps</h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
