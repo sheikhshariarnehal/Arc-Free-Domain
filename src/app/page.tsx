@@ -8,7 +8,6 @@ import { Search, CheckCircle, XCircle, Gift, Zap, Code, Shield, Settings, Globe,
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 
 export default function LandingPage() {
@@ -99,28 +98,25 @@ export default function LandingPage() {
 
       <main className="flex-1 flex flex-col items-center w-full">
         {/* Hero Section */}
-        <section className="w-full max-w-5xl mx-auto text-center pt-8 pb-10 sm:pt-16 sm:pb-20 px-4 sm:px-6 lg:px-8 flex flex-col items-center">
+        <section className="w-full max-w-5xl mx-auto text-center pt-6 pb-8 sm:pt-12 sm:pb-16 px-4 sm:px-6 lg:px-8 flex flex-col items-center">
 
           {/* Beta Badge */}
-          <Badge
-            variant="outline"
-            className="mb-4 sm:mb-7 border border-white/10 bg-white/5 backdrop-blur-md text-blue-400 font-semibold text-[10px] sm:text-xs font-mono py-1 px-3 sm:py-1.5 sm:px-3.5 rounded-full flex items-center gap-1.5 hover:bg-white/10 hover:border-white/20 transition-all cursor-default select-none max-w-full truncate"
-          >
-            <span className="size-1.5 sm:size-2 rounded-full bg-blue-400 animate-pulse inline-block shrink-0" />
-            <span className="truncate">Public Beta &bull; Limited Time Offer</span>
-          </Badge>
+          <div className="mb-3 sm:mb-5 text-xs text-blue-400 font-mono font-semibold flex items-center justify-center gap-1.5">
+            <span className="size-1.5 rounded-full bg-blue-400 animate-pulse inline-block" />
+            <span>Public Beta</span>
+          </div>
 
           {/* Headline */}
-          <h1 className="text-2xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight sm:leading-[1.05] mb-3 sm:mb-5 text-white max-w-4xl px-1">
-            Get Your Professional{" "}
+          <h1 className="text-xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight sm:leading-[1.1] mb-2 sm:mb-3 text-white max-w-4xl px-1">
+            Get Your Free{" "}
             <br className="hidden sm:inline" />
-            <span className="text-blue-400 font-extrabold block sm:inline mt-1 sm:mt-0">
-              Domain Identity
+            <span className="text-blue-400 font-extrabold block sm:inline mt-0.5 sm:mt-0">
+              .arc.bd Domain
             </span>
           </h1>
 
           {/* Subheadline */}
-          <p className="text-xs sm:text-base md:text-lg text-slate-200 font-medium max-w-md sm:max-w-xl md:max-w-2xl mb-6 sm:mb-10 leading-relaxed px-2 sm:px-0">
+          <p className="text-xs sm:text-sm text-slate-300 font-medium max-w-md sm:max-w-lg mb-4 sm:mb-6 leading-relaxed px-2 sm:px-0">
             Claim your free <code className="text-blue-400 font-mono font-semibold">.arc.bd</code> subdomain in seconds.{" "}
             <span className="inline">Direct routing to Vercel, Netlify, GitHub Pages, or custom VPS.</span>
           </p>
