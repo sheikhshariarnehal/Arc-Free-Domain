@@ -91,7 +91,7 @@ export default function LandingPage() {
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-[720px] sm:h-[860px] z-0 overflow-hidden"
         style={{
-          background: "radial-gradient(ellipse 70% 60% at 20% 25%, rgba(45, 65, 95, 0.22) 0%, rgba(16, 22, 34, 0.08) 50%, transparent 80%)",
+          background: "radial-gradient(ellipse 70% 60% at 20% 25%, rgba(25, 75, 175, 0.25) 0%, rgba(12, 35, 80, 0.10) 45%, transparent 75%)",
           contain: "paint layout",
         }}
       >
