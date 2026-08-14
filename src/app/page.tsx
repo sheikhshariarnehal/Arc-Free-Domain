@@ -87,16 +87,18 @@ export default function LandingPage() {
 
   return (
     <div className="flex-1 flex flex-col min-h-screen bg-background text-foreground selection:bg-blue-500/20 selection:text-blue-400 overflow-x-hidden relative">
-      {/* Full-bleed Silk Shader Background with Instant CSS Ambient Underlay */}
+      {/* Full-bleed Silk Shader Background with Instant CSS Ambient Underlay & Feathered Fade */}
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-[820px] z-0 overflow-hidden"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[680px] sm:h-[820px] z-0 overflow-hidden"
         style={{
-          background: "radial-gradient(ellipse 70% 60% at 18% 28%, rgba(45, 60, 85, 0.25) 0%, rgba(18, 24, 36, 0.12) 45%, transparent 75%)",
+          background: "radial-gradient(ellipse 70% 60% at 20% 20%, rgba(45, 60, 85, 0.20) 0%, rgba(18, 24, 36, 0.08) 50%, transparent 80%)",
           contain: "paint layout",
         }}
       >
-        <ShaderBackground className="h-full w-full opacity-80" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/25 via-60% to-background pointer-events-none" />
+        <ShaderBackground className="h-full w-full opacity-75 sm:opacity-80" />
+        {/* Multi-stop smooth bottom & edge blend to prevent harsh cutoffs */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/30 via-50% to-background pointer-events-none" />
+        <div className="absolute inset-x-0 bottom-0 h-40 sm:h-56 bg-gradient-to-t from-background via-background/80 to-transparent pointer-events-none" />
       </div>
 
       <Navbar transparent />
@@ -256,9 +258,11 @@ export default function LandingPage() {
 
         {/* Feature Grid */}
         <section
-          className="w-full max-w-6xl mx-auto py-10 sm:py-16 px-4 sm:px-6 lg:px-8 border-t border-white/10"
+          className="w-full max-w-6xl mx-auto pt-8 pb-12 sm:py-16 px-4 sm:px-6 lg:px-8 border-none relative"
           style={{ contentVisibility: "auto", containIntrinsicSize: "800px" }}
         >
+          {/* Soft Faded Divider */}
+          <div className="w-full max-w-3xl mx-auto h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent mb-10 sm:mb-14" />
           <div className="text-center mb-8 sm:mb-12">
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-white">Built for fast deployment</h2>
             <p className="text-xs sm:text-sm text-slate-300 mt-1 font-medium max-w-md mx-auto">Automated DNS management with zero configuration overhead.</p>
