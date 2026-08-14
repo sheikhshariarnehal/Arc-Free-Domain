@@ -184,9 +184,9 @@ vec3 shade(vec2 uv, vec2 p, float t) {
     q.y += amp / i * cos(i * 1.7 * q.x + t * 0.6);
   }
   float val = 0.5 + 0.5 * sin(q.x + q.y);
-  // Ultra-soft S-curve feathering: seamless smoky fade into pitch black
-  val = smoothstep(0.18, 0.88, val);
-  val = pow(val, 2.2);
+  // Glossy 3D silk curve with rich depth & specular crests
+  val = smoothstep(0.08, 0.94, val);
+  val = pow(val, 1.4);
   return palette(val);
 }
 
@@ -272,6 +272,11 @@ void main() {
     float vd = length(screenUv - 0.5) * 1.41421356;
     col *= 1.0 - u_vignette * smoothstep(0.35, 1.0, vd);
   }
+  // Smooth natural perimeter falloff: dissolves gracefully to pitch black at all edges
+  float edgeDist = min(min(screenUv.x, 1.0 - screenUv.x), min(screenUv.y, 1.0 - screenUv.y));
+  float edgeFalloff = smoothstep(0.0, 0.16, edgeDist);
+  col *= edgeFalloff;
+
   if (u_cursorPresence > 0.001 && u_cursorEffect > 3.5)
     col += (vec3(0.18) + col * 0.12) * cursorMask * u_cursorStrength;
   if (u_grain > 0.0001)
@@ -281,31 +286,31 @@ void main() {
 }
 `
 
-// Optimized lightweight settings: Soft, smoky, perfectly blended silk highlight
+// Optimized high-gloss 3D luminous silk settings
 const UNIFORMS = {
   colors: [
-    [0.003, 0.004, 0.006], // Deep obsidian background
-    [0.008, 0.011, 0.015], // Subtle smoky undertone
-    [0.022, 0.030, 0.040], // Dark slate transition
-    [0.055, 0.072, 0.096], // Soft graphite sheen
-    [0.150, 0.185, 0.235], // Ultra-soft frosted slate highlight (no harsh white contrast)
-    [0.150, 0.185, 0.235],
-    [0.150, 0.185, 0.235],
-    [0.150, 0.185, 0.235],
+    [0.004, 0.006, 0.010], // Deep obsidian depth
+    [0.018, 0.026, 0.042], // Midnight navy undertone
+    [0.055, 0.088, 0.145], // Rich metallic slate
+    [0.180, 0.280, 0.440], // Deep 3D luminous silk wave
+    [0.480, 0.620, 0.820], // High-gloss liquid specular sheen
+    [0.820, 0.900, 0.980], // Brilliant 3D crest highlight
+    [0.820, 0.900, 0.980],
+    [0.820, 0.900, 0.980],
   ] as [number, number, number][],
-  colorCount: 5,
-  scale: 0.720,
-  intensity: 0.160,
+  colorCount: 6,
+  scale: 0.640,
+  intensity: 0.280,
   paramA: 0.500,
-  warp: 0.120,
-  detail: 1.200,
-  contrast: 1.020,
-  brightness: -0.015,
-  saturation: 0.500,
+  warp: 0.200,
+  detail: 1.350,
+  contrast: 1.100,
+  brightness: 0.000,
+  saturation: 0.800,
   hue: 0.0000,
-  vignette: 0.350,
+  vignette: 0.150,
   blur: 0.0000, // 0.0 bypasses 5-tap multi-sampling (80% GPU performance boost)
-  grain: 0.008,
+  grain: 0.006,
   seed: 707.0,
   rotate: 2.5133,
   offsetX: 0.060,
@@ -317,7 +322,7 @@ const UNIFORMS = {
   cursorRadius: 0.460,
   oklab: 1.0,
   timeOffset: 4.800, // Starts with the sleek left-flank silk highlight visible on app open
-  timeScale: 0.180, // Smooth, organic breathing oscillation anchored near corner/flank
+  timeScale: 0.200, // Smooth, organic breathing oscillation anchored near corner/flank
 }
 
 const pendingContextReleases = new WeakMap<HTMLCanvasElement, number>()
