@@ -6,7 +6,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: '/',
-        disallow: ['/admin/', '/api/', '/dashboard/'],
+        disallow: ['/admin/', '/api/', '/dashboard/', '/subdomain-status'],
       },
     ],
     sitemap: 'https://arc.bd/sitemap.xml',
