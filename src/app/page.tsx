@@ -19,6 +19,7 @@ import {
   Lightbulb, 
   Globe, 
   X,
+  ArrowRight,
   ShieldAlert,
 } from "lucide-react";
 import Link from "next/link";
@@ -179,8 +180,8 @@ export default function LandingPage() {
             <form onSubmit={checkAvailability} className="w-full">
               {/* Mobile Input Container */}
               <div className="flex flex-col gap-2.5 sm:hidden w-full">
-                <div className="relative flex items-center skeuo-input rounded-full px-4.5 py-3 transition-all group w-full overflow-hidden">
-                  <Search className="size-4 text-slate-400 shrink-0 mr-2.5 group-focus-within:text-primary transition-colors" />
+                <div className="relative flex items-center skeuo-input rounded-full px-4.5 py-3 transition-all duration-200 group w-full overflow-hidden">
+                  <Search className="size-4 text-slate-400 shrink-0 mr-2.5 group-focus-within:text-primary transition-colors duration-200" />
                   <input
                     type="text"
                     placeholder="your-project"
@@ -193,7 +194,12 @@ export default function LandingPage() {
                     className="w-full min-w-0 bg-transparent text-sm text-white placeholder:text-slate-400 focus:outline-none font-mono font-medium pr-2"
                   />
                   {searchQuery && (
-                    <button type="button" onClick={clearSearch} aria-label="Clear subdomain search" className="p-1 text-slate-400 hover:text-white transition-colors mr-1 shrink-0">
+                    <button 
+                      type="button" 
+                      onClick={clearSearch} 
+                      aria-label="Clear subdomain search" 
+                      className="p-1 text-slate-400 hover:text-white transition-all duration-150 mr-1 shrink-0 active:scale-90"
+                    >
                       <X className="size-3.5" />
                     </button>
                   )}
@@ -205,7 +211,7 @@ export default function LandingPage() {
                   type="submit"
                   disabled={loading}
                   variant="default"
-                  className="w-full h-11 text-xs font-semibold rounded-full bg-foreground text-background hover:bg-foreground/90"
+                  className="w-full h-11 text-xs font-semibold rounded-full bg-foreground text-background hover:bg-foreground/90 active:scale-[0.99] transition-transform duration-150"
                 >
                   {loading ? <Loader2 className="size-3.5 animate-spin mr-1.5" /> : <Search className="size-3.5 mr-1.5" />}
                   {loading ? "Checking..." : "Check availability"}
@@ -213,8 +219,8 @@ export default function LandingPage() {
               </div>
 
               {/* Desktop Input Container */}
-              <div className="hidden sm:flex relative items-center skeuo-input rounded-full p-1.5 pl-4 transition-all group overflow-hidden">
-                <Search className="size-4 text-slate-400 shrink-0 mr-2.5 transition-colors group-focus-within:text-primary" />
+              <div className="hidden sm:flex relative items-center skeuo-input rounded-full p-1.5 pl-4 transition-all duration-200 group overflow-hidden">
+                <Search className="size-4 text-slate-400 shrink-0 mr-2.5 transition-colors duration-200 group-focus-within:text-primary" />
                 <input
                   type="text"
                   placeholder="your-project"
@@ -227,7 +233,12 @@ export default function LandingPage() {
                   className="w-full min-w-0 bg-transparent text-sm text-white placeholder:text-slate-400 focus:outline-none font-mono font-medium"
                 />
                 {searchQuery && (
-                  <button type="button" onClick={clearSearch} aria-label="Clear subdomain search" className="p-1 text-slate-400 hover:text-white transition-colors mr-1 shrink-0">
+                  <button 
+                    type="button" 
+                    onClick={clearSearch} 
+                    aria-label="Clear subdomain search" 
+                    className="p-1 text-slate-400 hover:text-white transition-all duration-150 mr-1 shrink-0 active:scale-90"
+                  >
                     <X className="size-3.5" />
                   </button>
                 )}
@@ -235,7 +246,7 @@ export default function LandingPage() {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="h-10 px-5 text-xs font-semibold shrink-0 rounded-full bg-foreground text-background hover:bg-foreground/90"
+                  className="h-10 px-5 text-xs font-semibold shrink-0 rounded-full bg-foreground text-background hover:bg-foreground/90 active:scale-[0.98] transition-transform duration-150"
                 >
                   {loading ? <Loader2 className="size-3.5 animate-spin mr-1" /> : <Search className="size-3.5 mr-1" />}
                   {loading ? "Checking..." : "Check availability"}
@@ -243,13 +254,13 @@ export default function LandingPage() {
               </div>
             </form>
 
-            {/* Availability Result Card with Live Region and Zero CLS */}
+            {/* Availability Result Card with Live Region and Spring Animation */}
             {availability !== 'idle' && (
-              <div role="status" aria-live="polite" className="w-full mt-2.5 animate-slide-up">
+              <div role="status" aria-live="polite" className="w-full mt-2.5 animate-spring-up">
                 {availability === 'available' && (
                   <div className="flex flex-col sm:flex-row w-full items-center justify-between gap-3 rounded-2xl sm:rounded-full border border-emerald-500/20 bg-emerald-500/10 p-3 sm:py-1.5 sm:px-4 backdrop-blur-md">
                     <div className="flex items-center gap-2 text-xs sm:text-sm text-emerald-300 font-mono text-left">
-                      <CheckCircle className="size-4 text-emerald-400 shrink-0" />
+                      <CheckCircle className="size-4 text-emerald-400 shrink-0 animate-spring-up" />
                       <span><strong className="font-semibold text-white">{searchQuery}</strong>.arc.bd is available</span>
                     </div>
                     <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
@@ -257,10 +268,11 @@ export default function LandingPage() {
                       <Button
                         onClick={handleClaimClick}
                         disabled={claiming}
-                        className="h-8 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold px-4 text-xs shrink-0 transition-all shadow-sm w-full sm:w-auto"
+                        className="group h-8 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold px-4 text-xs shrink-0 transition-all duration-150 active:scale-[0.98] shadow-sm w-full sm:w-auto flex items-center justify-center gap-1"
                       >
                         {claiming && <Loader2 className="size-3 mr-1 animate-spin" />}
-                        {claiming ? "Reserving..." : "Claim Subdomain →"}
+                        <span>{claiming ? "Reserving..." : "Claim Subdomain"}</span>
+                        {!claiming && <ArrowRight className="size-3 group-hover:translate-x-0.5 transition-transform duration-150" />}
                       </Button>
                     </div>
                   </div>
@@ -285,11 +297,12 @@ export default function LandingPage() {
                           <Lightbulb className="size-3 text-amber-400" /> Alternatives:
                         </span>
                         <div className="flex flex-wrap gap-1.5">
-                          {getAlternatives(searchQuery).map((alt) => (
+                          {getAlternatives(searchQuery).map((alt, idx) => (
                             <button
                               key={alt}
                               onClick={() => handleSuggestionClick(alt)}
-                              className="px-2.5 py-0.5 rounded-full bg-white/10 hover:bg-primary/20 text-slate-200 hover:text-primary border border-white/5 transition-all cursor-pointer text-[11px] font-mono"
+                              style={{ animationDelay: `${idx * 40}ms` }}
+                              className="animate-chip-in px-2.5 py-0.5 rounded-full bg-white/10 hover:bg-primary/20 hover:scale-105 active:scale-95 text-slate-200 hover:text-primary border border-white/5 transition-all duration-150 cursor-pointer text-[11px] font-mono"
                             >
                               {alt}.arc.bd
                             </button>
@@ -338,10 +351,10 @@ export default function LandingPage() {
               { icon: Settings, title: "Full Record Control", desc: "Manage root and subdomain A, CNAME, and TXT records right from your dashboard." },
               { icon: Globe, title: "Up to 5 Subdomains", desc: "Claim and manage multiple project addresses from one unified developer account." }
             ].map((item, i) => (
-              <Card key={i} className="p-5 flex flex-col gap-2.5 border border-white/10 bg-card/90">
+              <Card key={i} className="group p-5 flex flex-col gap-2.5 border border-white/10 bg-card/90 hover:border-white/20 hover:-translate-y-0.5 transition-all duration-200">
                 <CardContent className="p-0 flex flex-col gap-2.5">
                   <div
-                    className="size-8 rounded-lg bg-white/10 flex items-center justify-center text-white"
+                    className="size-8 rounded-lg bg-white/10 flex items-center justify-center text-white group-hover:scale-105 transition-transform duration-200"
                     style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.25)" }}
                   >
                     <item.icon className="size-4 text-primary" />
@@ -368,9 +381,9 @@ export default function LandingPage() {
               { step: "2", title: "Claim your address", desc: "Sign in with GitHub or email to link the subdomain to your account." },
               { step: "3", title: "Route your traffic", desc: "Add your host's CNAME target or VPS IP address to start receiving requests." }
             ].map((item, i) => (
-              <Card key={i} className="text-center p-5 sm:p-6 border border-white/10 bg-card/90">
+              <Card key={i} className="group text-center p-5 sm:p-6 border border-white/10 bg-card/90 hover:border-white/20 hover:-translate-y-0.5 transition-all duration-200">
                 <CardContent className="p-0 flex flex-col items-center">
-                  <div className="flex size-7 items-center justify-center rounded-full bg-primary/15 text-primary font-mono text-xs font-bold mb-3 border border-primary/20">
+                  <div className="flex size-7 items-center justify-center rounded-full bg-primary/15 text-primary font-mono text-xs font-bold mb-3 border border-primary/20 group-hover:scale-110 transition-transform duration-200">
                     {item.step}
                   </div>
                   <h3 className="font-semibold text-sm text-white mb-1.5">{item.title}</h3>

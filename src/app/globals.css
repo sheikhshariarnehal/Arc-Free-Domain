@@ -313,4 +313,48 @@ html.lenis body {
   pointer-events: none;
 }
 
+/* ==========================================================================
+   Impeccable Motion System
+   ========================================================================== */
+@keyframes spring-up {
+  0% {
+    opacity: 0;
+    transform: translateY(6px) scale(0.985);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes chip-in {
+  0% {
+    opacity: 0;
+    transform: translateX(-4px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+.animate-spring-up {
+  animation: spring-up 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-chip-in {
+  animation: chip-in 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 
