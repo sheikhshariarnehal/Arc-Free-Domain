@@ -19,12 +19,21 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export default function Navbar() {
+export default function Navbar({ transparent = false }: { transparent?: boolean } = {}) {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [session, setSession] = useState<{ user?: { id: string; email?: string; user_metadata?: Record<string, string> } } | null>(null);
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<{ full_name?: string; avatar_url?: string; role?: string } | null>(null);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const fetchProfile = async (userId: string) => {
     try {
@@ -90,53 +99,61 @@ export default function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-background/80 backdrop-blur-md transform-gpu will-change-transform">
-      <div className="max-w-7xl mx-auto flex h-16 items-center justify-between px-4 sm:px-6">
+    <header className="fixed top-0 inset-x-0 z-50 flex justify-center pointer-events-none px-3 pt-3 sm:pt-4 transition-all duration-300">
+      <div
+        className={`pointer-events-auto flex items-center justify-between gap-3 sm:gap-6 rounded-full transition-all duration-300 ease-out ${
+          scrolled
+            ? "w-full max-w-lg sm:max-w-xl h-10.5 sm:h-11 bg-gradient-to-b from-white/[0.24] via-white/[0.10] to-white/[0.05] backdrop-blur-2xl backdrop-saturate-180 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.45),0_12px_32px_-8px_rgba(0,0,0,0.4)] px-3.5"
+            : "w-full max-w-xl sm:max-w-2xl h-11 sm:h-11.5 bg-gradient-to-b from-white/[0.20] via-white/[0.08] to-white/[0.03] backdrop-blur-xl backdrop-saturate-180 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.35),0_8px_24px_-8px_rgba(0,0,0,0.3)] px-3.5 sm:px-4.5"
+        }`}
+      >
         {/* Brand Logo */}
-        <Link href="/" className="flex items-center space-x-2.5 group">
-          <div className="size-8 rounded-lg bg-white/10 flex items-center justify-center text-white group-hover:scale-105 transition-transform overflow-hidden" style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.25)" }}>
-            <Image src="/arc.png" alt="ARC.BD Logo" width={32} height={32} className="size-7 object-contain" />
+        <Link href="/" className="flex items-center space-x-2 shrink-0 group">
+          <div
+            className="size-6.5 rounded-full bg-white/[0.08] flex items-center justify-center text-white group-hover:scale-105 transition-transform overflow-hidden"
+          >
+            <Image src="/arc.png" alt="ARC.BD Logo" width={22} height={22} className="size-4.5 object-contain" />
           </div>
-          <span className="font-extrabold text-lg tracking-tight text-white">
+          <span className="font-bold text-xs sm:text-[13px] tracking-tight text-white">
             ARC<span className="text-blue-400 font-mono">.BD</span>
           </span>
         </Link>
 
-        {/* High-Contrast Desktop Navigation Links */}
-        <nav className="hidden md:flex items-center gap-4 lg:gap-6 xl:gap-8 text-sm font-semibold">
-          <Link href="/" className="text-slate-200 hover:text-white transition-colors">
+        {/* Desktop Navigation Links */}
+        <nav className="hidden md:flex items-center gap-6 lg:gap-8 text-xs sm:text-[13px] font-medium tracking-tight">
+          <Link href="/" className="text-slate-300 hover:text-white transition-colors duration-200">
             Home
           </Link>
-          <Link href="/docs" className="text-slate-200 hover:text-white transition-colors">
+          <Link href="/docs" className="text-slate-400 hover:text-white transition-colors duration-200">
             Docs
           </Link>
-          <Link href="/report" className="text-slate-200 hover:text-white transition-colors">
+          <Link href="/report" className="text-slate-400 hover:text-white transition-colors duration-200">
             Report Abuse
           </Link>
         </nav>
 
         {/* Desktop Auth Controls */}
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden md:flex items-center gap-2 shrink-0">
           {loading ? (
-            <div className="size-8 rounded-full bg-white/10 animate-pulse" />
+            <div className="size-6.5 rounded-full bg-white/10 animate-pulse" />
           ) : session ? (
-            <DropdownMenu>
+            <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
-                <button className="skeuo-button px-3.5 py-1.5 h-9 text-xs gap-2 text-white border-0 outline-none">
-                  <Avatar className="size-5">
+                <button className="flex items-center gap-1.5 h-7.5 rounded-full bg-gradient-to-b from-white/[0.22] to-white/[0.08] hover:from-white/[0.30] hover:to-white/[0.14] px-2.5 text-xs text-white shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.35)] transition-all duration-200 outline-none">
+                  <Avatar className="size-4.5">
                     {avatarUrl && <AvatarImage src={avatarUrl} alt={`${userName}'s profile`} className="object-cover" />}
-                    <AvatarFallback className="bg-blue-500/30 text-blue-400 text-[9px] font-bold font-mono">
+                    <AvatarFallback className="bg-blue-500/30 text-blue-400 text-[8px] font-bold font-mono">
                       {getInitials(userName)}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="max-w-[110px] truncate text-white font-semibold">
+                  <span className="max-w-[75px] sm:max-w-[100px] truncate text-white text-[11px] font-medium">
                     {userName}
                   </span>
-                  <ChevronDown className="size-3 text-slate-300" />
+                  <ChevronDown className="size-3 text-slate-400" />
                 </button>
               </DropdownMenuTrigger>
 
-              <DropdownMenuContent align="end" className="w-60 p-2 space-y-1 bg-card border-none shadow-2xl rounded-xl">
+              <DropdownMenuContent align="end" sideOffset={8} className="w-60 p-2 space-y-1 bg-[#0e1015]/95 backdrop-blur-2xl border border-white/10 shadow-2xl rounded-2xl">
                 <DropdownMenuLabel className="font-normal p-2.5">
                   <div className="flex flex-col space-y-1">
                     <div className="flex items-center justify-between">
@@ -147,7 +164,7 @@ export default function Navbar() {
                         <Badge variant="outline" className="text-[9px] px-1.5 py-0 h-4 text-blue-400 border-none bg-blue-500/20 font-semibold">Developer</Badge>
                       )}
                     </div>
-                    <p className="text-[11px] text-slate-300 truncate font-mono">{userEmail}</p>
+                    <p className="text-[11px] text-slate-400 truncate font-mono">{userEmail}</p>
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator className="bg-white/10" />
@@ -180,13 +197,13 @@ export default function Navbar() {
                 <DropdownMenuGroup>
                   <DropdownMenuItem asChild className="text-xs cursor-pointer focus:bg-white/10 rounded-lg text-slate-200 focus:text-white font-medium">
                     <Link href="/docs" className="flex items-center py-1.5">
-                      <BookOpen className="size-3.5 mr-2.5 text-slate-300" />
+                      <BookOpen className="size-3.5 mr-2.5 text-slate-400" />
                       Guides &amp; API Docs
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild className="text-xs cursor-pointer focus:bg-white/10 rounded-lg text-slate-200 focus:text-white font-medium">
                     <Link href="/report" className="flex items-center py-1.5">
-                      <AlertTriangle className="size-3.5 mr-2.5 text-slate-300" />
+                      <AlertTriangle className="size-3.5 mr-2.5 text-slate-400" />
                       Report Abuse
                     </Link>
                   </DropdownMenuItem>
@@ -204,48 +221,47 @@ export default function Navbar() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button
-              asChild
-              variant="default"
-              size="sm"
+            <Link
+              href="/login"
+              className="inline-flex items-center justify-center rounded-full bg-white/[0.08] hover:bg-white/[0.16] text-white font-medium text-xs px-3.5 py-1 transition-all duration-200 border-none"
             >
-              <Link href="/login">Sign In</Link>
-            </Button>
+              Sign In
+            </Link>
           )}
         </div>
 
         {/* Mobile Hamburger Button */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="p-2 text-slate-300 transition-colors hover:text-white md:hidden"
+          className="p-1 text-slate-400 transition-colors hover:text-white md:hidden shrink-0"
           aria-label="Toggle Menu"
         >
-          {isOpen ? <X className="size-5 text-white" /> : <Menu className="size-5 text-white" />}
+          {isOpen ? <X className="size-4.5 text-white" /> : <Menu className="size-4.5 text-white" />}
         </button>
       </div>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Floating Drawer */}
       {isOpen && (
-        <div className="border-b border-white/10 bg-card/95 px-4 pt-3 pb-6 space-y-4 backdrop-blur-md animate-slide-up md:hidden">
-          <nav className="flex flex-col space-y-3 font-semibold text-sm">
+        <div className="pointer-events-auto absolute top-16 inset-x-4 max-w-md mx-auto rounded-2xl border border-white/15 bg-[#0e1118]/95 p-4 space-y-4 backdrop-blur-2xl shadow-2xl animate-slide-up md:hidden">
+          <nav className="flex flex-col space-y-2.5 font-medium text-sm">
             <Link
               href="/"
               onClick={() => setIsOpen(false)}
-              className="text-slate-200 hover:text-white transition-colors"
+              className="text-slate-200 hover:text-white transition-colors p-1"
             >
               Home
             </Link>
             <Link
               href="/docs"
               onClick={() => setIsOpen(false)}
-              className="text-slate-200 hover:text-white transition-colors"
+              className="text-slate-200 hover:text-white transition-colors p-1"
             >
               Docs
             </Link>
             <Link
               href="/report"
               onClick={() => setIsOpen(false)}
-              className="text-slate-200 hover:text-white transition-colors"
+              className="text-slate-200 hover:text-white transition-colors p-1"
             >
               Report Abuse
             </Link>
@@ -264,7 +280,7 @@ export default function Navbar() {
                   asChild
                   variant="default"
                   size="sm"
-                  className="w-full justify-center"
+                  className="w-full justify-center rounded-full"
                 >
                   <Link href="/dashboard" onClick={() => setIsOpen(false)}>
                     Dashboard
@@ -274,7 +290,7 @@ export default function Navbar() {
                   variant="ghost"
                   size="sm"
                   onClick={handleSignOut}
-                  className="w-full justify-center text-destructive hover:text-destructive hover:bg-destructive/10"
+                  className="w-full justify-center text-destructive hover:text-destructive hover:bg-destructive/10 rounded-full"
                 >
                   Sign Out
                 </Button>
@@ -284,7 +300,7 @@ export default function Navbar() {
                 asChild
                 variant="default"
                 size="sm"
-                className="w-full justify-center"
+                className="w-full justify-center rounded-full"
               >
                 <Link href="/login" onClick={() => setIsOpen(false)}>
                   Sign In
