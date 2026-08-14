@@ -4,8 +4,8 @@
  * Interacts with PowerDNS v1 REST API for dynamic, zero-limit DNS record provisioning.
  */
 
-const POWERDNS_API_URL =
-  process.env.POWERDNS_API_URL || "http://127.0.0.1:8081/api/v1/servers/localhost";
+const POWERDNS_PRIMARY_URL =
+  process.env.POWERDNS_API_URL || "http://arc-powerdns:8081/api/v1/servers/localhost";
 const POWERDNS_API_KEY =
   process.env.POWERDNS_API_KEY || "arc_powerdns_secure_api_key_2026";
 const ROOT_ZONE = (process.env.NEXT_PUBLIC_DOMAIN || "arc.bd").toLowerCase();
@@ -37,33 +37,53 @@ function normalizeContent(type: string, content: string): string {
   return val;
 }
 
+const CANDIDATE_URLS = [
+  POWERDNS_PRIMARY_URL,
+  "http://arc-powerdns:8081/api/v1/servers/localhost",
+  "http://172.17.0.1:8081/api/v1/servers/localhost",
+  "http://172.18.0.1:8081/api/v1/servers/localhost",
+  "http://127.0.0.1:8081/api/v1/servers/localhost",
+];
+
 /**
- * Perform authenticated request to PowerDNS REST API
+ * Perform authenticated request to PowerDNS REST API with resilient failover
  */
 async function pdnsFetch(endpoint: string, options: RequestInit = {}) {
-  const url = `${POWERDNS_API_URL}${endpoint}`;
-  const res = await fetch(url, {
-    ...options,
-    headers: {
-      "X-API-Key": POWERDNS_API_KEY,
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      ...(options.headers || {}),
-    },
-    // Prevent Next.js from caching DNS mutation requests
-    cache: "no-store",
-  });
+  let lastError: Error | null = null;
+  const uniqueUrls = Array.from(new Set(CANDIDATE_URLS));
 
-  if (!res.ok && res.status !== 204) {
-    const errorText = await res.text().catch(() => res.statusText);
-    throw new Error(`PowerDNS API Error (${res.status}): ${errorText}`);
+  for (const baseUrl of uniqueUrls) {
+    try {
+      const url = `${baseUrl}${endpoint}`;
+      const res = await fetch(url, {
+        ...options,
+        headers: {
+          "X-API-Key": POWERDNS_API_KEY,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          ...(options.headers || {}),
+        },
+        signal: AbortSignal.timeout(4000),
+        cache: "no-store",
+      });
+
+      if (!res.ok && res.status !== 204) {
+        const errorText = await res.text().catch(() => res.statusText);
+        throw new Error(`PowerDNS API Error (${res.status}): ${errorText}`);
+      }
+
+      if (res.status === 204) {
+        return null;
+      }
+
+      return await res.json().catch(() => null);
+    } catch (e: any) {
+      lastError = e;
+      // Continue to next candidate URL
+    }
   }
 
-  if (res.status === 204) {
-    return null;
-  }
-
-  return await res.json().catch(() => null);
+  throw lastError || new Error("Failed to connect to PowerDNS REST API");
 }
 
 /**
