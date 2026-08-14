@@ -286,27 +286,27 @@ void main() {
 }
 `
 
-// Optimized high-gloss 3D luminous silk settings matched to ARC.BD Royal Blue theme
+// Optimized high-gloss 3D luminous silk settings: Pure Obsidian Black & Metallic Chrome
 const UNIFORMS = {
   colors: [
-    [0.003, 0.005, 0.009], // Deep obsidian background (#09090b)
-    [0.008, 0.020, 0.055], // Midnight cobalt undertone
-    [0.025, 0.080, 0.220], // Deep sapphire transition
-    [0.080, 0.260, 0.720], // Electric ARC Royal Blue (Theme Primary)
-    [0.220, 0.540, 0.960], // Luminous cyan-blue silk wave (Brand Accent)
-    [0.650, 0.860, 1.000], // High-gloss specular ice-blue sheen
-    [0.900, 0.960, 1.000], // Diamond white-cyan crest glint
-    [0.900, 0.960, 1.000],
+    [0.002, 0.003, 0.005], // Deep obsidian void (#09090b)
+    [0.012, 0.014, 0.018], // Rich dark charcoal undertone
+    [0.040, 0.046, 0.058], // Sleek dark graphite transition
+    [0.120, 0.140, 0.175], // Deep 3D metallic liquid silk body
+    [0.380, 0.430, 0.520], // High-gloss liquid chrome specular sheen
+    [0.820, 0.880, 0.960], // Brilliant silver-white crest glint
+    [0.820, 0.880, 0.960],
+    [0.820, 0.880, 0.960],
   ] as [number, number, number][],
-  colorCount: 7,
+  colorCount: 6,
   scale: 0.620,
-  intensity: 0.300,
+  intensity: 0.320,
   paramA: 0.500,
   warp: 0.180,
   detail: 1.350,
-  contrast: 1.140,
-  brightness: -0.010,
-  saturation: 0.950,
+  contrast: 1.160,
+  brightness: -0.005,
+  saturation: 0.180, // Pure monochromatic glossy black/charcoal/silver luxury aesthetic
   hue: 0.0000,
   vignette: 0.150,
   blur: 0.0000, // 0.0 bypasses 5-tap multi-sampling (80% GPU performance boost)
