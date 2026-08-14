@@ -22,13 +22,27 @@ export async function POST(request: Request) {
 
   const { data: subdomain } = await supabase
     .from('subdomains')
-    .select('id, name')
+    .select('id, name, status')
     .eq('id', subdomain_id)
     .eq('user_id', user.id)
     .single()
 
   if (!subdomain) {
     return NextResponse.json({ error: 'Subdomain not found or unauthorized' }, { status: 404 })
+  }
+
+  if (subdomain.status === 'pending') {
+    return NextResponse.json(
+      { error: 'DNS management is locked until your domain claim is approved by an administrator.' },
+      { status: 403 }
+    )
+  }
+
+  if (subdomain.status !== 'active') {
+    return NextResponse.json(
+      { error: `This domain is currently ${subdomain.status}. DNS management is locked.` },
+      { status: 403 }
+    )
   }
 
   let cleanContent = content.trim()

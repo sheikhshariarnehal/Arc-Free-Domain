@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { validateSubdomainName } from '@/lib/validation'
 import { getFullDomain } from '@/lib/utils'
-import { createDNSRecord } from '@/lib/cloudflare'
+import { sendClaimPendingEmail } from '@/lib/email'
 
 export async function POST(request: Request) {
   const supabase = await createClient()
@@ -25,18 +25,22 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: validationError }, { status: 400 })
   }
 
+  // Resolve user identity
+  const userEmail = user.email || user.user_metadata?.email || ''
+  const userName = user.user_metadata?.full_name || user.user_metadata?.name || (userEmail ? userEmail.split('@')[0] : 'Developer')
+
   // Ensure profile row exists in public.profiles
   const { data: existingProfile } = await supabase
     .from('profiles')
-    .select('id')
+    .select('id, email, name')
     .eq('id', userId)
     .single()
 
   if (!existingProfile) {
     await supabase.from('profiles').upsert({
       id: userId,
-      email: user.email || '',
-      name: user.user_metadata?.full_name || user.user_metadata?.name || user.email || '',
+      email: userEmail,
+      name: userName,
     })
   }
 
@@ -84,10 +88,10 @@ export async function POST(request: Request) {
 
   const fullDomain = getFullDomain(name)
 
-  // Insert subdomain with 'active' status directly (Wildcard *.arc.bd in Cloudflare handles routing)
+  // Insert subdomain with 'pending' status — locked until admin confirms the request
   const { data: subdomain, error: insertError } = await supabase
     .from('subdomains')
-    .insert({ user_id: userId, name, full_domain: fullDomain, status: 'active' })
+    .insert({ user_id: userId, name, full_domain: fullDomain, status: 'pending' })
     .select()
     .single()
 
@@ -99,15 +103,36 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Failed to register subdomain. Please try again.' }, { status: 500 })
   }
 
+  // Send transactional email confirming claim receipt & pending review
+  const recipientEmail = userEmail || existingProfile?.email
+  if (recipientEmail) {
+    try {
+      const emailResult = await sendClaimPendingEmail({
+        to: recipientEmail,
+        userName: existingProfile?.name || userName,
+        domainName: name,
+        fullDomain,
+      })
+      if (!emailResult.success) {
+        console.warn('[Claim Pending Email Warning]', emailResult.error)
+      }
+    } catch (mailErr) {
+      console.error('[Claim Pending Email Error]', mailErr)
+    }
+  } else {
+    console.warn('[Claim Pending Email] No recipient email found for user', userId)
+  }
+
   await supabase.from('audit_logs').insert({
     user_id: userId,
-    action: 'claim_subdomain',
+    action: 'claim_subdomain_pending',
     resource_type: 'subdomain',
     resource_id: subdomain.id,
-    metadata: { name, fullDomain }
+    metadata: { name, fullDomain, status: 'pending' }
   })
 
   return NextResponse.json(subdomain)
 }
+
 
 

@@ -4,7 +4,7 @@
 // Adapted for ARC.BD Dark/Black Theme. Zero dependencies: one WebGL canvas that fills its parent.
 // Drop it behind your content with <div className="relative"><ShaderBackground className="absolute inset-0" />…
 
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 
 const VERT = `attribute vec2 a_position;
 void main() {
@@ -324,6 +324,7 @@ const pendingContextReleases = new WeakMap<HTMLCanvasElement, number>()
 
 export function ShaderBackground({ className }: { className?: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const [isReady, setIsReady] = useState(false)
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -331,7 +332,7 @@ export function ShaderBackground({ className }: { className?: string }) {
     const pendingRelease = pendingContextReleases.get(canvas)
     if (pendingRelease !== undefined) window.clearTimeout(pendingRelease)
     pendingContextReleases.delete(canvas)
-    const gl = canvas.getContext("webgl", { antialias: false })
+    const gl = canvas.getContext("webgl", { antialias: false, powerPreference: "high-performance" })
     if (!gl) return
 
     const compile = (type: number, src: string) => {
@@ -528,14 +529,13 @@ export function ShaderBackground({ className }: { className?: string }) {
 
     function render(now: number) {
       raf = 0
-      if (disposed || !visible || !inView) return
+      if (disposed || !visible || !inView || !canvas || !gl) return
       const dt = lastNow === null ? 0 : Math.min((now - lastNow) / 1000, 0.1)
       lastNow = now
       const follow = 1 - Math.exp(-12 * dt)
       mouseX += (targetX - mouseX) * follow
       mouseY += (targetY - mouseY) * follow
       cursorPresence += (targetPresence - cursorPresence) * follow
-      resizeCanvas()
       const width = canvas.width
       const height = canvas.height
       gl.uniform4f(
@@ -567,6 +567,8 @@ export function ShaderBackground({ className }: { className?: string }) {
       if (timeAnimated || pointerSettling) requestRender()
       else lastNow = null
     }
+    render(performance.now())
+    setIsReady(true)
     requestRender()
     return () => {
       disposed = true
@@ -599,6 +601,10 @@ export function ShaderBackground({ className }: { className?: string }) {
   }, [])
 
   return (
-    <canvas ref={canvasRef} className={className} style={{ display: "block", width: "100%", height: "100%" }} />
+    <canvas
+      ref={canvasRef}
+      className={`${className || ""} transition-opacity duration-500 ease-out ${isReady ? "opacity-80" : "opacity-0"}`}
+      style={{ display: "block", width: "100%", height: "100%" }}
+    />
   )
 }

@@ -87,16 +87,16 @@ export default function LandingPage() {
 
   return (
     <div className="flex-1 flex flex-col min-h-screen bg-background text-foreground selection:bg-blue-500/20 selection:text-blue-400 overflow-x-hidden relative">
-      {/* Full-bleed Silk Shader Background covering from top-0 behind Navbar down through Hero */}
+      {/* Full-bleed Silk Shader Background with Instant CSS Ambient Underlay */}
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-[920px] z-0 overflow-hidden"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[820px] z-0 overflow-hidden"
         style={{
-          maskImage: "linear-gradient(to bottom, black 0%, black 50%, rgba(0, 0, 0, 0.75) 72%, rgba(0, 0, 0, 0.25) 86%, transparent 100%)",
-          WebkitMaskImage: "linear-gradient(to bottom, black 0%, black 50%, rgba(0, 0, 0, 0.75) 72%, rgba(0, 0, 0, 0.25) 86%, transparent 100%)",
+          background: "radial-gradient(ellipse 70% 60% at 18% 28%, rgba(45, 60, 85, 0.25) 0%, rgba(18, 24, 36, 0.12) 45%, transparent 75%)",
+          contain: "paint layout",
         }}
       >
         <ShaderBackground className="h-full w-full opacity-80" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/15 via-60% to-background" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/25 via-60% to-background pointer-events-none" />
       </div>
 
       <Navbar transparent />
@@ -105,13 +105,15 @@ export default function LandingPage() {
         {/* Hero Section */}
         <section className="relative mx-auto flex w-full min-w-0 max-w-5xl flex-1 flex-col items-center justify-center px-4 pt-24 pb-12 text-center sm:px-6 sm:pt-28 sm:pb-16 md:min-h-screen md:py-28 lg:px-8">
           {/* Headline */}
-            <h1 className="mb-4 w-full max-w-3xl text-[clamp(2.25rem,5.5vw,3.75rem)] font-extrabold leading-[1.15] tracking-[-0.03em] text-white sm:mb-5">
-              <span>Free </span>
-              <span className="inline-block bg-[#0e1d36] text-[#3b82f6] px-2 py-0.5 rounded-md border-0 border-transparent shadow-none ring-0 outline-none">
-                .arc.bd
+            <h1 className="mb-4 w-full max-w-3xl text-[clamp(1.75rem,7vw,3.75rem)] font-extrabold leading-[1.18] tracking-[-0.03em] text-white sm:mb-5 text-balance">
+              <span className="whitespace-nowrap">
+                Free{" "}
+                <span className="inline-block bg-blue-500/10 text-blue-400 font-mono px-1.5 sm:px-2.5 py-0.5 rounded-none border-none align-baseline">
+                  .arc.bd
+                </span>{" "}
+                domains
               </span>
-              <span> domains</span>
-              <span className="block mt-1">for developers.</span>
+              <span className="block mt-1 sm:mt-1.5">for developers.</span>
             </h1>
 
             {/* Subheadline */}
@@ -323,7 +325,7 @@ export default function LandingPage() {
               className="size-5 rounded bg-white/12 flex items-center justify-center text-white overflow-hidden"
               style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.25)" }}
             >
-              <Image src="/arc.png" alt="ARC.BD Logo" width={20} height={20} className="size-4 object-contain" />
+              <Image src="/ARC.webp" alt="ARC.BD Logo" width={20} height={20} className="size-4 object-contain" />
             </div>
             <span className="font-semibold text-white">ARC.BD</span>
             <span className="text-slate-300">&copy; {new Date().getFullYear()}</span>

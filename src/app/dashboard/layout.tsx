@@ -97,7 +97,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {/* Brand Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-border">
           <div className="flex items-center gap-2.5">
-            <Image src="/arc.png" alt="ARC.BD Logo" width={32} height={32} className="size-8 object-contain rounded-md shrink-0" />
+            <Image src="/ARC.webp" alt="ARC.BD Logo" width={32} height={32} className="size-8 object-contain rounded-md shrink-0" />
             <div className="flex flex-col leading-none">
               <span className="text-sm font-semibold text-foreground">ARC.BD</span>
               <span className="text-[11px] text-muted-foreground">Free Subdomain Platform</span>
@@ -211,7 +211,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           >
             <Menu className="size-5" />
           </button>
-          <Image src="/arc.png" alt="ARC.BD Logo" width={24} height={24} className="size-6 object-contain rounded" />
+          <Image src="/ARC.webp" alt="ARC.BD Logo" width={24} height={24} className="size-6 object-contain rounded" />
           <span className="font-semibold text-foreground">ARC.BD Dashboard</span>
         </header>
 

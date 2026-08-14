@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { 
   Users, 
   Globe, 
@@ -14,7 +15,8 @@ import {
   CheckCircle2,
   ShieldCheck,
   Activity,
-  Bookmark
+  Bookmark,
+  Clock
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -36,6 +38,7 @@ export default function AdminOverview() {
     metrics: {
       totalUsers: number;
       activeSubdomains: number;
+      pendingSubdomains: number;
       suspendedSubdomains: number;
       pendingReports: number;
       reservedNames: number;
@@ -47,6 +50,7 @@ export default function AdminOverview() {
     metrics: {
       totalUsers: 5,
       activeSubdomains: 4,
+      pendingSubdomains: 0,
       suspendedSubdomains: 0,
       pendingReports: 0,
       reservedNames: 36,
@@ -109,7 +113,31 @@ export default function AdminOverview() {
 
   return (
     <div className="flex flex-col gap-6">
-      {/* 1. Real Supabase Metric Banner Grid matching shadcnblocks-admin dashboard-1 */}
+      {/* Pending Approvals Action Banner */}
+      {metrics.pendingSubdomains > 0 && (
+        <Alert className="border-amber-500/30 bg-amber-500/10 text-amber-300 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4">
+          <div className="flex items-center gap-3">
+            <div className="size-9 rounded-lg bg-amber-500/20 flex items-center justify-center shrink-0">
+              <Clock className="size-5 text-amber-400" />
+            </div>
+            <div>
+              <AlertTitle className="text-amber-400 font-semibold text-sm">
+                {metrics.pendingSubdomains} Subdomain Claim{metrics.pendingSubdomains > 1 ? "s" : ""} Pending Review
+              </AlertTitle>
+              <AlertDescription className="text-amber-300/80 text-xs mt-0.5">
+                New user claims are awaiting admin approval before DNS management is unlocked.
+              </AlertDescription>
+            </div>
+          </div>
+          <Button size="sm" className="bg-amber-500 hover:bg-amber-600 text-black font-semibold text-xs whitespace-nowrap" asChild>
+            <Link href="/admin/subdomains?status=pending">
+              Review Claims ({metrics.pendingSubdomains})
+            </Link>
+          </Button>
+        </Alert>
+      )}
+
+      {/* 1. Real Supabase Metric Banner Grid */}
       <div className="bg-card grid grid-cols-2 gap-3 rounded-xl border border-border p-4 sm:gap-4 sm:p-5 lg:grid-cols-4 lg:gap-6 lg:p-6 shadow-sm">
         {/* Metric 1: Total Platform Users */}
         <div className="flex items-start">

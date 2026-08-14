@@ -10,6 +10,8 @@ import {
   ExternalLink,
   Clock,
   Search,
+  Lock,
+  Settings,
 } from "lucide-react";
 import Link from "next/link";
 import { formatDate } from "@/lib/utils";
@@ -67,6 +69,7 @@ export default function DashboardOverview() {
   }, []);
 
   const activeCount = subdomains.filter((s) => s.status === "active").length;
+  const pendingCount = subdomains.filter((s) => s.status === "pending").length;
   const usedSlots = subdomains.length;
   const usagePercent = Math.min((usedSlots / MAX_SUBDOMAINS) * 100, 100);
 
@@ -114,6 +117,28 @@ export default function DashboardOverview() {
           </Link>
         </Button>
       </div>
+
+      {/* Pending Claims Banner if any domain is awaiting admin review */}
+      {pendingCount > 0 && (
+        <div className="flex items-center justify-between p-4 rounded-xl border border-amber-500/30 bg-amber-500/10 text-amber-300 gap-4">
+          <div className="flex items-center gap-3">
+            <div className="size-8 rounded-lg bg-amber-500/20 flex items-center justify-center shrink-0">
+              <Clock className="size-4 text-amber-400" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-amber-300">
+                {pendingCount} Domain Claim{pendingCount > 1 ? "s" : ""} Pending Review
+              </p>
+              <p className="text-xs text-amber-200/80 mt-0.5">
+                Your domain claim is being reviewed by administrators. DNS controls will unlock as soon as approved.
+              </p>
+            </div>
+          </div>
+          <Button variant="outline" size="sm" className="border-amber-500/40 text-amber-300 hover:bg-amber-500/20 text-xs shrink-0" asChild>
+            <Link href="/dashboard/domains">View Domains</Link>
+          </Button>
+        </div>
+      )}
 
       {/* Metric Banner — matching admin grid style */}
       <div className="bg-card grid grid-cols-2 gap-3 rounded-xl border border-border p-4 sm:gap-4 sm:p-5 lg:grid-cols-4 lg:gap-6 lg:p-6 shadow-sm">
@@ -316,7 +341,12 @@ export default function DashboardOverview() {
                     <span className="text-xs text-muted-foreground hidden sm:block">{formatDate(domain.created_at)}</span>
                     <Button variant="ghost" size="sm" className="h-7 text-xs" asChild>
                       <Link href={`/dashboard/domains/${domain.id}`}>
-                        <ExternalLink className="size-3 mr-1" /> Manage
+                        {domain.status === "active" ? (
+                          <Settings className="size-3 mr-1" />
+                        ) : (
+                          <Lock className="size-3 mr-1 text-amber-400" />
+                        )}
+                        Manage
                       </Link>
                     </Button>
                   </div>

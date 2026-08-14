@@ -18,7 +18,7 @@ export default async function NotFound() {
     <main className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground px-6 text-center gap-5">
       <Link href="https://arc.bd" className="flex items-center gap-2.5 mb-2">
         <div className="size-8 rounded-lg bg-white/10 flex items-center justify-center overflow-hidden">
-          <Image src="/arc.png" alt="ARC.BD Logo" width={32} height={32} className="size-7 object-contain" />
+          <Image src="/ARC.webp" alt="ARC.BD Logo" width={32} height={32} className="size-7 object-contain" />
         </div>
         <span className="font-extrabold text-lg tracking-tight">
           ARC<span className="text-blue-400 font-mono">.BD</span>

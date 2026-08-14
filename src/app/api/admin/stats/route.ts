@@ -39,6 +39,7 @@ export async function GET() {
     const totalUsers = usersRes.count || 5;
     const subdomains: Array<{ id: string; status: string; created_at: string }> = subdomainsRes.data || [];
     const activeSubdomains = subdomains.filter((s: { status: string }) => s.status === "active").length;
+    const pendingSubdomains = subdomains.filter((s: { status: string }) => s.status === "pending").length;
     const suspendedSubdomains = subdomains.filter((s: { status: string }) => s.status === "suspended").length;
     const reservedNames = reservedRes.count || 36;
     
@@ -82,6 +83,7 @@ export async function GET() {
       metrics: {
         totalUsers,
         activeSubdomains,
+        pendingSubdomains,
         suspendedSubdomains,
         pendingReports,
         reservedNames,

@@ -16,12 +16,28 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
 
   const { data: record } = await supabase
     .from('dns_records')
-    .select('*, subdomains (user_id, name)')
+    .select('*, subdomains (user_id, name, status)')
     .eq('id', id)
     .single()
 
-  if (!record || record.subdomains.user_id !== user.id) {
+  const sub = record?.subdomains as { user_id: string; name: string; status: string } | undefined
+
+  if (!record || !sub || sub.user_id !== user.id) {
     return NextResponse.json({ error: 'Not found or unauthorized' }, { status: 404 })
+  }
+
+  if (sub.status === 'pending') {
+    return NextResponse.json(
+      { error: 'DNS management is locked until your domain claim is approved by an administrator.' },
+      { status: 403 }
+    )
+  }
+
+  if (sub.status !== 'active') {
+    return NextResponse.json(
+      { error: `This domain is currently ${sub.status}. DNS management is locked.` },
+      { status: 403 }
+    )
   }
 
   const newType = type || record.type
@@ -111,12 +127,28 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
 
   const { data: record } = await supabase
     .from('dns_records')
-    .select('*, subdomains (user_id)')
+    .select('*, subdomains (user_id, status)')
     .eq('id', id)
     .single()
 
-  if (!record || record.subdomains.user_id !== user.id) {
+  const sub = record?.subdomains as { user_id: string; status: string } | undefined
+
+  if (!record || !sub || sub.user_id !== user.id) {
     return NextResponse.json({ error: 'Not found or unauthorized' }, { status: 404 })
+  }
+
+  if (sub.status === 'pending') {
+    return NextResponse.json(
+      { error: 'DNS management is locked until your domain claim is approved by an administrator.' },
+      { status: 403 }
+    )
+  }
+
+  if (sub.status !== 'active') {
+    return NextResponse.json(
+      { error: `This domain is currently ${sub.status}. DNS management is locked.` },
+      { status: 403 }
+    )
   }
 
   try {

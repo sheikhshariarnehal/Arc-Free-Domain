@@ -2,7 +2,21 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Save, Plus, Trash2, ShieldAlert, Loader2, CheckCircle2, Globe, Server, Code, GitBranch } from "lucide-react";
+import { 
+  ArrowLeft, 
+  Save, 
+  Plus, 
+  Trash2, 
+  ShieldAlert, 
+  Loader2, 
+  CheckCircle2, 
+  Globe, 
+  Server, 
+  Code, 
+  GitBranch, 
+  Lock, 
+  Clock 
+} from "lucide-react";
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -45,7 +59,7 @@ function StatusBadge({ status }: { status: string }) {
     case "active":
       return <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20 capitalize">Active</Badge>;
     case "pending":
-      return <Badge className="bg-amber-500/10 text-amber-400 border-amber-500/30 hover:bg-amber-500/20 capitalize">Pending</Badge>;
+      return <Badge className="bg-amber-500/10 text-amber-400 border-amber-500/30 hover:bg-amber-500/20 capitalize">Pending Review</Badge>;
     case "suspended":
       return <Badge variant="destructive" className="capitalize">Suspended</Badge>;
     default:
@@ -96,9 +110,18 @@ export default function DomainDetail() {
     if (domainId) fetchDomain();
   }, [domainId]);
 
+  const isPending = subdomain?.status === "pending";
+  const isSuspended = subdomain?.status === "suspended";
+  const isLocked = isPending || isSuspended;
+
   const handleAddDNS = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!subdomain || !recordTarget.trim()) return;
+    if (isLocked) {
+      setError("DNS management is locked until your domain claim is approved by an administrator.");
+      return;
+    }
+
     setAddingRecord(true);
     setError(null);
     setSuccessMsg(null);
@@ -131,7 +154,7 @@ export default function DomainDetail() {
   };
 
   const handleDeleteDNS = async () => {
-    if (!deleteRecordId) return;
+    if (!deleteRecordId || isLocked) return;
     setDeletingRecord(true);
     setError(null);
     setSuccessMsg(null);
@@ -169,6 +192,7 @@ export default function DomainDetail() {
   };
 
   const applyPreset = async (type: "A" | "CNAME" | "TXT", target: string, name: string = "@") => {
+    if (isLocked) return;
     setRecordType(type);
     setRecordName(name);
     setRecordTarget(target);
@@ -225,6 +249,51 @@ export default function DomainDetail() {
         </div>
       </div>
 
+      {/* Security Status Banner for Pending Review */}
+      {isPending && (
+        <Alert className="border-amber-500/40 bg-amber-500/10 text-amber-300 p-5">
+          <div className="flex items-start gap-3.5">
+            <div className="size-10 rounded-lg bg-amber-500/20 flex items-center justify-center shrink-0 mt-0.5">
+              <Lock className="size-5 text-amber-400" />
+            </div>
+            <div className="space-y-1.5">
+              <div className="flex items-center gap-2">
+                <AlertTitle className="text-amber-300 font-semibold text-base">
+                  Domain Claim Pending Administrator Approval
+                </AlertTitle>
+                <Badge className="bg-amber-500/20 text-amber-400 border-amber-500/30 text-[10px] px-2 py-0.5">
+                  <Clock className="size-3 mr-1 inline" /> Under Review
+                </Badge>
+              </div>
+              <AlertDescription className="text-amber-200/90 text-sm leading-relaxed">
+                Your claim for <strong>{subdomain?.full_domain}</strong> has been received and is queued for verification. For platform security and anti-abuse safeguards, <strong>DNS record management is locked</strong> until an administrator confirms your request.
+                <br />
+                <span className="text-xs text-amber-300/80 mt-1 block">
+                  ✓ A confirmation email has been sent to your address. You will receive another notification as soon as DNS management is unlocked.
+                </span>
+              </AlertDescription>
+            </div>
+          </div>
+        </Alert>
+      )}
+
+      {/* Security Status Banner for Suspended */}
+      {isSuspended && (
+        <Alert variant="destructive" className="p-5">
+          <div className="flex items-start gap-3.5">
+            <div className="size-10 rounded-lg bg-destructive/20 flex items-center justify-center shrink-0 mt-0.5">
+              <ShieldAlert className="size-5 text-destructive" />
+            </div>
+            <div className="space-y-1">
+              <AlertTitle className="font-semibold text-base">Domain Suspended</AlertTitle>
+              <AlertDescription className="text-sm">
+                This domain has been suspended by administrators. DNS routing and record modifications are locked. Contact <a href="mailto:admin@arc.bd" className="underline font-semibold">admin@arc.bd</a> for assistance.
+              </AlertDescription>
+            </div>
+          </div>
+        </Alert>
+      )}
+
       {/* Notifications */}
       {error && (
         <Alert variant="destructive">
@@ -242,15 +311,27 @@ export default function DomainDetail() {
       )}
 
       {/* Setup Presets */}
-      <Card className="border-border">
+      <Card className={`border-border transition-opacity ${isLocked ? "opacity-60 pointer-events-none select-none" : ""}`}>
         <CardHeader>
-          <CardTitle className="text-base font-semibold">Quick Setup Presets</CardTitle>
-          <CardDescription>One-click presets for popular hosting platforms.</CardDescription>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="text-base font-semibold flex items-center gap-2">
+                Quick Setup Presets
+                {isLocked && <Lock className="size-3.5 text-muted-foreground" />}
+              </CardTitle>
+              <CardDescription>
+                {isLocked 
+                  ? "Presets will unlock once this domain claim is approved."
+                  : "One-click presets for popular hosting platforms."}
+              </CardDescription>
+            </div>
+          </div>
         </CardHeader>
         <CardContent className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           <button
             onClick={() => applyPreset("CNAME", "cname.vercel-dns.com", "@")}
-            className="flex flex-col items-start gap-2.5 p-3 rounded-lg border border-border bg-card/50 hover:bg-card hover:border-primary/50 transition-all text-left group"
+            disabled={isLocked}
+            className="flex flex-col items-start gap-2.5 p-3 rounded-lg border border-border bg-card/50 hover:bg-card hover:border-primary/50 transition-all text-left group disabled:cursor-not-allowed"
           >
             <div className="size-8 rounded-md bg-primary/15 flex items-center justify-center group-hover:bg-primary/25 transition-colors">
               <Server className="size-4 text-primary" />
@@ -263,7 +344,8 @@ export default function DomainDetail() {
 
           <button
             onClick={() => applyPreset("TXT", "vc-domain-verify=...", "_vercel")}
-            className="flex flex-col items-start gap-2.5 p-3 rounded-lg border border-border bg-card/50 hover:bg-card hover:border-primary/50 transition-all text-left group"
+            disabled={isLocked}
+            className="flex flex-col items-start gap-2.5 p-3 rounded-lg border border-border bg-card/50 hover:bg-card hover:border-primary/50 transition-all text-left group disabled:cursor-not-allowed"
           >
             <div className="size-8 rounded-md bg-primary/15 flex items-center justify-center group-hover:bg-primary/25 transition-colors">
               <Code className="size-4 text-primary" />
@@ -276,7 +358,8 @@ export default function DomainDetail() {
 
           <button
             onClick={() => applyPreset("CNAME", "your-username.github.io", "@")}
-            className="flex flex-col items-start gap-2.5 p-3 rounded-lg border border-border bg-card/50 hover:bg-card hover:border-primary/50 transition-all text-left group"
+            disabled={isLocked}
+            className="flex flex-col items-start gap-2.5 p-3 rounded-lg border border-border bg-card/50 hover:bg-card hover:border-primary/50 transition-all text-left group disabled:cursor-not-allowed"
           >
             <div className="size-8 rounded-md bg-primary/15 flex items-center justify-center group-hover:bg-primary/25 transition-colors">
               <GitBranch className="size-4 text-primary" />
@@ -289,7 +372,8 @@ export default function DomainDetail() {
 
           <button
             onClick={() => applyPreset("CNAME", "your-site.netlify.app", "@")}
-            className="flex flex-col items-start gap-2.5 p-3 rounded-lg border border-border bg-card/50 hover:bg-card hover:border-primary/50 transition-all text-left group"
+            disabled={isLocked}
+            className="flex flex-col items-start gap-2.5 p-3 rounded-lg border border-border bg-card/50 hover:bg-card hover:border-primary/50 transition-all text-left group disabled:cursor-not-allowed"
           >
             <div className="size-8 rounded-md bg-primary/15 flex items-center justify-center group-hover:bg-primary/25 transition-colors">
               <Globe className="size-4 text-primary" />
@@ -302,19 +386,36 @@ export default function DomainDetail() {
         </CardContent>
       </Card>
 
-      {/* DNS Records */}
+      {/* DNS Records Card */}
       <Card className="border-border">
         <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-border pb-4 gap-4">
           <div>
-            <CardTitle className="text-base font-semibold">DNS Records</CardTitle>
-            <CardDescription>Manage active DNS routing entries for this domain.</CardDescription>
+            <CardTitle className="text-base font-semibold flex items-center gap-2">
+              DNS Records
+              {isLocked && (
+                <Badge variant="outline" className="text-amber-400 border-amber-500/30 bg-amber-500/10 text-[11px] font-normal">
+                  <Lock className="size-3 mr-1" /> Controls Locked
+                </Badge>
+              )}
+            </CardTitle>
+            <CardDescription>
+              {isLocked 
+                ? "DNS record management is locked while your claim is pending review."
+                : "Manage active DNS routing entries for this domain."}
+            </CardDescription>
           </div>
-          <Button variant="outline" size="sm" onClick={() => setShowAddForm(!showAddForm)} className="w-full sm:w-auto">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => !isLocked && setShowAddForm(!showAddForm)} 
+            disabled={isLocked}
+            className="w-full sm:w-auto"
+          >
             <Plus className="size-4 mr-1.5" /> {showAddForm ? "Close Form" : "Add Record"}
           </Button>
         </CardHeader>
 
-        {showAddForm && (
+        {showAddForm && !isLocked && (
           <form onSubmit={handleAddDNS} className="p-4 bg-muted/20 border-b border-border space-y-3">
             <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
               <div className="sm:col-span-3">
@@ -383,7 +484,21 @@ export default function DomainDetail() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {subdomain?.dns_records && subdomain.dns_records.length > 0 ? (
+              {isPending ? (
+                <TableRow>
+                  <TableCell colSpan={5} className="h-32 text-center text-muted-foreground text-sm">
+                    <div className="flex flex-col items-center justify-center gap-2 py-6">
+                      <div className="size-10 rounded-full bg-amber-500/10 flex items-center justify-center">
+                        <Lock className="size-5 text-amber-400" />
+                      </div>
+                      <p className="font-medium text-foreground text-sm">DNS Management Locked (Pending Approval)</p>
+                      <p className="text-xs text-muted-foreground max-w-sm">
+                        You will be able to create and manage DNS routing records as soon as an administrator verifies and approves your domain claim.
+                      </p>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ) : subdomain?.dns_records && subdomain.dns_records.length > 0 ? (
                 subdomain.dns_records.map((rec) => (
                   <TableRow key={rec.id} className="border-border hover:bg-muted/30">
                     <TableCell className="font-semibold text-primary whitespace-nowrap">{rec.type}</TableCell>
@@ -396,7 +511,8 @@ export default function DomainDetail() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="h-7 text-xs text-destructive hover:text-destructive hover:bg-destructive/10 whitespace-nowrap"
+                        disabled={isLocked}
+                        className="h-7 text-xs text-destructive hover:text-destructive hover:bg-destructive/10 whitespace-nowrap disabled:opacity-50"
                         onClick={() => setDeleteRecordId(rec.id)}
                       >
                         <Trash2 className="size-3.5" />
@@ -407,7 +523,7 @@ export default function DomainDetail() {
               ) : (
                 <TableRow>
                   <TableCell colSpan={5} className="h-24 text-center text-muted-foreground text-sm">
-                    No DNS records configured. Click "Add Record" to configure routing.
+                    No DNS records configured. Click &quot;Add Record&quot; to configure routing.
                   </TableCell>
                 </TableRow>
               )}

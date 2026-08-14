@@ -56,7 +56,7 @@ export const metadata: Metadata = {
       "Claim your free .arc.bd subdomain in seconds with automated Cloudflare DNS. Connect directly to Vercel, Netlify, GitHub Pages, or any VPS.",
     images: [
       {
-        url: "/arc.png",
+        url: "/ARC.webp",
         width: 512,
         height: 512,
         alt: "ARC.BD Logo",
@@ -68,12 +68,12 @@ export const metadata: Metadata = {
     title: "ARC.BD — Free Subdomain Platform for Developers",
     description:
       "Claim your free .arc.bd subdomain with instant Cloudflare DNS. Connect to Vercel, Netlify, GitHub Pages, or any VPS.",
-    images: ["/arc.png"],
+    images: ["/ARC.webp"],
   },
   icons: {
-    icon: "/arc.png",
-    shortcut: "/arc.png",
-    apple: "/arc.png",
+    icon: "/ARC.webp",
+    shortcut: "/ARC.webp",
+    apple: "/ARC.webp",
   },
 };
 
@@ -85,7 +85,7 @@ const jsonLd = {
       "@id": "https://arc.bd/#organization",
       "name": "ARC.BD",
       "url": "https://arc.bd",
-      "logo": "https://arc.bd/arc.png",
+      "logo": "https://pub-6f3e39e02b3f4c84b240db2dbc06e491.r2.dev/ARC.webp",
       "description": "Free .arc.bd subdomains for developers and creators with automated Cloudflare DNS management.",
       "sameAs": ["https://github.com/sheikhshariarnehal/Arc-Free-Domain"]
     },

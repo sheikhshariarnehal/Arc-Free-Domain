@@ -26,10 +26,18 @@ export default function Navbar({ transparent = false }: { transparent?: boolean 
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<{ full_name?: string; avatar_url?: string; role?: string } | null>(null);
   const [scrolled, setScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+    let prev = window.scrollY > 20;
+    setScrolled(prev);
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      const next = window.scrollY > 20;
+      if (next !== prev) {
+        prev = next;
+        setScrolled(next);
+      }
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
@@ -43,11 +51,11 @@ export default function Navbar({ transparent = false }: { transparent?: boolean 
         .select("*")
         .eq("id", userId)
         .single();
-      setProfile(data);
+      if (data) {
+        setProfile(data);
+      }
     } catch {
       // Fallback profile
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -55,10 +63,9 @@ export default function Navbar({ transparent = false }: { transparent?: boolean 
     const supabase = createClient();
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
+      setLoading(false);
       if (session?.user) {
         fetchProfile(session.user.id);
-      } else {
-        setLoading(false);
       }
     });
 
@@ -66,11 +73,11 @@ export default function Navbar({ transparent = false }: { transparent?: boolean 
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
+      setLoading(false);
       if (session?.user) {
         fetchProfile(session.user.id);
       } else {
         setProfile(null);
-        setLoading(false);
       }
     });
 
@@ -98,13 +105,19 @@ export default function Navbar({ transparent = false }: { transparent?: boolean 
     return name.slice(0, 2).toUpperCase();
   };
 
+  const isScrolled = mounted && scrolled;
+
   return (
-    <header className="fixed top-0 inset-x-0 z-50 flex justify-center pointer-events-none px-3 pt-3 sm:pt-4 transition-all duration-300">
+    <header
+      suppressHydrationWarning
+      className="fixed top-0 inset-x-0 z-50 flex justify-center pointer-events-none px-3 pt-3 sm:pt-4 transform-gpu"
+    >
       <div
-        className={`pointer-events-auto flex items-center justify-between gap-3 sm:gap-6 transition-all duration-300 ease-out ${
-          scrolled
-            ? "w-full max-w-lg sm:max-w-xl h-10.5 sm:h-11 bg-gradient-to-b from-white/[0.24] via-white/[0.10] to-[#090b0f]/85 backdrop-blur-2xl backdrop-saturate-180 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.35),0_12px_32px_-8px_rgba(0,0,0,0.6)] px-3.5 rounded-full"
-            : "w-full max-w-4xl h-12 sm:h-14 bg-transparent backdrop-blur-none shadow-none border-none px-4 sm:px-6"
+        suppressHydrationWarning
+        className={`pointer-events-auto flex items-center justify-between transition-[max-width,background-color,backdrop-filter,box-shadow,border-radius] duration-300 ease-out transform-gpu ${
+          isScrolled
+            ? "w-full max-w-lg sm:max-w-xl h-11 bg-gradient-to-b from-white/[0.22] via-white/[0.08] to-white/[0.04] backdrop-blur-xl shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.40),0_10px_30px_-8px_rgba(0,0,0,0.35)] px-3.5 sm:px-4 rounded-full"
+            : "w-full max-w-xl md:max-w-5xl h-11 bg-gradient-to-b from-white/[0.22] via-white/[0.08] to-white/[0.04] md:bg-none md:bg-transparent backdrop-blur-xl md:backdrop-blur-none shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.40),0_10px_30px_-8px_rgba(0,0,0,0.35)] md:shadow-none border-none px-3.5 md:px-6 rounded-full md:rounded-none"
         }`}
       >
         {/* Brand Logo */}
@@ -112,7 +125,7 @@ export default function Navbar({ transparent = false }: { transparent?: boolean 
           <div
             className="size-6.5 rounded-full bg-white/[0.08] flex items-center justify-center text-white group-hover:scale-105 transition-transform overflow-hidden"
           >
-            <Image src="/arc.png" alt="ARC.BD Logo" width={22} height={22} className="size-4.5 object-contain" />
+            <Image src="/ARC.webp" alt="ARC.BD Logo" width={22} height={22} className="size-4.5 object-contain" />
           </div>
           <span className="font-bold text-xs sm:text-[13px] tracking-tight text-white">
             ARC<span className="text-blue-400 font-mono">.BD</span>
@@ -221,12 +234,15 @@ export default function Navbar({ transparent = false }: { transparent?: boolean 
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Link
-              href="/login"
-              className="inline-flex items-center justify-center rounded-full bg-white/[0.08] hover:bg-white/[0.16] text-white font-medium text-xs px-3.5 py-1 transition-all duration-200 border-none"
+            <Button
+              asChild
+              variant="default"
+              className="h-7.5 sm:h-8 rounded-full px-3.5 text-xs font-semibold"
             >
-              Sign In
-            </Link>
+              <Link href="/login">
+                Sign In
+              </Link>
+            </Button>
           )}
         </div>
 

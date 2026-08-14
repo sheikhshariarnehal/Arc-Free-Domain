@@ -2,7 +2,7 @@
 
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { Globe, Plus, Search, Loader2, ExternalLink, Trash2 } from "lucide-react";
+import { Globe, Plus, Search, Loader2, ExternalLink, Trash2, Lock, Settings } from "lucide-react";
 import Link from "next/link";
 import { formatDate } from "@/lib/utils";
 import {
@@ -77,6 +77,7 @@ function DomainsListInner() {
   const [showClaimDialog, setShowClaimDialog] = useState(false);
   const [claiming, setClaiming] = useState(false);
   const [claimError, setClaimError] = useState<string | null>(null);
+  const [claimSuccessMsg, setClaimSuccessMsg] = useState<string | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [autoClaiming, setAutoClaiming] = useState(false);
@@ -109,7 +110,7 @@ function DomainsListInner() {
 
     const autoClaim = async () => {
       setAutoClaiming(true);
-      setAutoClaimMsg(`Claiming ${claimName}.arc.bd for you...`);
+      setAutoClaimMsg(`Submitting claim for ${claimName}.arc.bd...`);
       try {
         const res = await fetch("/api/subdomains/claim", {
           method: "POST",
@@ -118,7 +119,7 @@ function DomainsListInner() {
         });
         const data = await res.json();
         if (res.ok) {
-          setAutoClaimMsg(`✓ ${claimName}.arc.bd claimed successfully!`);
+          setAutoClaimMsg(`✓ ${claimName}.arc.bd claim submitted! Awaiting admin review (confirmation email sent).`);
         } else {
           setAutoClaimMsg(`Could not claim ${claimName}.arc.bd: ${data.error || "Already taken"}`);
         }
@@ -127,8 +128,8 @@ function DomainsListInner() {
       } finally {
         setAutoClaiming(false);
         fetchSubdomains();
-        // Clear message after 5 seconds
-        setTimeout(() => setAutoClaimMsg(null), 5000);
+        // Clear message after 8 seconds
+        setTimeout(() => setAutoClaimMsg(null), 8000);
       }
     };
 
@@ -141,17 +142,21 @@ function DomainsListInner() {
     if (!claimInput.trim()) return;
     setClaiming(true);
     setClaimError(null);
+    setClaimSuccessMsg(null);
+    const domainToClaim = claimInput.trim();
     try {
       const res = await fetch("/api/subdomains/claim", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: claimInput.trim() }),
+        body: JSON.stringify({ name: domainToClaim }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to claim subdomain");
       setClaimInput("");
       setShowClaimDialog(false);
+      setClaimSuccessMsg(`🎉 Claim for ${domainToClaim}.arc.bd submitted! Your request is pending admin review. A confirmation email has been sent.`);
       fetchSubdomains();
+      setTimeout(() => setClaimSuccessMsg(null), 10000);
     } catch (err: any) {
       setClaimError(err.message || "Failed to claim subdomain");
     } finally {
@@ -201,13 +206,21 @@ function DomainsListInner() {
         </Button>
       </div>
 
+      {/* Success banner after claiming */}
+      {claimSuccessMsg && (
+        <div className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium border bg-amber-500/10 border-amber-500/30 text-amber-300">
+          <span className="size-2 rounded-full bg-amber-400 animate-pulse" />
+          {claimSuccessMsg}
+        </div>
+      )}
+
       {/* Auto-claim status banner (shown after OAuth redirect) */}
       {autoClaimMsg && (
         <div className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium border ${
           autoClaiming
             ? "bg-blue-500/10 border-blue-500/30 text-blue-400"
             : autoClaimMsg.startsWith("✓")
-            ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
+            ? "bg-amber-500/10 border-amber-500/30 text-amber-300"
             : "bg-destructive/10 border-destructive/30 text-destructive"
         }`}>
           {autoClaiming && <Loader2 className="size-4 animate-spin shrink-0" />}
@@ -335,7 +348,11 @@ function DomainsListInner() {
               <TableBody>
                 {filtered.map((domain) => {
                   const target =
-                    domain.dns_records && domain.dns_records.length > 0
+                    domain.status === "pending"
+                      ? "🔒 Locked (Pending Review)"
+                      : domain.status === "suspended"
+                      ? "🔒 Suspended"
+                      : domain.dns_records && domain.dns_records.length > 0
                       ? `${domain.dns_records[0].type}: ${domain.dns_records[0].content}`
                       : "No DNS records";
                   return (
@@ -351,7 +368,9 @@ function DomainsListInner() {
                       <TableCell>
                         <StatusBadge status={domain.status} />
                       </TableCell>
-                      <TableCell className="font-mono text-xs text-muted-foreground hidden sm:table-cell max-w-[200px] truncate">
+                      <TableCell className={`font-mono text-xs hidden sm:table-cell max-w-[200px] truncate ${
+                        domain.status === "pending" ? "text-amber-400 font-medium" : "text-muted-foreground"
+                      }`}>
                         {target}
                       </TableCell>
                       <TableCell className="text-xs text-muted-foreground hidden md:table-cell">
@@ -361,7 +380,12 @@ function DomainsListInner() {
                         <div className="flex items-center justify-end gap-1">
                           <Button variant="ghost" size="sm" className="h-7 text-xs" asChild>
                             <Link href={`/dashboard/domains/${domain.id}`}>
-                              <ExternalLink className="size-3 mr-1" /> Manage
+                              {domain.status === "active" ? (
+                                <Settings className="size-3 mr-1" />
+                              ) : (
+                                <Lock className="size-3 mr-1 text-amber-400" />
+                              )}
+                              Manage
                             </Link>
                           </Button>
                           <Button
