@@ -123,12 +123,13 @@ export async function updateSession(request: NextRequest) {
           return rewriteToSubdomainStatus(request, subdomainName, "pending");
         }
 
-        let target = resolution.target.content.trim();
+        let target = resolution.target.content.trim().replace(/\.+$/, "");
         if (!target.startsWith("http://") && !target.startsWith("https://")) {
           target = `https://${target}`;
         }
 
         const targetUrl = new URL(target);
+        targetUrl.hostname = targetUrl.hostname.replace(/\.+$/, "");
         targetUrl.pathname = request.nextUrl.pathname;
         targetUrl.search = request.nextUrl.search;
 
@@ -142,6 +143,7 @@ export async function updateSession(request: NextRequest) {
         });
       } catch (e) {
         console.error("[Subdomain Proxy Error]", e);
+        return rewriteToSubdomainStatus(request, subdomainName, "pending");
       }
     }
   }

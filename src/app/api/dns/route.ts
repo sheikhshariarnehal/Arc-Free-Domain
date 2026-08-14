@@ -26,11 +26,12 @@ export async function POST(request: Request) {
     .eq('user_id', user.id)
     .single()
 
-  if (!subdomain) {
-    return NextResponse.json({ error: 'Subdomain not found or unauthorized' }, { status: 404 })
+  let cleanContent = content.trim()
+  if (type === 'CNAME') {
+    cleanContent = cleanContent.replace(/\.+$/, "")
   }
 
-  const { valid, error: valError } = validateDNSContent(type, content)
+  const { valid, error: valError } = validateDNSContent(type, cleanContent)
   if (!valid) {
     return NextResponse.json({ error: valError }, { status: 400 })
   }
@@ -96,7 +97,7 @@ export async function POST(request: Request) {
     // flows) rather than through our app, so they still need a real record.
     let cloudflareRecordId: string | null = null
     if (type === 'TXT') {
-      const cfResult = await createDNSRecord({ type, name: recordName, content })
+      const cfResult = await createDNSRecord({ type, name: recordName, content: cleanContent })
 
       if (!cfResult.success || !cfResult.recordId) {
         throw new Error(cfResult.error || 'Cloudflare failed to return record ID')
@@ -110,7 +111,7 @@ export async function POST(request: Request) {
         subdomain_id: subdomain.id,
         type,
         name: recordName,
-        content,
+        content: cleanContent,
         cloudflare_record_id: cloudflareRecordId,
         status: 'active'
       })
@@ -124,7 +125,7 @@ export async function POST(request: Request) {
       action: 'create_dns',
       resource_type: 'dns_record',
       resource_id: record.id,
-      metadata: { type, content }
+      metadata: { type, content: cleanContent }
     })
 
     return NextResponse.json(record)

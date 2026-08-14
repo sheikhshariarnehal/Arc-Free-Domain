@@ -249,28 +249,28 @@ export default function DomainDetail() {
         </CardHeader>
         <CardContent className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <button
-            onClick={() => applyPreset("CNAME", "cname.vercel-dns.com", "@")}
+            onClick={() => applyPreset("CNAME", "your-app.vercel.app", "@")}
             className="flex flex-col items-start gap-3 p-3 rounded-lg border border-border bg-card/50 hover:bg-card hover:border-primary/50 transition-all text-left group"
           >
             <div className="size-8 rounded-md bg-primary/15 flex items-center justify-center group-hover:bg-primary/25 transition-colors">
               <Server className="size-4 text-primary" />
             </div>
             <div className="w-full">
-              <h3 className="font-semibold text-sm text-foreground">Vercel CNAME</h3>
-              <p className="text-[11px] text-muted-foreground mt-1.5 break-words font-mono">@ → cname.vercel-dns.com</p>
+              <h3 className="font-semibold text-sm text-foreground">Vercel App</h3>
+              <p className="text-[11px] text-muted-foreground mt-1.5 break-words font-mono">@ → your-app.vercel.app</p>
             </div>
           </button>
 
           <button
-            onClick={() => applyPreset("TXT", "vc-domain-verify=...", "_vercel")}
+            onClick={() => applyPreset("CNAME", "your-app.netlify.app", "@")}
             className="flex flex-col items-start gap-3 p-3 rounded-lg border border-border bg-card/50 hover:bg-card hover:border-primary/50 transition-all text-left group"
           >
             <div className="size-8 rounded-md bg-primary/15 flex items-center justify-center group-hover:bg-primary/25 transition-colors">
               <Code className="size-4 text-primary" />
             </div>
             <div className="w-full">
-              <h3 className="font-semibold text-sm text-foreground">Vercel Verification</h3>
-              <p className="text-[11px] text-muted-foreground mt-1.5 break-words font-mono">_vercel → verification code</p>
+              <h3 className="font-semibold text-sm text-foreground">Netlify App</h3>
+              <p className="text-[11px] text-muted-foreground mt-1.5 break-words font-mono">@ → your-app.netlify.app</p>
             </div>
           </button>
 
