@@ -193,15 +193,15 @@ export default function LandingPage() {
               {availability !== 'idle' && (
                 <div className="w-full mt-2.5 animate-slide-up">
                   {availability === 'available' && (
-                    <div className="flex w-full items-center justify-between gap-3 rounded-full border-none bg-emerald-500/10 px-4 py-1.5 backdrop-blur-md">
-                      <div className="flex items-center gap-2 text-xs sm:text-sm text-emerald-300 font-mono">
-                        <CheckCircle className="size-4 text-emerald-400 shrink-0" />
+                    <div className="flex w-full items-center justify-between gap-3 rounded-full border-none bg-blue-500/10 px-4 py-1.5 backdrop-blur-md">
+                      <div className="flex items-center gap-2 text-xs sm:text-sm text-blue-300 font-mono">
+                        <CheckCircle className="size-4 text-blue-400 shrink-0" />
                         <span><strong className="font-semibold text-white">{searchQuery}</strong>.arc.bd is available</span>
                       </div>
                       <Button
                         onClick={handleClaimClick}
                         disabled={claiming}
-                        className="h-7.5 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold px-4 text-xs shrink-0 transition-all shadow-sm"
+                        className="h-7.5 rounded-full bg-blue-500 hover:bg-blue-400 text-white font-semibold px-4 text-xs shrink-0 transition-all shadow-sm"
                       >
                         {claiming && <Loader2 className="size-3 mr-1 animate-spin" />}
                         {claiming ? "Claiming..." : "Claim"}
@@ -225,7 +225,7 @@ export default function LandingPage() {
                             <button
                               key={alt}
                               onClick={() => handleSuggestionClick(alt)}
-                              className="px-2.5 py-0.5 rounded-full bg-white/10 hover:bg-emerald-500/20 text-slate-200 hover:text-emerald-300 border-none transition-all cursor-pointer text-[11px] font-mono"
+                              className="px-2.5 py-0.5 rounded-full bg-white/10 hover:bg-blue-500/20 text-slate-200 hover:text-blue-300 border-none transition-all cursor-pointer text-[11px] font-mono"
                             >
                               {alt}.arc.bd
                             </button>

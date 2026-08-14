@@ -101,10 +101,10 @@ export default function Navbar({ transparent = false }: { transparent?: boolean 
   return (
     <header className="fixed top-0 inset-x-0 z-50 flex justify-center pointer-events-none px-3 pt-3 sm:pt-4 transition-all duration-300">
       <div
-        className={`pointer-events-auto flex items-center justify-between gap-3 sm:gap-6 rounded-full transition-all duration-300 ease-out ${
+        className={`pointer-events-auto flex items-center justify-between gap-3 sm:gap-6 transition-all duration-300 ease-out ${
           scrolled
-            ? "w-full max-w-lg sm:max-w-xl h-10.5 sm:h-11 bg-gradient-to-b from-white/[0.24] via-white/[0.10] to-white/[0.05] backdrop-blur-2xl backdrop-saturate-180 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.45),0_12px_32px_-8px_rgba(0,0,0,0.4)] px-3.5"
-            : "w-full max-w-xl sm:max-w-2xl h-11 sm:h-11.5 bg-gradient-to-b from-white/[0.20] via-white/[0.08] to-white/[0.03] backdrop-blur-xl backdrop-saturate-180 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.35),0_8px_24px_-8px_rgba(0,0,0,0.3)] px-3.5 sm:px-4.5"
+            ? "w-full max-w-lg sm:max-w-xl h-10.5 sm:h-11 bg-gradient-to-b from-white/[0.24] via-white/[0.10] to-[#090b0f]/85 backdrop-blur-2xl backdrop-saturate-180 shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.35),0_12px_32px_-8px_rgba(0,0,0,0.6)] px-3.5 rounded-full"
+            : "w-full max-w-4xl h-12 sm:h-14 bg-transparent backdrop-blur-none shadow-none border-none px-4 sm:px-6"
         }`}
       >
         {/* Brand Logo */}
