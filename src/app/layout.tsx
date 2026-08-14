@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
+import { SmoothScroll } from "@/components/SmoothScroll";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], display: "swap" });
@@ -129,6 +130,7 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.className} min-h-screen flex flex-col`} suppressHydrationWarning>
+        <SmoothScroll />
         {children}
       </body>
     </html>
