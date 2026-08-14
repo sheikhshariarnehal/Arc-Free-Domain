@@ -85,10 +85,23 @@ export async function POST(request: Request) {
   }
   
   try {
-    const cfResult = await createDNSRecord({ type, name: recordName, content })
-    
-    if (!cfResult.success || !cfResult.recordId) {
-      throw new Error(cfResult.error || 'Cloudflare failed to return record ID')
+    // Wildcard *.arc.bd already routes all traffic to this app, and the
+    // middleware resolves A/CNAME "routing" targets straight from this table
+    // (see resolve_subdomain_target RPC) to reverse-proxy the request. A real
+    // Cloudflare record is therefore redundant for A/CNAME and would only
+    // burn through the zone's 200-record hard limit as usage grows.
+    //
+    // TXT records are the exception: they're looked up directly over public
+    // DNS by third parties (e.g. Google Search Console, domain verification
+    // flows) rather than through our app, so they still need a real record.
+    let cloudflareRecordId: string | null = null
+    if (type === 'TXT') {
+      const cfResult = await createDNSRecord({ type, name: recordName, content })
+
+      if (!cfResult.success || !cfResult.recordId) {
+        throw new Error(cfResult.error || 'Cloudflare failed to return record ID')
+      }
+      cloudflareRecordId = cfResult.recordId
     }
 
     const { data: record, error: insertError } = await supabase
@@ -98,7 +111,7 @@ export async function POST(request: Request) {
         type,
         name: recordName,
         content,
-        cloudflare_record_id: cfResult.recordId,
+        cloudflare_record_id: cloudflareRecordId,
         status: 'active'
       })
       .select()

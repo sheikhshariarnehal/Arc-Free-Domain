@@ -34,13 +34,30 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
   const cfRecordId = record.cloudflare_record_id || record.cf_record_id
 
   try {
-    if (cfRecordId) {
-      await updateDNSRecord({ recordId: cfRecordId, name: fullDomain, type: newType, content: newContent })
+    // Only TXT records live in Cloudflare (see POST handler for rationale).
+    // A/CNAME routing records are resolved by the app itself, so they're
+    // never pushed to Cloudflare going forward.
+    let cloudflareRecordId: string | null = cfRecordId ?? null
+
+    if (newType === 'TXT') {
+      if (cfRecordId) {
+        await updateDNSRecord({ recordId: cfRecordId, name: fullDomain, type: newType, content: newContent })
+      }
+    } else if (cfRecordId) {
+      // Type changed away from TXT (or a legacy record still has a stale
+      // Cloudflare record) — remove the now-redundant Cloudflare record and
+      // reclaim the zone's record quota.
+      try {
+        await deleteDNSRecord(cfRecordId)
+      } catch (e) {
+        console.error('[Cloudflare Delete Error]', e)
+      }
+      cloudflareRecordId = null
     }
 
     const { data: updatedRecord, error: updateError } = await supabase
       .from('dns_records')
-      .update({ type: newType, content: newContent })
+      .update({ type: newType, content: newContent, cloudflare_record_id: cloudflareRecordId })
       .eq('id', record.id)
       .select()
       .single()
