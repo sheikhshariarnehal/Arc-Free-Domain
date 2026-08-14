@@ -23,7 +23,7 @@ export default function NetlifyDoc() {
     <div className="min-h-screen flex flex-col bg-background text-foreground">
       <Navbar />
       
-      <main className="flex-1 max-w-5xl mx-auto w-full p-6 md:p-12">
+      <main className="flex-1 max-w-4xl mx-auto w-full px-4 pt-20 pb-12 sm:px-6 sm:pt-24 sm:pb-16 lg:px-8 lg:pt-28">
         <Link href="/docs" className="text-sm text-blue-400 hover:text-blue-300 flex items-center gap-1 mb-8 w-fit transition-colors">
           <ArrowLeft className="h-4 w-4" /> Back to Docs
         </Link>

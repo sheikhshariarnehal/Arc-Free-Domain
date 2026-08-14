@@ -1,44 +1,94 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 import Navbar from "@/components/Navbar";
-import { Search, CheckCircle, XCircle, Gift, Zap, Code, Shield, Settings, Loader2, Lock, Lightbulb, Globe, X } from "lucide-react";
+import { 
+  Search, 
+  CheckCircle, 
+  XCircle, 
+  Gift, 
+  Zap, 
+  Code, 
+  Shield, 
+  Settings, 
+  Loader2, 
+  Lock, 
+  Lightbulb, 
+  Globe, 
+  X,
+  ShieldAlert,
+} from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ShaderBackground } from "@/components/ui/dq";
+
+// Dynamic import for WebGL Canvas component: zero SSR footprint and faster initial First Contentful Paint (FCP)
+const ShaderBackground = dynamic(
+  () => import("@/components/ui/dq").then((mod) => mod.ShaderBackground),
+  { ssr: false }
+);
 
 export default function LandingPage() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [availability, setAvailability] = useState<'idle' | 'available' | 'taken'>('idle');
+  const [takenReason, setTakenReason] = useState<string | null>(null);
+  const [isReserved, setIsReserved] = useState(false);
   const [loading, setLoading] = useState(false);
   const [claiming, setClaiming] = useState(false);
 
+  // Active fetch abort controller to prevent request racing and wasted network calls
+  const abortControllerRef = useRef<AbortController | null>(null);
+
   const checkAvailability = async (e?: React.FormEvent, nameOverride?: string) => {
     if (e) e.preventDefault();
-    const query = (nameOverride || searchQuery).trim();
+    const query = (nameOverride || searchQuery).trim().toLowerCase();
     if (!query) return;
+
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
     setLoading(true);
     setAvailability('idle');
+    setTakenReason(null);
+    setIsReserved(false);
 
     try {
-      const res = await fetch(`/api/subdomains/check?name=${encodeURIComponent(query)}`);
+      const res = await fetch(`/api/subdomains/check?name=${encodeURIComponent(query)}`, {
+        signal: controller.signal,
+      });
       const data = await res.json();
       if (data.available) {
         setAvailability('available');
       } else {
         setAvailability('taken');
+        const reasonStr = data.reason || 'Already taken';
+        setTakenReason(reasonStr);
+        setIsReserved(reasonStr.toLowerCase().includes('reserved'));
       }
-    } catch {
+    } catch (err: any) {
+      if (err.name === 'AbortError') return;
       setAvailability('taken');
+      setTakenReason('Unable to verify availability. Please try again.');
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
+  }, []);
 
   const handleSuggestionClick = (suggestion: string) => {
     setSearchQuery(suggestion);
@@ -47,8 +97,13 @@ export default function LandingPage() {
   };
 
   const clearSearch = () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
     setSearchQuery("");
     setAvailability('idle');
+    setTakenReason(null);
+    setIsReserved(false);
   };
 
   const handleClaimClick = async () => {
@@ -69,6 +124,7 @@ export default function LandingPage() {
           router.push(`/dashboard/domains/${data.id || ''}`);
         } else {
           setAvailability('taken');
+          setTakenReason(data.error || 'Subdomain is no longer available');
         }
       } catch {
         setAvailability('taken');
@@ -86,7 +142,7 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="flex-1 flex flex-col min-h-screen bg-background text-foreground selection:bg-blue-500/20 selection:text-blue-400 overflow-x-hidden relative">
+    <div className="flex-1 flex flex-col min-h-screen bg-background text-foreground selection:bg-primary/20 selection:text-primary overflow-x-hidden relative">
       {/* Full-bleed Silk Shader Background with Ambient Underlay */}
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-[700px] sm:h-[840px] z-0 overflow-hidden"
@@ -106,63 +162,25 @@ export default function LandingPage() {
         {/* Hero Section */}
         <section className="relative mx-auto flex w-full min-w-0 max-w-5xl flex-1 flex-col items-center justify-center px-4 pt-24 pb-12 text-center sm:px-6 sm:pt-28 sm:pb-16 md:min-h-screen md:py-28 lg:px-8">
           {/* Headline */}
-            <h1 className="mb-4 w-full max-w-3xl text-[clamp(1.75rem,7vw,3.75rem)] font-extrabold leading-[1.18] tracking-[-0.03em] text-white sm:mb-5 text-balance">
-              <span className="whitespace-nowrap">
-                Free{" "}
-                <span className="inline-block bg-blue-500/10 text-blue-400 font-mono px-1.5 sm:px-2.5 py-0.5 rounded-none border-none align-baseline">
-                  .arc.bd
-                </span>{" "}
-                domains
-              </span>
-              <span className="block mt-1 sm:mt-1.5">for developers.</span>
-            </h1>
+          <h1 className="mb-4 w-full max-w-3xl text-[clamp(2.25rem,7.5vw,4.25rem)] font-extrabold leading-[1.1] tracking-[-0.04em] text-white sm:mb-5 text-balance">
+            <span>
+              Free <span className="text-[#0084ff] font-mono">.</span><span className="inline-block bg-[#021c3d] text-[#0084ff] font-mono px-1.5 py-0.5 rounded-none align-baseline leading-none">arc.bd</span> domains
+            </span>
+            <span className="block mt-1 sm:mt-2">for developers.</span>
+          </h1>
 
-            {/* Subheadline */}
-            <p className="mb-6 w-full max-w-xl px-2 text-sm font-normal leading-relaxed text-slate-300 sm:mb-8 sm:px-0 sm:text-base">
-              <span className="block">Claim your free custom address. Use it on your</span>
-              <span className="block">web site, portfolio or project</span>
-            </p>
+          {/* Subheadline */}
+          <p className="mb-8 w-full max-w-xl px-2 text-sm sm:text-base font-normal leading-relaxed text-slate-300 sm:px-0">
+            <span>Claim your free custom address for your website, portfolio, or web app.</span>
+          </p>
 
-            {/* Search Bar */}
-            <div className="w-full min-w-0 max-w-xl px-0 sm:px-1">
-              <form onSubmit={checkAvailability} className="w-full">
-                {/* Mobile Input Container */}
-                <div className="flex flex-col gap-2.5 sm:hidden w-full">
-                  <div className="relative flex items-center skeuo-input rounded-full px-4.5 py-3 transition-all group w-full overflow-hidden">
-                    <Search className="size-4 text-slate-400 shrink-0 mr-2.5 group-focus-within:text-blue-400 transition-colors" />
-                    <input
-                      type="text"
-                      placeholder="your-project"
-                      aria-label="Subdomain name to check"
-                      value={searchQuery}
-                      onChange={(e) => {
-                        setSearchQuery(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''));
-                        setAvailability('idle');
-                      }}
-                      className="w-full min-w-0 bg-transparent text-sm text-white placeholder:text-slate-500 focus:outline-none font-mono font-medium pr-2"
-                    />
-                    {searchQuery && (
-                      <button type="button" onClick={clearSearch} aria-label="Clear subdomain search" className="p-1 text-slate-400 hover:text-white transition-colors mr-1 shrink-0">
-                        <X className="size-3.5" />
-                      </button>
-                    )}
-                    <span className="text-xs text-slate-300 font-mono font-semibold mr-1.5 shrink-0 select-none">
-                      .arc.bd
-                    </span>
-                  </div>
-                  <Button
-                    type="submit"
-                    disabled={loading}
-                    variant="default"
-                    className="w-full h-11 text-xs font-semibold rounded-full"
-                  >
-                    {loading ? <Loader2 className="size-3.5 animate-spin mr-1.5" /> : <Search className="size-3.5 mr-1.5" />}
-                    {loading ? "Checking..." : "Check availability"}
-                  </Button>
-                </div>
-
-                <div className="hidden sm:flex relative items-center skeuo-input rounded-full p-1.5 pl-4 transition-all group overflow-hidden">
-                  <Search className="size-4 text-slate-400 shrink-0 mr-2.5 transition-colors group-focus-within:text-blue-400" />
+          {/* Search Bar Container */}
+          <div className="w-full min-w-0 max-w-xl px-0 sm:px-1">
+            <form onSubmit={checkAvailability} className="w-full">
+              {/* Mobile Input Container */}
+              <div className="flex flex-col gap-2.5 sm:hidden w-full">
+                <div className="relative flex items-center skeuo-input rounded-full px-4.5 py-3 transition-all group w-full overflow-hidden">
+                  <Search className="size-4 text-slate-400 shrink-0 mr-2.5 group-focus-within:text-primary transition-colors" />
                   <input
                     type="text"
                     placeholder="your-project"
@@ -172,88 +190,132 @@ export default function LandingPage() {
                       setSearchQuery(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''));
                       setAvailability('idle');
                     }}
-                    className="w-full min-w-0 bg-transparent text-sm text-white placeholder:text-slate-400 focus:outline-none font-mono font-medium"
+                    className="w-full min-w-0 bg-transparent text-sm text-white placeholder:text-slate-400 focus:outline-none font-mono font-medium pr-2"
                   />
                   {searchQuery && (
                     <button type="button" onClick={clearSearch} aria-label="Clear subdomain search" className="p-1 text-slate-400 hover:text-white transition-colors mr-1 shrink-0">
                       <X className="size-3.5" />
                     </button>
                   )}
-                  <span className="text-xs text-slate-300 font-mono font-semibold mr-3 shrink-0 select-none">.arc.bd</span>
-                  <Button
-                    type="submit"
-                    disabled={loading}
-                    variant="default"
-                    className="h-10 px-5 text-xs font-semibold shrink-0 rounded-full"
-                  >
-                    {loading ? <Loader2 className="size-3.5 animate-spin mr-1" /> : <Search className="size-3.5 mr-1" />}
-                    {loading ? "Checking..." : "Check availability"}
-                  </Button>
+                  <span className="text-xs text-slate-300 font-mono font-semibold mr-1.5 shrink-0 select-none">
+                    .arc.bd
+                  </span>
                 </div>
-              </form>
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  variant="default"
+                  className="w-full h-11 text-xs font-semibold rounded-full bg-foreground text-background hover:bg-foreground/90"
+                >
+                  {loading ? <Loader2 className="size-3.5 animate-spin mr-1.5" /> : <Search className="size-3.5 mr-1.5" />}
+                  {loading ? "Checking..." : "Check availability"}
+                </Button>
+              </div>
 
-              {/* Availability Result Card - Minimal Feedback UX */}
-              {availability !== 'idle' && (
-                <div className="w-full mt-2.5 animate-slide-up">
-                  {availability === 'available' && (
-                    <div className="flex w-full items-center justify-between gap-3 rounded-full border-none bg-blue-500/10 px-4 py-1.5 backdrop-blur-md">
-                      <div className="flex items-center gap-2 text-xs sm:text-sm text-blue-300 font-mono">
-                        <CheckCircle className="size-4 text-blue-400 shrink-0" />
-                        <span><strong className="font-semibold text-white">{searchQuery}</strong>.arc.bd is available</span>
-                      </div>
+              {/* Desktop Input Container */}
+              <div className="hidden sm:flex relative items-center skeuo-input rounded-full p-1.5 pl-4 transition-all group overflow-hidden">
+                <Search className="size-4 text-slate-400 shrink-0 mr-2.5 transition-colors group-focus-within:text-primary" />
+                <input
+                  type="text"
+                  placeholder="your-project"
+                  aria-label="Subdomain name to check"
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''));
+                    setAvailability('idle');
+                  }}
+                  className="w-full min-w-0 bg-transparent text-sm text-white placeholder:text-slate-400 focus:outline-none font-mono font-medium"
+                />
+                {searchQuery && (
+                  <button type="button" onClick={clearSearch} aria-label="Clear subdomain search" className="p-1 text-slate-400 hover:text-white transition-colors mr-1 shrink-0">
+                    <X className="size-3.5" />
+                  </button>
+                )}
+                <span className="text-xs text-slate-300 font-mono font-semibold mr-3 shrink-0 select-none">.arc.bd</span>
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="h-10 px-5 text-xs font-semibold shrink-0 rounded-full bg-foreground text-background hover:bg-foreground/90"
+                >
+                  {loading ? <Loader2 className="size-3.5 animate-spin mr-1" /> : <Search className="size-3.5 mr-1" />}
+                  {loading ? "Checking..." : "Check availability"}
+                </Button>
+              </div>
+            </form>
+
+            {/* Availability Result Card with Live Region and Zero CLS */}
+            {availability !== 'idle' && (
+              <div role="status" aria-live="polite" className="w-full mt-2.5 animate-slide-up">
+                {availability === 'available' && (
+                  <div className="flex flex-col sm:flex-row w-full items-center justify-between gap-3 rounded-2xl sm:rounded-full border border-emerald-500/20 bg-emerald-500/10 p-3 sm:py-1.5 sm:px-4 backdrop-blur-md">
+                    <div className="flex items-center gap-2 text-xs sm:text-sm text-emerald-300 font-mono text-left">
+                      <CheckCircle className="size-4 text-emerald-400 shrink-0" />
+                      <span><strong className="font-semibold text-white">{searchQuery}</strong>.arc.bd is available</span>
+                    </div>
+                    <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+                      <span className="text-[11px] text-emerald-400/80 font-medium hidden sm:inline">100% Free Forever</span>
                       <Button
                         onClick={handleClaimClick}
                         disabled={claiming}
-                        className="h-7.5 rounded-full bg-blue-500 hover:bg-blue-400 text-white font-semibold px-4 text-xs shrink-0 transition-all shadow-sm"
+                        className="h-8 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold px-4 text-xs shrink-0 transition-all shadow-sm w-full sm:w-auto"
                       >
                         {claiming && <Loader2 className="size-3 mr-1 animate-spin" />}
-                        {claiming ? "Claiming..." : "Claim"}
+                        {claiming ? "Reserving..." : "Claim Subdomain →"}
                       </Button>
                     </div>
-                  )}
+                  </div>
+                )}
 
-                  {availability === 'taken' && (
-                    <div className="flex flex-col gap-2 p-3 px-4 rounded-2xl w-full border-none bg-rose-500/10 backdrop-blur-md">
-                      <div className="flex items-center gap-2 text-xs sm:text-sm text-rose-300 font-mono">
+                {availability === 'taken' && (
+                  <div className="flex flex-col gap-2.5 p-3 px-4 rounded-2xl w-full border border-rose-500/20 bg-rose-500/10 backdrop-blur-md text-left">
+                    <div className="flex items-center gap-2 text-xs sm:text-sm text-rose-300 font-mono">
+                      {isReserved ? (
+                        <ShieldAlert className="size-4 shrink-0 text-amber-400" />
+                      ) : (
                         <XCircle className="size-4 shrink-0 text-rose-400" />
-                        <span><strong className="font-semibold text-white">{searchQuery}</strong>.arc.bd is already taken</span>
-                      </div>
+                      )}
+                      <span>
+                        <strong className="font-semibold text-white">{searchQuery}</strong>.arc.bd is {isReserved ? "a reserved system name" : "already taken"}
+                      </span>
+                    </div>
 
-                      <div className="flex flex-wrap items-center gap-1.5 pt-1.5 border-t border-rose-500/20 text-xs font-mono text-slate-300">
+                    {!isReserved && (
+                      <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-rose-500/20 text-xs font-mono text-slate-300">
                         <span className="flex items-center gap-1 text-slate-400 text-[11px] font-medium shrink-0 mr-1">
-                          <Lightbulb className="size-3 text-amber-400" /> Suggestions:
+                          <Lightbulb className="size-3 text-amber-400" /> Alternatives:
                         </span>
                         <div className="flex flex-wrap gap-1.5">
                           {getAlternatives(searchQuery).map((alt) => (
                             <button
                               key={alt}
                               onClick={() => handleSuggestionClick(alt)}
-                              className="px-2.5 py-0.5 rounded-full bg-white/10 hover:bg-blue-500/20 text-slate-200 hover:text-blue-300 border-none transition-all cursor-pointer text-[11px] font-mono"
+                              className="px-2.5 py-0.5 rounded-full bg-white/10 hover:bg-primary/20 text-slate-200 hover:text-primary border border-white/5 transition-all cursor-pointer text-[11px] font-mono"
                             >
                               {alt}.arc.bd
                             </button>
                           ))}
                         </div>
                       </div>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Platform Feature Pills */}
-              <div className="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[11px] font-medium text-slate-300 sm:mt-7 sm:gap-x-5 sm:text-xs">
-                <span className="flex items-center gap-1.5">
-                  <Globe className="size-3.5 text-white shrink-0" /> Free Forever
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <Zap className="size-3.5 text-white shrink-0" /> DNS Ready
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <Lock className="size-3.5 text-white shrink-0" /> SSL Enabled
-                </span>
+                    )}
+                  </div>
+                )}
               </div>
+            )}
+
+            {/* Platform Feature Pills */}
+            <div className="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[11px] font-medium text-slate-300 sm:mt-7 sm:gap-x-5 sm:text-xs">
+              <span className="flex items-center gap-1.5">
+                <Globe className="size-3.5 text-white shrink-0" /> Free Forever
+              </span>
+              <span className="flex items-center gap-1.5">
+                <Zap className="size-3.5 text-white shrink-0" /> DNS Ready
+              </span>
+              <span className="flex items-center gap-1.5">
+                <Lock className="size-3.5 text-white shrink-0" /> SSL Enabled
+              </span>
             </div>
-          </section>
+          </div>
+        </section>
 
         {/* Feature Grid */}
         <section
@@ -282,7 +344,7 @@ export default function LandingPage() {
                     className="size-8 rounded-lg bg-white/10 flex items-center justify-center text-white"
                     style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.25)" }}
                   >
-                    <item.icon className="size-4 text-blue-400" />
+                    <item.icon className="size-4 text-primary" />
                   </div>
                   <h3 className="font-semibold text-sm text-white">{item.title}</h3>
                   <p className="text-xs text-slate-300 leading-relaxed">{item.desc}</p>
@@ -308,7 +370,7 @@ export default function LandingPage() {
             ].map((item, i) => (
               <Card key={i} className="text-center p-5 sm:p-6 border border-white/10 bg-card/90">
                 <CardContent className="p-0 flex flex-col items-center">
-                  <div className="flex size-7 items-center justify-center rounded-full bg-blue-500/15 text-blue-400 font-mono text-xs font-bold mb-3 border border-blue-400/20">
+                  <div className="flex size-7 items-center justify-center rounded-full bg-primary/15 text-primary font-mono text-xs font-bold mb-3 border border-primary/20">
                     {item.step}
                   </div>
                   <h3 className="font-semibold text-sm text-white mb-1.5">{item.title}</h3>
