@@ -285,27 +285,27 @@ void main() {
 const UNIFORMS = {
   colors: [
     [0.003, 0.004, 0.006], // Deep obsidian background
-    [0.010, 0.013, 0.018], // Subtle smoky undertone
-    [0.035, 0.044, 0.058], // Dark slate transition
-    [0.095, 0.118, 0.150], // Soft graphite sheen
-    [0.260, 0.315, 0.390], // Gentle, muted frosted silver-slate highlight
-    [0.260, 0.315, 0.390],
-    [0.260, 0.315, 0.390],
-    [0.260, 0.315, 0.390],
+    [0.008, 0.011, 0.015], // Subtle smoky undertone
+    [0.022, 0.030, 0.040], // Dark slate transition
+    [0.055, 0.072, 0.096], // Soft graphite sheen
+    [0.150, 0.185, 0.235], // Ultra-soft frosted slate highlight (no harsh white contrast)
+    [0.150, 0.185, 0.235],
+    [0.150, 0.185, 0.235],
+    [0.150, 0.185, 0.235],
   ] as [number, number, number][],
   colorCount: 5,
-  scale: 0.680,
-  intensity: 0.200,
+  scale: 0.720,
+  intensity: 0.160,
   paramA: 0.500,
-  warp: 0.150,
-  detail: 1.250,
-  contrast: 1.040,
-  brightness: -0.010,
-  saturation: 0.650,
+  warp: 0.120,
+  detail: 1.200,
+  contrast: 1.020,
+  brightness: -0.015,
+  saturation: 0.500,
   hue: 0.0000,
-  vignette: 0.220,
+  vignette: 0.350,
   blur: 0.0000, // 0.0 bypasses 5-tap multi-sampling (80% GPU performance boost)
-  grain: 0.010,
+  grain: 0.008,
   seed: 707.0,
   rotate: 2.5133,
   offsetX: 0.060,
@@ -317,7 +317,7 @@ const UNIFORMS = {
   cursorRadius: 0.460,
   oklab: 1.0,
   timeOffset: 4.800, // Starts with the sleek left-flank silk highlight visible on app open
-  timeScale: 0.200, // Smooth, organic breathing oscillation anchored near corner/flank
+  timeScale: 0.180, // Smooth, organic breathing oscillation anchored near corner/flank
 }
 
 const pendingContextReleases = new WeakMap<HTMLCanvasElement, number>()

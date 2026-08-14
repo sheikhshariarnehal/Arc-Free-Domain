@@ -256,39 +256,49 @@ export default function Navbar({ transparent = false }: { transparent?: boolean 
         </button>
       </div>
 
-      {/* Mobile Floating Drawer */}
+      {/* Mobile Floating Drawer (Matches Header Glass Aesthetic) */}
       {isOpen && (
-        <div className="pointer-events-auto absolute top-16 inset-x-4 max-w-md mx-auto rounded-2xl border border-white/15 bg-[#0e1118]/95 p-4 space-y-4 backdrop-blur-2xl shadow-2xl animate-slide-up md:hidden">
-          <nav className="flex flex-col space-y-2.5 font-medium text-sm">
+        <div className="pointer-events-auto absolute top-15 inset-x-3 max-w-lg sm:max-w-xl mx-auto rounded-3xl border border-white/15 bg-gradient-to-b from-white/[0.20] via-white/[0.08] to-white/[0.04] bg-[#09090b]/85 p-4 space-y-3.5 backdrop-blur-2xl shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.40),0_20px_40px_-15px_rgba(0,0,0,0.7)] animate-slide-up md:hidden">
+          <nav className="flex flex-col space-y-1 font-medium text-sm">
             <Link
               href="/"
               onClick={() => setIsOpen(false)}
-              className="text-slate-200 hover:text-white transition-colors p-1"
+              className="flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-slate-200 hover:text-white hover:bg-white/10 transition-all"
             >
-              Home
+              <span className="flex items-center gap-3">
+                <Globe2 className="size-4 text-blue-400 shrink-0" />
+                Home
+              </span>
             </Link>
             <Link
               href="/docs"
               onClick={() => setIsOpen(false)}
-              className="text-slate-200 hover:text-white transition-colors p-1"
+              className="flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-slate-200 hover:text-white hover:bg-white/10 transition-all"
             >
-              Docs
+              <span className="flex items-center gap-3">
+                <BookOpen className="size-4 text-blue-400 shrink-0" />
+                Documentation
+              </span>
             </Link>
             <Link
               href="/report"
               onClick={() => setIsOpen(false)}
-              className="text-slate-200 hover:text-white transition-colors p-1"
+              className="flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-slate-200 hover:text-white hover:bg-white/10 transition-all"
             >
-              Report Abuse
+              <span className="flex items-center gap-3">
+                <AlertTriangle className="size-4 text-amber-400 shrink-0" />
+                Report Abuse
+              </span>
             </Link>
           </nav>
-          <div className="pt-2 border-t border-white/10 flex flex-col space-y-2">
+
+          <div className="pt-3 border-t border-white/10 flex flex-col space-y-2.5">
             {session ? (
               <>
-                <div className="flex items-center justify-between px-2 py-1">
+                <div className="flex items-center justify-between px-3.5 py-2 rounded-2xl bg-white/[0.06] border border-white/10">
                   <div className="text-xs">
-                    <p className="font-semibold text-white">{userName}</p>
-                    <p className="text-slate-300 font-mono">{userEmail}</p>
+                    <p className="font-semibold text-white truncate max-w-[200px]">{userName}</p>
+                    <p className="text-slate-400 font-mono text-[11px] truncate max-w-[200px]">{userEmail}</p>
                   </div>
                   {isAdmin && <Badge variant="destructive" className="text-[9px]">Admin</Badge>}
                 </div>
@@ -296,9 +306,10 @@ export default function Navbar({ transparent = false }: { transparent?: boolean 
                   asChild
                   variant="default"
                   size="sm"
-                  className="w-full justify-center rounded-full"
+                  className="w-full justify-center rounded-full h-9 font-semibold text-xs shadow-md shadow-blue-500/20"
                 >
                   <Link href="/dashboard" onClick={() => setIsOpen(false)}>
+                    <LayoutDashboard className="size-3.5 mr-2" />
                     Dashboard
                   </Link>
                 </Button>
@@ -306,8 +317,9 @@ export default function Navbar({ transparent = false }: { transparent?: boolean 
                   variant="ghost"
                   size="sm"
                   onClick={handleSignOut}
-                  className="w-full justify-center text-destructive hover:text-destructive hover:bg-destructive/10 rounded-full"
+                  className="w-full justify-center text-destructive hover:text-destructive hover:bg-destructive/10 rounded-full h-8 text-xs font-medium"
                 >
+                  <LogOut className="size-3.5 mr-2" />
                   Sign Out
                 </Button>
               </>
@@ -316,7 +328,7 @@ export default function Navbar({ transparent = false }: { transparent?: boolean 
                 asChild
                 variant="default"
                 size="sm"
-                className="w-full justify-center rounded-full"
+                className="w-full justify-center rounded-full h-9.5 font-semibold text-xs shadow-lg shadow-blue-500/25"
               >
                 <Link href="/login" onClick={() => setIsOpen(false)}>
                   Sign In

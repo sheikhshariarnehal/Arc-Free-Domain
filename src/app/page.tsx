@@ -89,16 +89,18 @@ export default function LandingPage() {
     <div className="flex-1 flex flex-col min-h-screen bg-background text-foreground selection:bg-blue-500/20 selection:text-blue-400 overflow-x-hidden relative">
       {/* Full-bleed Silk Shader Background with Instant CSS Ambient Underlay & Feathered Fade */}
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-[680px] sm:h-[820px] z-0 overflow-hidden"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[640px] sm:h-[820px] z-0 overflow-hidden"
         style={{
-          background: "radial-gradient(ellipse 70% 60% at 20% 20%, rgba(45, 60, 85, 0.20) 0%, rgba(18, 24, 36, 0.08) 50%, transparent 80%)",
+          background: "radial-gradient(ellipse 65% 55% at 20% 20%, rgba(40, 52, 75, 0.16) 0%, rgba(14, 18, 28, 0.06) 50%, transparent 80%)",
+          WebkitMaskImage: "radial-gradient(ellipse 95% 85% at 40% 30%, black 25%, rgba(0,0,0,0.7) 60%, transparent 100%)",
+          maskImage: "radial-gradient(ellipse 95% 85% at 40% 30%, black 25%, rgba(0,0,0,0.7) 60%, transparent 100%)",
           contain: "paint layout",
         }}
       >
-        <ShaderBackground className="h-full w-full opacity-75 sm:opacity-80" />
+        <ShaderBackground className="h-full w-full opacity-70 sm:opacity-75" />
         {/* Multi-stop smooth bottom & edge blend to prevent harsh cutoffs */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/30 via-50% to-background pointer-events-none" />
-        <div className="absolute inset-x-0 bottom-0 h-40 sm:h-56 bg-gradient-to-t from-background via-background/80 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/25 via-40% to-background pointer-events-none" />
+        <div className="absolute inset-x-0 bottom-0 h-48 sm:h-64 bg-gradient-to-t from-background via-background/85 to-transparent pointer-events-none" />
       </div>
 
       <Navbar transparent />
