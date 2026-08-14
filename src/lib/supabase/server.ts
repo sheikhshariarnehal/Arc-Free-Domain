@@ -1,8 +1,8 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
-const fallbackUrl = "https://placeholder.supabase.co";
-const fallbackKey = "placeholder-anon-key";
+const fallbackUrl = "https://jhhgwqgkixiuyoelycak.supabase.co";
+const fallbackKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpoaGd3cWdraXhpdXlvZWx5Y2FrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY1MzMyMDYsImV4cCI6MjEwMjEwOTIwNn0.DahFt3pbEFzLl3IByMYLMk9QYileaiEmC6y-ChjyW2c";
 
 export async function createClient() {
   const cookieStore = await cookies();
