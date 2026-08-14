@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { validateDNSContent } from '@/lib/validation'
 import { upsertPowerDNSRecord, deletePowerDNSRecord } from '@/lib/powerdns'
+import { createDNSRecord, deleteDNSRecord } from '@/lib/cloudflare'
 import { getFullDomain } from '@/lib/utils'
 
 export async function POST(request: Request) {
@@ -40,7 +41,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: valError }, { status: 400 })
   }
 
-  // Quota Safeguard: Allow up to 10 DNS records per subdomain in PowerDNS
+  // Quota Safeguard: Allow up to 10 DNS records per subdomain
   const { count: subdomainRecordCount } = await supabase
     .from('dns_records')
     .select('id', { count: 'exact', head: true })
@@ -70,7 +71,7 @@ export async function POST(request: Request) {
   if (type !== 'TXT') {
     const { data: existingRecords } = await supabase
       .from('dns_records')
-      .select('id, name, type')
+      .select('id, name, type, cloudflare_record_id')
       .eq('subdomain_id', subdomain.id)
       .eq('name', recordName)
       .neq('type', 'TXT')
@@ -82,19 +83,47 @@ export async function POST(request: Request) {
         } catch (e) {
           console.error('[PowerDNS Delete Error]', e)
         }
+        if (rec.cloudflare_record_id) {
+          try {
+            await deleteDNSRecord(rec.cloudflare_record_id)
+          } catch (e) {
+            console.error('[Cloudflare Delete Error]', e)
+          }
+        }
         await supabase.from('dns_records').delete().eq('id', rec.id)
       }
     }
   }
   
   try {
-    // Provision record directly in authoritative PowerDNS Server
-    await upsertPowerDNSRecord({
-      name: recordName,
-      type: type as any,
-      content: cleanContent,
-      ttl: 300
-    })
+    // 1. Provision in PowerDNS Server
+    try {
+      await upsertPowerDNSRecord({
+        name: recordName,
+        type: type as any,
+        content: cleanContent,
+        ttl: 300
+      })
+    } catch (pdnsErr) {
+      console.error('[PowerDNS Provisioning Warning]', pdnsErr)
+    }
+
+    // 2. Provision in Cloudflare Edge (DNS Only, proxied: false)
+    let cfRecordId: string | null = null
+    try {
+      const cfRes = await createDNSRecord({
+        type: type as any,
+        name: recordName,
+        content: cleanContent,
+        ttl: 1,
+        proxied: false
+      })
+      if (cfRes.success && cfRes.recordId) {
+        cfRecordId = cfRes.recordId
+      }
+    } catch (cfErr) {
+      console.error('[Cloudflare Provisioning Warning]', cfErr)
+    }
 
     const { data: record, error: insertError } = await supabase
       .from('dns_records')
@@ -103,12 +132,14 @@ export async function POST(request: Request) {
         type,
         name: recordName,
         content: cleanContent,
+        cloudflare_record_id: cfRecordId,
         status: 'active'
       })
       .select()
       .single()
 
     if (insertError) throw insertError
+
 
     await supabase.from('audit_logs').insert({
       user_id: user.id,
