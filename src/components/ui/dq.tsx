@@ -178,15 +178,15 @@ vec3 hueRotate(vec3 col, float a) {
 
 vec3 shade(vec2 uv, vec2 p, float t) {
   vec2 q = p * 1.6;
-  float amp = 0.25 + u_intensity * 0.85;
+  float amp = 0.22 + u_intensity * 0.80;
   for (float i = 1.0; i < 4.0; i += 1.0) {
     q.x += amp / i * cos(i * 2.4 * q.y + t * 0.8 + u_seed);
     q.y += amp / i * cos(i * 1.7 * q.x + t * 0.6);
   }
   float val = 0.5 + 0.5 * sin(q.x + q.y);
-  // Glossy 3D silk curve with rich depth & specular crests
-  val = smoothstep(0.08, 0.94, val);
-  val = pow(val, 1.4);
+  // Deep obsidian curve: keeps canvas deeply dark with focused glossy highlights
+  val = smoothstep(0.12, 0.98, val);
+  val = pow(val, 1.8);
   return palette(val);
 }
 
@@ -286,29 +286,29 @@ void main() {
 }
 `
 
-// Optimized high-gloss 3D luminous silk settings: Pure Obsidian Black & Metallic Chrome
+// Optimized high-gloss 3D luminous silk settings: Deep Obsidian Black
 const UNIFORMS = {
   colors: [
-    [0.002, 0.003, 0.005], // Deep obsidian void (#09090b)
-    [0.012, 0.014, 0.018], // Rich dark charcoal undertone
-    [0.040, 0.046, 0.058], // Sleek dark graphite transition
-    [0.120, 0.140, 0.175], // Deep 3D metallic liquid silk body
-    [0.380, 0.430, 0.520], // High-gloss liquid chrome specular sheen
-    [0.820, 0.880, 0.960], // Brilliant silver-white crest glint
-    [0.820, 0.880, 0.960],
-    [0.820, 0.880, 0.960],
+    [0.001, 0.002, 0.003], // Pure pitch obsidian void (#09090b)
+    [0.005, 0.007, 0.010], // Deep midnight charcoal
+    [0.018, 0.022, 0.028], // Dark graphite shadow
+    [0.055, 0.065, 0.082], // Subtle 3D dark slate body
+    [0.160, 0.185, 0.225], // Muted liquid chrome specular sheen
+    [0.360, 0.400, 0.470], // Sleek dark silver crest peak
+    [0.360, 0.400, 0.470],
+    [0.360, 0.400, 0.470],
   ] as [number, number, number][],
   colorCount: 6,
   scale: 0.620,
-  intensity: 0.320,
+  intensity: 0.260,
   paramA: 0.500,
   warp: 0.180,
   detail: 1.350,
-  contrast: 1.160,
-  brightness: -0.005,
-  saturation: 0.180, // Pure monochromatic glossy black/charcoal/silver luxury aesthetic
+  contrast: 1.180,
+  brightness: -0.020,
+  saturation: 0.150, // Pure monochromatic deep obsidian aesthetic
   hue: 0.0000,
-  vignette: 0.150,
+  vignette: 0.250,
   blur: 0.0000, // 0.0 bypasses 5-tap multi-sampling (80% GPU performance boost)
   grain: 0.006,
   seed: 707.0,
