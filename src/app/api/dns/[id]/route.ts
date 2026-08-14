@@ -1,15 +1,14 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { validateDNSContent } from '@/lib/validation'
-import { updateDNSRecord, deleteDNSRecord } from '@/lib/cloudflare'
-import { getFullDomain } from '@/lib/utils'
+import { upsertPowerDNSRecord, deletePowerDNSRecord } from '@/lib/powerdns'
 
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const supabase = await createClient()
-  const { data: { session } } = await supabase.auth.getSession()
+  const { data: { user } } = await supabase.auth.getUser()
 
-  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const body = await request.json()
   const { type, content } = body
@@ -20,44 +19,40 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     .eq('id', id)
     .single()
 
-  if (!record || record.subdomains.user_id !== session.user.id) {
+  if (!record || record.subdomains.user_id !== user.id) {
     return NextResponse.json({ error: 'Not found or unauthorized' }, { status: 404 })
   }
 
   const newType = type || record.type
-  const newContent = content || record.content
+  let newContent = content || record.content
+  if (newType === 'CNAME') {
+    newContent = newContent.trim().replace(/\.+$/, "")
+  }
 
   const { valid, error: valError } = validateDNSContent(newType, newContent)
   if (!valid) return NextResponse.json({ error: valError }, { status: 400 })
 
-  const fullDomain = getFullDomain(record.subdomains.name)
-  const cfRecordId = record.cloudflare_record_id || record.cf_record_id
-
   try {
-    // Only TXT records live in Cloudflare (see POST handler for rationale).
-    // A/CNAME routing records are resolved by the app itself, so they're
-    // never pushed to Cloudflare going forward.
-    let cloudflareRecordId: string | null = cfRecordId ?? null
-
-    if (newType === 'TXT') {
-      if (cfRecordId) {
-        await updateDNSRecord({ recordId: cfRecordId, name: fullDomain, type: newType, content: newContent })
-      }
-    } else if (cfRecordId) {
-      // Type changed away from TXT (or a legacy record still has a stale
-      // Cloudflare record) — remove the now-redundant Cloudflare record and
-      // reclaim the zone's record quota.
+    // If type changed, delete the old RRset from PowerDNS first
+    if (newType !== record.type) {
       try {
-        await deleteDNSRecord(cfRecordId)
+        await deletePowerDNSRecord(record.name, record.type)
       } catch (e) {
-        console.error('[Cloudflare Delete Error]', e)
+        console.error('[PowerDNS Delete Old Error]', e)
       }
-      cloudflareRecordId = null
     }
+
+    // Upsert the updated record to PowerDNS
+    await upsertPowerDNSRecord({
+      name: record.name,
+      type: newType,
+      content: newContent,
+      ttl: record.ttl || 300,
+    })
 
     const { data: updatedRecord, error: updateError } = await supabase
       .from('dns_records')
-      .update({ type: newType, content: newContent, cloudflare_record_id: cloudflareRecordId })
+      .update({ type: newType, content: newContent })
       .eq('id', record.id)
       .select()
       .single()
@@ -65,7 +60,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     if (updateError) throw updateError
 
     await supabase.from('audit_logs').insert({
-      user_id: session.user.id,
+      user_id: user.id,
       action: 'update_dns',
       resource_type: 'dns_record',
       resource_id: record.id,
@@ -81,9 +76,9 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
 export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const supabase = await createClient()
-  const { data: { session } } = await supabase.auth.getSession()
+  const { data: { user } } = await supabase.auth.getUser()
 
-  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const { data: record } = await supabase
     .from('dns_records')
@@ -91,19 +86,22 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
     .eq('id', id)
     .single()
 
-  if (!record || record.subdomains.user_id !== session.user.id) {
+  if (!record || record.subdomains.user_id !== user.id) {
     return NextResponse.json({ error: 'Not found or unauthorized' }, { status: 404 })
   }
 
   try {
-    const cfRecordId = record.cloudflare_record_id || record.cf_record_id
-    if (cfRecordId) {
-      await deleteDNSRecord(cfRecordId)
+    // Delete record directly from PowerDNS
+    try {
+      await deletePowerDNSRecord(record.name, record.type)
+    } catch (e) {
+      console.error('[PowerDNS Delete Error]', e)
     }
+
     await supabase.from('dns_records').delete().eq('id', record.id)
 
     await supabase.from('audit_logs').insert({
-      user_id: session.user.id,
+      user_id: user.id,
       action: 'delete_dns',
       resource_type: 'dns_record',
       resource_id: record.id,

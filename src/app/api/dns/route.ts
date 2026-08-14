@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { validateDNSContent } from '@/lib/validation'
-import { createDNSRecord, deleteDNSRecord } from '@/lib/cloudflare'
+import { upsertPowerDNSRecord, deletePowerDNSRecord } from '@/lib/powerdns'
 import { getFullDomain } from '@/lib/utils'
 
 export async function POST(request: Request) {
@@ -26,6 +26,10 @@ export async function POST(request: Request) {
     .eq('user_id', user.id)
     .single()
 
+  if (!subdomain) {
+    return NextResponse.json({ error: 'Subdomain not found or unauthorized' }, { status: 404 })
+  }
+
   let cleanContent = content.trim()
   if (type === 'CNAME') {
     cleanContent = cleanContent.replace(/\.+$/, "")
@@ -36,40 +40,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: valError }, { status: 400 })
   }
 
-  // Quota Safeguard: Limit to max 3 DNS records per subdomain to preserve Cloudflare 200 zone limit
+  // Quota Safeguard: Allow up to 10 DNS records per subdomain in PowerDNS
   const { count: subdomainRecordCount } = await supabase
     .from('dns_records')
     .select('id', { count: 'exact', head: true })
     .eq('subdomain_id', subdomain.id)
 
-  if (subdomainRecordCount !== null && subdomainRecordCount >= 3) {
+  if (subdomainRecordCount !== null && subdomainRecordCount >= 10) {
     return NextResponse.json(
-      { error: 'Maximum limit of 3 DNS records per subdomain reached. Please delete an existing record to create a new one.' },
+      { error: 'Maximum limit of 10 DNS records per subdomain reached. Please delete an existing record to create a new one.' },
       { status: 400 }
     )
-  }
-
-  // For A/CNAME records: replace any existing routing records (they conflict)
-  // For TXT records: coexist — TXT is used for verification and stacks alongside routing records
-  if (type !== 'TXT') {
-    const { data: existingRecords } = await supabase
-      .from('dns_records')
-      .select('id, cloudflare_record_id')
-      .eq('subdomain_id', subdomain.id)
-      .neq('type', 'TXT')
-
-    if (existingRecords && existingRecords.length > 0) {
-      for (const rec of existingRecords) {
-        if (rec.cloudflare_record_id) {
-          try {
-            await deleteDNSRecord(rec.cloudflare_record_id)
-          } catch (e) {
-            console.error('[Cloudflare Delete Error]', e)
-          }
-        }
-        await supabase.from('dns_records').delete().eq('id', rec.id)
-      }
-    }
   }
 
   const fullDomain = getFullDomain(subdomain.name)
@@ -84,26 +65,36 @@ export async function POST(request: Request) {
       recordName = `${cleanPrefix}.${fullDomain}`
     }
   }
+
+  // For A/CNAME records: replace any existing conflicting records of same name
+  if (type !== 'TXT') {
+    const { data: existingRecords } = await supabase
+      .from('dns_records')
+      .select('id, name, type')
+      .eq('subdomain_id', subdomain.id)
+      .eq('name', recordName)
+      .neq('type', 'TXT')
+
+    if (existingRecords && existingRecords.length > 0) {
+      for (const rec of existingRecords) {
+        try {
+          await deletePowerDNSRecord(rec.name, rec.type)
+        } catch (e) {
+          console.error('[PowerDNS Delete Error]', e)
+        }
+        await supabase.from('dns_records').delete().eq('id', rec.id)
+      }
+    }
+  }
   
   try {
-    // Wildcard *.arc.bd already routes all traffic to this app, and the
-    // middleware resolves A/CNAME "routing" targets straight from this table
-    // (see resolve_subdomain_target RPC) to reverse-proxy the request. A real
-    // Cloudflare record is therefore redundant for A/CNAME and would only
-    // burn through the zone's 200-record hard limit as usage grows.
-    //
-    // TXT records are the exception: they're looked up directly over public
-    // DNS by third parties (e.g. Google Search Console, domain verification
-    // flows) rather than through our app, so they still need a real record.
-    let cloudflareRecordId: string | null = null
-    if (type === 'TXT') {
-      const cfResult = await createDNSRecord({ type, name: recordName, content: cleanContent })
-
-      if (!cfResult.success || !cfResult.recordId) {
-        throw new Error(cfResult.error || 'Cloudflare failed to return record ID')
-      }
-      cloudflareRecordId = cfResult.recordId
-    }
+    // Provision record directly in authoritative PowerDNS Server
+    await upsertPowerDNSRecord({
+      name: recordName,
+      type: type as any,
+      content: cleanContent,
+      ttl: 300
+    })
 
     const { data: record, error: insertError } = await supabase
       .from('dns_records')
@@ -112,7 +103,6 @@ export async function POST(request: Request) {
         type,
         name: recordName,
         content: cleanContent,
-        cloudflare_record_id: cloudflareRecordId,
         status: 'active'
       })
       .select()

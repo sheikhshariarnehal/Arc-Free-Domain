@@ -43,11 +43,10 @@ export default function VercelDoc() {
           <div className="p-6 rounded-2xl border border-primary/20 bg-primary/5 space-y-3">
             <h2 className="text-lg font-semibold text-primary flex items-center gap-2">
               <CheckCircle2 className="size-5 shrink-0" />
-              Instant Reverse-Proxy Deployment (Recommended)
+              Direct Authoritative DNS Resolution
             </h2>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Because ARC.BD uses an advanced wildcard gateway, you <strong>do not need</strong> to register or verify your custom domain in Vercel settings! 
-              You can simply map your subdomain to your raw Vercel deployment URL (e.g., <code className="text-foreground bg-muted px-1.5 py-0.5 rounded font-mono">yourproject.vercel.app</code>) and we will instantly reverse-proxy all traffic, keeping your clean <code className="text-foreground font-mono">.arc.bd</code> URL in the address bar.
+              ARC.BD runs a dedicated, high-speed Authoritative DNS network. When you connect your <code className="text-foreground font-mono">.arc.bd</code> subdomain to Vercel, visitors connect <strong>directly to Vercel&apos;s global edge network</strong> with zero proxy delay, automatic SSL, and full support for WebSockets and serverless functions.
             </p>
           </div>
 
@@ -55,11 +54,12 @@ export default function VercelDoc() {
           <div className="p-6 rounded-2xl border border-border bg-card space-y-3">
             <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
               <span className="size-6 rounded-full bg-primary/20 text-primary text-xs flex items-center justify-center font-bold">1</span>
-              Get your Vercel URL
+              Add Domain to Vercel Project
             </h2>
             <ol className="text-sm text-muted-foreground space-y-2 list-disc list-inside ml-2">
-              <li>Open your Vercel Dashboard and go to your project.</li>
-              <li>Under the <strong>Deployment</strong> section, copy your raw <code className="text-foreground bg-muted px-1.5 py-0.5 rounded font-mono">.vercel.app</code> production URL.</li>
+              <li>Open your project on the <strong>Vercel Dashboard</strong>.</li>
+              <li>Go to <strong>Settings</strong> &rarr; <strong>Domains</strong>.</li>
+              <li>Enter your full subdomain (e.g., <code className="text-foreground bg-muted px-1.5 py-0.5 rounded font-mono">yourname.arc.bd</code>) and click <strong>Add</strong>.</li>
             </ol>
           </div>
 
@@ -67,18 +67,18 @@ export default function VercelDoc() {
           <div className="p-6 rounded-2xl border border-border bg-card space-y-3">
             <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
               <span className="size-6 rounded-full bg-primary/20 text-primary text-xs flex items-center justify-center font-bold">2</span>
-              Configure Target in ARC.BD Dashboard
+              Configure DNS in ARC.BD Dashboard
             </h2>
             <p className="text-sm text-muted-foreground">
-              Go to your <Link href="/dashboard/domains" className="text-primary underline">ARC.BD Domain Dashboard</Link>, open your subdomain, and add a CNAME record:
+              Go to your <Link href="/dashboard/domains" className="text-primary underline">ARC.BD Domain Dashboard</Link>, open your subdomain, and add the CNAME record:
             </p>
             <div className="bg-muted border border-border rounded-xl p-4 font-mono text-xs space-y-1">
               <div><strong className="text-primary">Type:</strong> CNAME</div>
               <div><strong className="text-primary">Name / Host:</strong> @</div>
-              <div><strong className="text-primary">Target Hostname:</strong> yourproject.vercel.app</div>
+              <div><strong className="text-primary">Target Hostname:</strong> cname.vercel-dns.com</div>
             </div>
             <p className="text-xs text-muted-foreground mt-2">
-              💡 Do not enter <code className="text-foreground font-mono">cname.vercel-dns.com</code> as target; instead enter your specific <code className="text-foreground font-mono">yourproject.vercel.app</code> URL so we can reverse-proxy directly to your app.
+              Tip: If Vercel requires ownership verification, also add the TXT verification record with name <code className="text-foreground font-mono">_vercel</code>.
             </p>
           </div>
 
@@ -86,10 +86,10 @@ export default function VercelDoc() {
           <div className="p-6 rounded-2xl border border-border bg-card space-y-3">
             <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
               <span className="size-6 rounded-full bg-primary/20 text-primary text-xs flex items-center justify-center font-bold">3</span>
-              Go Live!
+              Verify &amp; Go Live!
             </h2>
             <p className="text-sm text-muted-foreground">
-              Your site is immediately active. Visiting your <code className="text-foreground font-mono">yourname.arc.bd</code> subdomain will instantly display your Vercel project with automatic SSL and zero configuration on Vercel's side.
+              Vercel will automatically detect the DNS record and issue an SSL certificate within seconds. Your domain status on Vercel will turn <strong>Valid Configuration</strong> and your site will be live globally!
             </p>
           </div>
         </div>

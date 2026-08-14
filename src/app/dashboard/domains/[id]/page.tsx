@@ -247,43 +247,56 @@ export default function DomainDetail() {
           <CardTitle className="text-base font-semibold">Quick Setup Presets</CardTitle>
           <CardDescription>One-click presets for popular hosting platforms.</CardDescription>
         </CardHeader>
-        <CardContent className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <CardContent className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           <button
-            onClick={() => applyPreset("CNAME", "your-app.vercel.app", "@")}
-            className="flex flex-col items-start gap-3 p-3 rounded-lg border border-border bg-card/50 hover:bg-card hover:border-primary/50 transition-all text-left group"
+            onClick={() => applyPreset("CNAME", "cname.vercel-dns.com", "@")}
+            className="flex flex-col items-start gap-2.5 p-3 rounded-lg border border-border bg-card/50 hover:bg-card hover:border-primary/50 transition-all text-left group"
           >
             <div className="size-8 rounded-md bg-primary/15 flex items-center justify-center group-hover:bg-primary/25 transition-colors">
               <Server className="size-4 text-primary" />
             </div>
             <div className="w-full">
-              <h3 className="font-semibold text-sm text-foreground">Vercel App</h3>
-              <p className="text-[11px] text-muted-foreground mt-1.5 break-words font-mono">@ → your-app.vercel.app</p>
+              <h3 className="font-semibold text-sm text-foreground">Vercel</h3>
+              <p className="text-[11px] text-muted-foreground mt-1 break-words font-mono">@ → cname.vercel-dns.com</p>
             </div>
           </button>
 
           <button
-            onClick={() => applyPreset("CNAME", "your-app.netlify.app", "@")}
-            className="flex flex-col items-start gap-3 p-3 rounded-lg border border-border bg-card/50 hover:bg-card hover:border-primary/50 transition-all text-left group"
+            onClick={() => applyPreset("TXT", "vc-domain-verify=...", "_vercel")}
+            className="flex flex-col items-start gap-2.5 p-3 rounded-lg border border-border bg-card/50 hover:bg-card hover:border-primary/50 transition-all text-left group"
           >
             <div className="size-8 rounded-md bg-primary/15 flex items-center justify-center group-hover:bg-primary/25 transition-colors">
               <Code className="size-4 text-primary" />
             </div>
             <div className="w-full">
-              <h3 className="font-semibold text-sm text-foreground">Netlify App</h3>
-              <p className="text-[11px] text-muted-foreground mt-1.5 break-words font-mono">@ → your-app.netlify.app</p>
+              <h3 className="font-semibold text-sm text-foreground">Vercel Verification</h3>
+              <p className="text-[11px] text-muted-foreground mt-1 break-words font-mono">_vercel → verification code</p>
             </div>
           </button>
 
           <button
             onClick={() => applyPreset("CNAME", "your-username.github.io", "@")}
-            className="flex flex-col items-start gap-3 p-3 rounded-lg border border-border bg-card/50 hover:bg-card hover:border-primary/50 transition-all text-left group"
+            className="flex flex-col items-start gap-2.5 p-3 rounded-lg border border-border bg-card/50 hover:bg-card hover:border-primary/50 transition-all text-left group"
           >
             <div className="size-8 rounded-md bg-primary/15 flex items-center justify-center group-hover:bg-primary/25 transition-colors">
               <GitBranch className="size-4 text-primary" />
             </div>
             <div className="w-full">
               <h3 className="font-semibold text-sm text-foreground">GitHub Pages</h3>
-              <p className="text-[11px] text-muted-foreground mt-1.5 break-words font-mono">@ → username.github.io</p>
+              <p className="text-[11px] text-muted-foreground mt-1 break-words font-mono">@ → username.github.io</p>
+            </div>
+          </button>
+
+          <button
+            onClick={() => applyPreset("CNAME", "your-site.netlify.app", "@")}
+            className="flex flex-col items-start gap-2.5 p-3 rounded-lg border border-border bg-card/50 hover:bg-card hover:border-primary/50 transition-all text-left group"
+          >
+            <div className="size-8 rounded-md bg-primary/15 flex items-center justify-center group-hover:bg-primary/25 transition-colors">
+              <Globe className="size-4 text-primary" />
+            </div>
+            <div className="w-full">
+              <h3 className="font-semibold text-sm text-foreground">Netlify</h3>
+              <p className="text-[11px] text-muted-foreground mt-1 break-words font-mono">@ → your-site.netlify.app</p>
             </div>
           </button>
         </CardContent>

@@ -50,21 +50,24 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
 
   const { data: dnsRecords } = await supabase
     .from('dns_records')
-    .select('cloudflare_record_id')
+    .select('name, type')
     .eq('subdomain_id', subdomain.id)
 
   if (dnsRecords) {
+    const { deletePowerDNSRecord } = await import('@/lib/powerdns')
     for (const record of dnsRecords) {
-      const recId = record.cloudflare_record_id
-      if (recId) {
-        try {
-          await deleteDNSRecord(recId)
-        } catch (e) {
-          console.error('Failed to delete CF record', e)
-        }
+      try {
+        await deletePowerDNSRecord(record.name, record.type)
+      } catch (e) {
+        console.error('Failed to delete PowerDNS record', e)
       }
     }
   }
+
+  await supabase
+    .from('dns_records')
+    .delete()
+    .eq('subdomain_id', subdomain.id)
 
   await supabase
     .from('subdomains')
