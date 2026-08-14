@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import { listZoneDNSRecords, createDNSRecord, deleteDNSRecord } from '@/lib/cloudflare'
+import { getZoneRecords, upsertPowerDNSRecord, deletePowerDNSRecord } from '@/lib/powerdns'
 
 async function checkAdmin() {
   const supabase = await createClient()
@@ -23,12 +23,12 @@ export async function GET() {
     return NextResponse.json({ error: 'Unauthorized. Admin access required.' }, { status: 403 })
   }
 
-  const res = await listZoneDNSRecords()
-  if (!res.success) {
-    return NextResponse.json({ error: res.error || 'Failed to list Cloudflare records' }, { status: 500 })
+  try {
+    const rrsets = await getZoneRecords()
+    return NextResponse.json(rrsets || [])
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message || 'Failed to list PowerDNS records' }, { status: 500 })
   }
-
-  return NextResponse.json(res.result || [])
 }
 
 export async function POST(request: Request) {
@@ -38,18 +38,23 @@ export async function POST(request: Request) {
   }
 
   const body = await request.json()
-  const { type, name, content } = body
+  const { type, name, content, ttl } = body
 
   if (!type || !name || !content) {
     return NextResponse.json({ error: 'Missing required fields (type, name, content)' }, { status: 400 })
   }
 
-  const res = await createDNSRecord({ type, name, content })
-  if (!res.success) {
-    return NextResponse.json({ error: res.error || 'Failed to create Cloudflare record' }, { status: 500 })
+  try {
+    await upsertPowerDNSRecord({
+      name,
+      type,
+      content,
+      ttl: ttl || 300
+    })
+    return NextResponse.json({ success: true })
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message || 'Failed to create PowerDNS record' }, { status: 500 })
   }
-
-  return NextResponse.json({ success: true, recordId: res.recordId })
 }
 
 export async function DELETE(request: Request) {
@@ -59,16 +64,17 @@ export async function DELETE(request: Request) {
   }
 
   const { searchParams } = new URL(request.url)
-  const id = searchParams.get('id')
+  const name = searchParams.get('name')
+  const type = searchParams.get('type')
 
-  if (!id) {
-    return NextResponse.json({ error: 'Missing record id' }, { status: 400 })
+  if (!name || !type) {
+    return NextResponse.json({ error: 'Missing name or type parameter' }, { status: 400 })
   }
 
-  const res = await deleteDNSRecord(id)
-  if (!res.success) {
-    return NextResponse.json({ error: res.error || 'Failed to delete Cloudflare record' }, { status: 500 })
+  try {
+    await deletePowerDNSRecord(name, type)
+    return NextResponse.json({ success: true })
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message || 'Failed to delete PowerDNS record' }, { status: 500 })
   }
-
-  return NextResponse.json({ success: true })
 }
