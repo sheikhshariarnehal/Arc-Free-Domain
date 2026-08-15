@@ -126,29 +126,31 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         {/* Sidebar Navigation */}
         <aside
-          className={`fixed md:sticky top-0 left-0 z-50 flex flex-col h-screen bg-sidebar/95 backdrop-blur-md border-r border-sidebar-border transition-all duration-300 ease-in-out shrink-0 select-none ${
+          className={`fixed md:sticky top-0 left-0 z-50 flex flex-col h-screen bg-background/95 backdrop-blur-md border-r border-border/60 transition-all duration-300 ease-in-out shrink-0 select-none ${
             mobileNavOpen
               ? "translate-x-0 w-64 shadow-2xl"
               : "-translate-x-full md:translate-x-0"
           } ${sidebarOpen ? "md:w-64" : "md:w-16"}`}
         >
           {/* Brand Header */}
-          <div className="flex items-center justify-between px-3.5 border-b border-sidebar-border h-14 shrink-0">
+          <div className="flex items-center justify-between px-3.5 border-b border-border/60 h-14 shrink-0">
             <Link
               href="/dashboard"
-              className="flex items-center gap-2.5 overflow-hidden group focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded-md p-0.5"
+              className="flex items-center gap-2.5 overflow-hidden group focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded-md p-1"
             >
-              <Image
-                src="/ARC.webp"
-                alt="ARC.BD Logo"
-                width={30}
-                height={30}
-                className="size-7.5 object-contain rounded-md shrink-0 transition-transform duration-200 group-hover:scale-105"
-              />
+              <div className="size-7 rounded-md bg-white/[0.06] flex items-center justify-center text-white shrink-0 group-hover:scale-105 transition-transform overflow-hidden">
+                <Image
+                  src="/ARC.webp"
+                  alt="ARC.BD Logo"
+                  width={24}
+                  height={24}
+                  className="size-5 object-contain"
+                />
+              </div>
               {sidebarOpen && (
                 <div className="flex items-center gap-1.5 min-w-0">
-                  <span className="text-sm font-bold tracking-tight text-sidebar-foreground">ARC.BD</span>
-                  <Badge variant="outline" className="text-xs px-1.5 py-0 h-4 bg-primary/10 text-primary border-primary/20 font-mono">
+                  <span className="text-sm font-bold tracking-tight text-white">ARC<span className="text-zinc-400 font-mono">.BD</span></span>
+                  <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-4 bg-primary/10 text-primary border-primary/20 font-mono">
                     DEV
                   </Badge>
                 </div>
@@ -178,13 +180,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                       <Link
                         href={item.href}
                         onClick={() => setMobileNavOpen(false)}
-                        className={`flex items-center justify-center size-10 mx-auto rounded-[4px] transition-colors ${
+                        className={`flex items-center justify-center size-9 mx-auto rounded-lg transition-all ${
                           isActive
-                            ? "bg-secondary text-foreground font-semibold"
-                            : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground"
+                            ? "bg-white/[0.08] text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)]"
+                            : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
                         }`}
                       >
-                        <item.icon className={`size-4 shrink-0 ${isActive ? "text-foreground" : ""}`} />
+                        <item.icon className={`size-4 shrink-0 ${isActive ? "text-primary" : "text-zinc-400"}`} />
                         <span className="sr-only">{item.name}</span>
                       </Link>
                     </TooltipTrigger>
@@ -200,14 +202,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   key={item.name}
                   href={item.href}
                   onClick={() => setMobileNavOpen(false)}
-                  className={`flex items-center justify-between gap-2.5 px-3 py-2 rounded-[4px] text-sm font-medium transition-all ${
+                  className={`flex items-center justify-between gap-2.5 px-3 py-2 rounded-lg text-xs sm:text-[13px] font-medium transition-all group ${
                     isActive
-                      ? "bg-secondary text-foreground font-semibold"
-                      : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground"
+                      ? "bg-white/[0.08] text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)]"
+                      : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
                   }`}
                 >
                   <div className="flex items-center gap-2.5 truncate">
-                    <item.icon className={`size-4 shrink-0 ${isActive ? "text-foreground" : ""}`} />
+                    <item.icon className={`size-4 shrink-0 ${isActive ? "text-primary" : "text-zinc-400 group-hover:text-zinc-200"} transition-colors`} />
                     <span className="truncate">{item.name}</span>
                   </div>
                 </Link>
@@ -225,13 +227,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                       <Link
                         href={item.href}
                         onClick={() => setMobileNavOpen(false)}
-                        className={`flex items-center justify-center size-10 mx-auto rounded-[4px] transition-colors ${
+                        className={`flex items-center justify-center size-9 mx-auto rounded-lg transition-all ${
                           isActive
-                            ? "bg-secondary text-foreground font-semibold"
-                            : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground"
+                            ? "bg-white/[0.08] text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)]"
+                            : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
                         }`}
                       >
-                        <item.icon className={`size-4 shrink-0 ${isActive ? "text-foreground" : ""}`} />
+                        <item.icon className={`size-4 shrink-0 ${isActive ? "text-primary" : "text-zinc-400"}`} />
                         <span className="sr-only">{item.name}</span>
                       </Link>
                     </TooltipTrigger>
@@ -247,14 +249,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   key={item.name}
                   href={item.href}
                   onClick={() => setMobileNavOpen(false)}
-                  className={`flex items-center justify-between gap-2.5 px-3 py-2 rounded-[4px] text-sm font-medium transition-all ${
+                  className={`flex items-center justify-between gap-2.5 px-3 py-2 rounded-lg text-xs sm:text-[13px] font-medium transition-all group ${
                     isActive
-                      ? "bg-secondary text-foreground font-semibold"
-                      : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground"
+                      ? "bg-white/[0.08] text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)]"
+                      : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
                   }`}
                 >
                   <div className="flex items-center gap-2.5 truncate">
-                    <item.icon className={`size-4 shrink-0 ${isActive ? "text-foreground" : ""}`} />
+                    <item.icon className={`size-4 shrink-0 ${isActive ? "text-primary" : "text-zinc-400 group-hover:text-zinc-200"} transition-colors`} />
                     <span className="truncate">{item.name}</span>
                   </div>
                 </Link>
@@ -265,16 +267,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             {isAdmin && (
               <>
                 <div className="pt-2 pb-1">
-                  <Separator className="bg-sidebar-border/60" />
+                  <Separator className="bg-border/60" />
                 </div>
                 {sidebarOpen ? (
                   <Link
                     href="/admin"
                     onClick={() => setMobileNavOpen(false)}
-                    className="flex items-center justify-between gap-2.5 px-3 py-2 rounded-md text-sm font-medium text-amber-400 hover:bg-amber-500/15 transition-all group"
+                    className="flex items-center justify-between gap-2.5 px-3 py-2 rounded-lg text-xs sm:text-[13px] font-medium text-amber-400 hover:bg-amber-500/15 transition-all group"
                   >
                     <div className="flex items-center gap-2.5 truncate">
-                      <Shield className="size-4 shrink-0 text-amber-400 group-hover:scale-110 transition-transform" />
+                      <Shield className="size-4 shrink-0 text-amber-400 group-hover:scale-105 transition-transform" />
                       <span className="truncate">Admin Panel</span>
                     </div>
                   </Link>
@@ -284,7 +286,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                       <Link
                         href="/admin"
                         onClick={() => setMobileNavOpen(false)}
-                        className="flex items-center justify-center size-10 mx-auto rounded-md text-amber-400 hover:bg-amber-500/15 transition-colors"
+                        className="flex items-center justify-center size-9 mx-auto rounded-lg text-amber-400 hover:bg-amber-500/15 transition-colors"
                       >
                         <Shield className="size-4 shrink-0" />
                         <span className="sr-only">Admin Panel</span>
@@ -301,53 +303,47 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
           {/* Subdomain Quota Capsule */}
           {sidebarOpen && (
-            <div className={`mx-2.5 mb-2 px-3 py-2 rounded-md text-xs flex items-center justify-between transition-colors ${
-              remainingSlots === 0
-                ? "bg-amber-500/15 text-amber-300"
-                : "bg-secondary/60 text-foreground"
-            }`}>
-              <div className="flex items-center gap-2">
-                <Globe className={`size-3.5 ${remainingSlots === 0 ? "text-amber-400" : "text-primary"}`} />
-                <span className="font-mono text-xs">{subdomainCount} / 5 Domains</span>
+            <div className="mx-2.5 mb-2 p-2.5 rounded-lg bg-white/[0.03] border border-white/[0.08] flex flex-col gap-1.5">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-zinc-400 font-medium">Domain Usage</span>
+                <span className={`font-mono text-[11px] font-semibold ${remainingSlots === 0 ? "text-amber-400" : "text-zinc-300"}`}>
+                  {subdomainCount} / 5
+                </span>
               </div>
-              {remainingSlots > 0 ? (
-                <Link
-                  href="/dashboard/domains?action=claim"
-                  className="text-primary hover:underline font-semibold text-xs"
-                >
-                  + Claim
-                </Link>
-              ) : (
-                <span className="font-mono text-xs text-amber-400 font-semibold">Full</span>
-              )}
+              <div className="w-full bg-white/10 h-1 rounded-full overflow-hidden">
+                <div
+                  className={`h-full rounded-full transition-all duration-300 ${
+                    remainingSlots === 0 ? "bg-amber-400" : "bg-primary"
+                  }`}
+                  style={{ width: `${Math.min(100, (subdomainCount / 5) * 100)}%` }}
+                />
+              </div>
             </div>
           )}
 
-          <Separator className="bg-sidebar-border" />
-
           {/* Bottom User Profile Trigger */}
-          <div className="p-2 shrink-0">
+          <div className="p-2 shrink-0 border-t border-border/60">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
-                  className={`flex w-full items-center gap-2.5 p-2 rounded-xl hover:bg-secondary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring transition-colors ${
+                  className={`flex w-full items-center gap-2.5 p-1.5 rounded-lg hover:bg-white/[0.06] active:bg-white/[0.10] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring transition-all cursor-pointer group ${
                     !sidebarOpen ? "justify-center" : ""
                   }`}
                   aria-label="User profile and account settings"
                 >
-                  <Avatar className="size-8 shrink-0 border border-sidebar-border shadow-2xs">
-                    {avatarUrl && <AvatarImage src={avatarUrl} alt={userName} />}
-                    <AvatarFallback className="bg-primary/20 text-primary text-xs font-bold">
+                  <Avatar className="size-7.5 shrink-0 ring-1 ring-white/15">
+                    {avatarUrl && <AvatarImage src={avatarUrl} alt={userName} className="object-cover" />}
+                    <AvatarFallback className="bg-primary/20 text-primary text-xs font-bold font-mono">
                       {initials}
                     </AvatarFallback>
                   </Avatar>
                   {sidebarOpen && (
                     <>
                       <div className="flex-1 min-w-0 text-left">
-                        <p className="text-xs font-semibold text-sidebar-foreground truncate">{userName}</p>
-                        <p className="text-xs text-muted-foreground truncate">{userEmail}</p>
+                        <p className="text-xs font-medium text-white truncate">{userName}</p>
+                        <p className="text-[11px] text-zinc-400 truncate font-mono">{userEmail}</p>
                       </div>
-                      <ChevronsUpDown className="size-3.5 text-muted-foreground/70 shrink-0" />
+                      <ChevronsUpDown className="size-3.5 text-zinc-400 group-hover:text-zinc-200 transition-colors shrink-0" />
                     </>
                   )}
                 </button>

@@ -220,12 +220,12 @@ export function DashboardHeader({
             {/* Search Trigger */}
             <button
               onClick={() => setSearchOpen(true)}
-              className="flex h-9 items-center gap-2 rounded-[4px] border-none bg-card/60 px-2.5 sm:px-3 text-xs text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring group"
+              className="flex h-8.5 items-center gap-2 rounded-lg border border-white/[0.08] bg-white/[0.03] px-2.5 sm:px-3 text-xs text-zinc-400 hover:bg-white/[0.08] hover:text-white transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring group cursor-pointer"
               aria-label="Search pages and documentation"
             >
-              <Search className="size-3.5 sm:size-4 shrink-0 text-muted-foreground group-hover:text-foreground transition-colors" />
+              <Search className="size-3.5 shrink-0 text-zinc-400 group-hover:text-zinc-200 transition-colors" />
               <span className="hidden sm:inline-block">Search...</span>
-              <kbd className="pointer-events-none hidden sm:inline-flex h-5 select-none items-center gap-0.5 rounded-[3px] border-none bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
+              <kbd className="pointer-events-none hidden sm:inline-flex h-4.5 select-none items-center gap-0.5 rounded-[4px] border border-white/10 bg-white/[0.06] px-1.5 font-mono text-[10px] font-medium text-zinc-400">
                 {isMac ? <span>⌘K</span> : <span>Ctrl K</span>}
               </kbd>
             </button>
@@ -238,11 +238,11 @@ export function DashboardHeader({
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="relative size-9 text-muted-foreground hover:text-foreground hover:bg-secondary rounded-lg"
+                        className="relative size-8.5 text-zinc-400 hover:text-white hover:bg-white/[0.06] rounded-lg transition-colors"
                         aria-label="System status notifications"
                       >
                         <Bell className="size-4" />
-                        <span className="absolute top-2 right-2 size-2 rounded-full bg-emerald-500 ring-2 ring-background" />
+                        <span className="absolute top-1.5 right-1.5 size-2 rounded-full bg-emerald-500 ring-2 ring-background" />
                       </Button>
                     </DropdownMenuTrigger>
                   </TooltipTrigger>
@@ -290,12 +290,12 @@ export function DashboardHeader({
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button
-                    className="flex items-center gap-2 p-0.5 rounded-full hover:ring-2 hover:ring-primary/40 focus:outline-none focus:ring-2 focus:ring-ring transition-all"
+                    className="flex items-center gap-2 p-0.5 rounded-full hover:ring-2 hover:ring-primary/40 focus:outline-none focus:ring-2 focus:ring-ring transition-all cursor-pointer"
                     aria-label="User account options"
                   >
-                    <Avatar className="size-8 border border-border shadow-2xs">
-                      {avatarUrl && <AvatarImage src={avatarUrl} alt={userName} />}
-                      <AvatarFallback className="bg-primary/20 text-primary font-bold text-xs">
+                    <Avatar className="size-7.5 ring-1 ring-white/15 shadow-2xs">
+                      {avatarUrl && <AvatarImage src={avatarUrl} alt={userName} className="object-cover" />}
+                      <AvatarFallback className="bg-primary/20 text-primary font-bold text-xs font-mono">
                         {getInitials(userName)}
                       </AvatarFallback>
                     </Avatar>

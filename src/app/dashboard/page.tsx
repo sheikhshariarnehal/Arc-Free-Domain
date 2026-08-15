@@ -21,7 +21,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { formatDate } from "@/lib/utils";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -52,27 +51,27 @@ function statusBadge(status: string) {
   switch (status) {
     case "active":
       return (
-        <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20 font-mono text-xs">
+        <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20 text-[11px] font-medium rounded-full px-2.5 py-0.5">
           <span className="size-1.5 rounded-full bg-emerald-400 mr-1.5 inline-block" />
           Active
         </Badge>
       );
     case "pending":
       return (
-        <Badge className="bg-amber-500/10 text-amber-400 border-amber-500/30 hover:bg-amber-500/20 font-mono text-xs">
+        <Badge className="bg-amber-500/10 text-amber-400 border-amber-500/20 hover:bg-amber-500/20 text-[11px] font-medium rounded-full px-2.5 py-0.5">
           <span className="size-1.5 rounded-full bg-amber-400 mr-1.5 inline-block" />
           Pending Review
         </Badge>
       );
     case "suspended":
       return (
-        <Badge variant="destructive" className="font-mono text-xs">
+        <Badge variant="destructive" className="text-[11px] font-medium rounded-full px-2.5 py-0.5">
           Suspended
         </Badge>
       );
     default:
       return (
-        <Badge variant="outline" className="capitalize font-mono text-xs">
+        <Badge variant="outline" className="capitalize text-[11px] font-medium rounded-full px-2.5 py-0.5">
           {status}
         </Badge>
       );
@@ -144,19 +143,19 @@ export default function DashboardOverview() {
     return (
       <div className="space-y-6 w-full animate-pulse">
         <div className="flex justify-between items-center">
-          <Skeleton className="h-8 w-56" />
-          <Skeleton className="h-9 w-36" />
+          <Skeleton className="h-8 w-56 rounded-lg" />
+          <Skeleton className="h-9 w-36 rounded-lg" />
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {[...Array(4)].map((_, i) => (
-            <Skeleton key={i} className="h-32 rounded-[4px]" />
+            <Skeleton key={i} className="h-32 rounded-xl" />
           ))}
         </div>
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-          <Skeleton className="h-72 rounded-[4px] xl:col-span-2" />
-          <Skeleton className="h-72 rounded-[4px]" />
+          <Skeleton className="h-72 rounded-xl xl:col-span-2" />
+          <Skeleton className="h-72 rounded-xl" />
         </div>
-        <Skeleton className="h-64 rounded-[4px]" />
+        <Skeleton className="h-64 rounded-xl" />
       </div>
     );
   }
@@ -174,13 +173,13 @@ export default function DashboardOverview() {
           </p>
         </div>
         <div className="flex items-center gap-2 w-full sm:w-auto">
-          <Button variant="outline" size="sm" asChild className="text-xs h-9 flex-1 sm:flex-initial whitespace-nowrap">
+          <Button variant="outline" size="sm" asChild className="text-xs h-9 rounded-lg flex-1 sm:flex-initial whitespace-nowrap">
             <Link href="/docs" className="inline-flex items-center justify-center">
               <BookOpen className="size-3.5 mr-1.5 shrink-0" />
               <span>Documentation</span>
             </Link>
           </Button>
-          <Button asChild size="sm" className="text-xs h-9 font-semibold flex-1 sm:flex-initial whitespace-nowrap">
+          <Button asChild size="sm" className="text-xs h-9 rounded-lg font-semibold flex-1 sm:flex-initial whitespace-nowrap">
             <Link href="/dashboard/domains?action=claim" className="inline-flex items-center justify-center">
               <Plus className="size-3.5 mr-1.5 shrink-0" />
               <span>Claim Subdomain</span>
@@ -191,17 +190,17 @@ export default function DashboardOverview() {
 
       {/* Pending Claims Notice */}
       {pendingCount > 0 && (
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-[4px] border-none bg-amber-500/10 backdrop-blur-xs text-amber-300 gap-4 shadow-none">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl border border-amber-500/20 bg-amber-500/10 backdrop-blur-xs text-amber-300 gap-4 shadow-none">
           <div className="flex items-center gap-3.5 min-w-0">
-            <div className="size-10 rounded-[4px] bg-amber-500/20 border-none flex items-center justify-center shrink-0">
-              <Clock className="size-5 text-amber-400" />
+            <div className="size-9 rounded-lg bg-amber-500/20 border border-amber-500/30 flex items-center justify-center shrink-0">
+              <Clock className="size-4.5 text-amber-400" />
             </div>
             <div className="min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
                 <p className="text-sm font-semibold text-foreground">
                   {pendingCount} Domain Claim{pendingCount > 1 ? "s" : ""} Pending Review
                 </p>
-                <Badge variant="outline" className="bg-amber-500/15 text-amber-400 border-none font-mono text-[10px] py-0 h-4">
+                <Badge variant="outline" className="bg-amber-500/15 text-amber-400 border-amber-500/30 font-mono text-[10px] py-0 h-4">
                   Awaiting Verification
                 </Badge>
               </div>
@@ -212,7 +211,7 @@ export default function DashboardOverview() {
           </div>
           <Button
             size="sm"
-            className="rounded-[4px] bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 border-none text-xs font-semibold shrink-0"
+            className="rounded-lg bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 border border-amber-500/30 text-xs font-semibold shrink-0"
             asChild
           >
             <Link href="/dashboard/domains">View Pending Domains</Link>
@@ -223,12 +222,12 @@ export default function DashboardOverview() {
       {/* Metric Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Metric 1: Subdomains Quota */}
-        <div className="rounded-[4px] border-none bg-card/70 backdrop-blur-xs p-5 space-y-3 hover:bg-card transition-all shadow-none group">
+        <div className="rounded-xl border border-border/60 bg-card p-5 space-y-3 hover:border-border transition-all shadow-xs group">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-muted-foreground group-hover:text-foreground transition-colors">
               Subdomains Used
             </span>
-            <div className="size-8 rounded-[4px] bg-primary/10 border-none flex items-center justify-center text-primary">
+            <div className="size-8.5 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
               <Globe className="size-4" />
             </div>
           </div>
@@ -243,12 +242,12 @@ export default function DashboardOverview() {
         </div>
 
         {/* Metric 2: Active Subdomains */}
-        <div className="rounded-[4px] border-none bg-card/70 backdrop-blur-xs p-5 space-y-3 hover:bg-card transition-all shadow-none group">
+        <div className="rounded-xl border border-border/60 bg-card p-5 space-y-3 hover:border-border transition-all shadow-xs group">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-muted-foreground group-hover:text-foreground transition-colors">
               Active Domains
             </span>
-            <div className="size-8 rounded-[4px] bg-emerald-500/10 border-none flex items-center justify-center text-emerald-400">
+            <div className="size-8.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
               <Activity className="size-4" />
             </div>
           </div>
@@ -263,12 +262,12 @@ export default function DashboardOverview() {
         </div>
 
         {/* Metric 3: DNS Records */}
-        <div className="rounded-[4px] border-none bg-card/70 backdrop-blur-xs p-5 space-y-3 hover:bg-card transition-all shadow-none group">
+        <div className="rounded-xl border border-border/60 bg-card p-5 space-y-3 hover:border-border transition-all shadow-xs group">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-muted-foreground group-hover:text-foreground transition-colors">
               DNS Records
             </span>
-            <div className="size-8 rounded-[4px] bg-cyan-500/10 border-none flex items-center justify-center text-cyan-400">
+            <div className="size-8.5 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
               <ChartColumn className="size-4" />
             </div>
           </div>
@@ -285,12 +284,12 @@ export default function DashboardOverview() {
         </div>
 
         {/* Metric 4: Free Slots Remaining */}
-        <div className="rounded-[4px] border-none bg-card/70 backdrop-blur-xs p-5 space-y-3 hover:bg-card transition-all shadow-none group">
+        <div className="rounded-xl border border-border/60 bg-card p-5 space-y-3 hover:border-border transition-all shadow-xs group">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-muted-foreground group-hover:text-foreground transition-colors">
               Available Slots
             </span>
-            <div className="size-8 rounded-[4px] bg-amber-500/10 border-none flex items-center justify-center text-amber-400">
+            <div className="size-8.5 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
               <Clock className="size-4" />
             </div>
           </div>
@@ -315,10 +314,10 @@ export default function DashboardOverview() {
       {/* Charts + Platform Status Grid */}
       <div className="flex flex-col gap-6 xl:flex-row">
         {/* Activity Chart Card */}
-        <div className="bg-card/70 backdrop-blur-xs flex min-w-0 flex-1 flex-col rounded-[4px] border-none shadow-none">
-          <div className="flex h-14 items-center justify-between border-none px-4 sm:px-5">
+        <div className="bg-card flex min-w-0 flex-1 flex-col rounded-xl border border-border/60 shadow-xs overflow-hidden">
+          <div className="flex h-14 items-center justify-between border-b border-border/60 px-4 sm:px-5">
             <div className="flex items-center gap-2.5">
-              <div className="size-8 rounded-[4px] bg-primary/10 border-none flex items-center justify-center">
+              <div className="size-8.5 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
                 <ChartColumn className="size-4 text-primary" />
               </div>
               <div>
@@ -367,10 +366,10 @@ export default function DashboardOverview() {
         </div>
 
         {/* Quick Platform Status Panel */}
-        <div className="bg-card/70 backdrop-blur-xs flex min-w-0 flex-col rounded-[4px] border-none shadow-none xl:w-[360px]">
-          <div className="flex h-14 items-center justify-between border-none px-4 sm:px-5">
+        <div className="bg-card flex min-w-0 flex-col rounded-xl border border-border/60 shadow-xs overflow-hidden xl:w-[360px]">
+          <div className="flex h-14 items-center justify-between border-b border-border/60 px-4 sm:px-5">
             <div className="flex items-center gap-2">
-              <div className="size-8 rounded-[4px] bg-emerald-500/10 border-none flex items-center justify-center">
+              <div className="size-8.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
                 <Radio className="size-4 text-emerald-400" />
               </div>
               <h2 className="text-sm font-semibold text-foreground">Infrastructure Status</h2>
@@ -385,7 +384,7 @@ export default function DashboardOverview() {
                 { label: "Subdomain Registrar", status: "Active", color: "text-emerald-400", dot: "bg-emerald-400" },
                 { label: "Edge SSL Termination", status: "Enabled", color: "text-emerald-400", dot: "bg-emerald-400" },
               ].map((item, i) => (
-                <div key={i} className="flex items-center justify-between py-2 border-none">
+                <div key={i} className="flex items-center justify-between py-2 border-b border-border/40 last:border-none">
                   <span className="text-xs text-muted-foreground">{item.label}</span>
                   <div className="flex items-center gap-1.5">
                     <span className={`size-1.5 rounded-full ${item.dot}`} />
@@ -396,7 +395,7 @@ export default function DashboardOverview() {
             </div>
 
             <div className="pt-2">
-              <Button variant="outline" className="w-full text-xs h-9" asChild>
+              <Button variant="outline" className="w-full text-xs h-9 rounded-lg" asChild>
                 <Link href="/subdomain-status">
                   <Activity className="size-3.5 mr-1.5 text-primary" /> View Detailed Status
                 </Link>
@@ -406,21 +405,21 @@ export default function DashboardOverview() {
         </div>
       </div>
 
-      {/* Recent Subdomains Table Card */}
-      <Card className="border-none bg-card/70 backdrop-blur-xs shadow-none rounded-[4px] overflow-hidden">
-        <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-none pb-4 gap-3 sm:gap-4">
+      {/* Recent Subdomains Table Panel */}
+      <div className="bg-card flex min-w-0 flex-col rounded-xl border border-border/60 shadow-xs overflow-hidden">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-border/60 px-4 sm:px-5 py-3 sm:py-0 sm:h-14 gap-3 sm:gap-4">
           <div>
-            <CardTitle className="text-base font-semibold">Recent Subdomains</CardTitle>
-            <CardDescription>Your claimed .arc.bd subdomains and DNS routing</CardDescription>
+            <h2 className="text-sm font-semibold text-foreground">Recent Subdomains</h2>
+            <p className="text-[11px] text-muted-foreground">Your claimed .arc.bd subdomains and DNS routing</p>
           </div>
           <div className="flex items-center gap-2 w-full sm:w-auto">
             <div className="relative flex-1 sm:w-56">
-              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
               <Input
                 placeholder="Filter subdomains..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-8 pr-8 h-8 w-full text-xs bg-card/60 rounded-[4px] border-none shadow-none"
+                className="pl-9 pr-8 h-8 w-full text-xs bg-background/60 rounded-full border border-border/60 shadow-none focus-visible:ring-1 focus-visible:ring-ring"
               />
               {search && (
                 <button
@@ -432,15 +431,15 @@ export default function DashboardOverview() {
                 </button>
               )}
             </div>
-            <Button variant="outline" size="sm" className="h-8 text-xs shrink-0" asChild>
+            <Button variant="outline" size="sm" className="h-8 rounded-full text-xs shrink-0 bg-transparent hover:bg-secondary border-border/60" asChild>
               <Link href="/dashboard/domains">View all</Link>
             </Button>
           </div>
-        </CardHeader>
-        <CardContent className="p-0">
+        </div>
+        <div>
           {filtered.length === 0 ? (
             <div className="flex flex-col items-center gap-3 py-16 text-center px-4">
-              <div className="size-12 rounded-[4px] bg-secondary flex items-center justify-center">
+              <div className="size-12 rounded-full bg-secondary flex items-center justify-center border border-border/60">
                 <Globe className="size-6 text-muted-foreground" />
               </div>
               <div>
@@ -454,7 +453,7 @@ export default function DashboardOverview() {
                 </p>
               </div>
               {subdomains.length === 0 && (
-                <Button asChild size="sm" className="mt-2 text-xs font-semibold">
+                <Button asChild size="sm" className="mt-2 text-xs font-semibold rounded-full">
                   <Link href="/dashboard/domains?action=claim">
                     <Plus className="size-3.5 mr-1.5" /> Claim Free Subdomain
                   </Link>
@@ -462,24 +461,24 @@ export default function DashboardOverview() {
               )}
             </div>
           ) : (
-            <div className="">
+            <div className="divide-y divide-border/50">
               {filtered.slice(0, 5).map((domain) => (
                 <div
                   key={domain.id}
-                  className="flex flex-col sm:flex-row sm:items-center justify-between px-4 sm:px-6 py-3.5 hover:bg-muted/30 transition-colors group gap-2.5 sm:gap-4"
+                  className="flex flex-col sm:flex-row sm:items-center justify-between px-4 sm:px-5 py-3.5 hover:bg-muted/20 transition-colors group gap-2.5 sm:gap-4"
                 >
-                  <div className="flex items-start sm:items-center gap-3 min-w-0 flex-1">
-                    <div className="size-8 rounded-[4px] bg-secondary border-none flex items-center justify-center shrink-0 mt-0.5 sm:mt-0 group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+                  <div className="flex items-start sm:items-center gap-3.5 min-w-0 flex-1">
+                    <div className="size-8.5 rounded-full bg-secondary/60 border border-border/60 flex items-center justify-center shrink-0 mt-0.5 sm:mt-0 group-hover:bg-primary/10 group-hover:text-primary group-hover:border-primary/30 transition-colors">
                       <Globe className="size-4 text-muted-foreground group-hover:text-primary" />
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-1.5 flex-wrap">
-                        <span className="text-sm font-semibold text-foreground truncate max-w-[200px] sm:max-w-xs">
+                        <span className="text-sm font-semibold text-foreground truncate max-w-[200px] sm:max-w-xs tracking-tight">
                           {domain.full_domain}
                         </span>
                         <button
                           onClick={(e) => handleCopy(domain.full_domain, e)}
-                          className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 text-muted-foreground hover:text-foreground transition-opacity p-1 sm:p-0.5 rounded-[3px] touch-manipulation shrink-0"
+                          className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 text-muted-foreground hover:text-foreground transition-opacity p-1 sm:p-0.5 rounded-md touch-manipulation shrink-0"
                           title="Copy URL"
                           aria-label={`Copy https://${domain.full_domain}`}
                         >
@@ -500,14 +499,14 @@ export default function DashboardOverview() {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between sm:justify-end gap-2 sm:gap-4 shrink-0 pl-11 sm:pl-0">
-                    <div className="flex items-center gap-2">
+                  <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-5 shrink-0 pl-12 sm:pl-0">
+                    <div className="flex items-center gap-3">
                       {statusBadge(domain.status)}
-                      <span className="text-xs text-muted-foreground hidden md:block">
+                      <span className="text-[11px] text-muted-foreground hidden md:block">
                         {formatDate(domain.created_at)}
                       </span>
                     </div>
-                    <Button variant="ghost" size="sm" className="h-8 text-xs gap-1 hover:bg-secondary" asChild>
+                    <Button variant="outline" size="sm" className="h-8 px-3.5 text-xs gap-1.5 rounded-full bg-transparent hover:bg-secondary text-foreground font-medium border-border/60 transition-colors" asChild>
                       <Link href={`/dashboard/domains/${domain.id}`}>
                         {domain.status === "active" ? (
                           <Settings className="size-3.5 text-muted-foreground" />
@@ -522,8 +521,8 @@ export default function DashboardOverview() {
               ))}
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }

@@ -453,11 +453,11 @@ export default function LandingPage() {
             ].map((item, i) => (
               <Card
                 key={i}
-                className="group p-5 sm:p-6 rounded-lg flex flex-col gap-3 border border-white/[0.12] bg-[#111115] hover:bg-[#16161b] hover:border-white/[0.22] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.16)] hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.28)] hover:-translate-y-0.5 transition-all duration-200"
+                className="group p-5 sm:p-6 rounded-xl flex flex-col gap-3 hover:-translate-y-1 transition-all duration-300"
               >
                 <CardContent className="p-0 flex flex-col gap-3">
                   <div
-                    className="size-8 rounded-[4px] bg-white/[0.07] flex items-center justify-center text-zinc-300 group-hover:bg-white/[0.12] group-hover:text-white transition-all duration-150"
+                    className="size-8.5 rounded-lg bg-white/[0.08] border border-white/[0.12] flex items-center justify-center text-zinc-300 group-hover:bg-white/[0.16] group-hover:text-white transition-all duration-200 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2)]"
                   >
                     <item.icon className="size-4 text-zinc-300 group-hover:text-white transition-colors" strokeWidth={1.5} />
                   </div>
@@ -485,11 +485,11 @@ export default function LandingPage() {
             ].map((item, i) => (
               <Card
                 key={i}
-                className="group text-center p-5 sm:p-6 rounded-lg border border-white/[0.12] bg-[#111115] hover:bg-[#16161b] hover:border-white/[0.22] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.16)] hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.28)] hover:-translate-y-0.5 transition-all duration-200"
+                className="group text-center p-5 sm:p-6 rounded-xl hover:-translate-y-1 transition-all duration-300"
               >
                 <CardContent className="p-0 flex flex-col items-center">
                   <div
-                    className="flex size-7.5 items-center justify-center rounded-[4px] bg-white/[0.07] text-white font-mono text-xs font-bold mb-3 group-hover:bg-white/[0.12] transition-all duration-150"
+                    className="flex size-8 items-center justify-center rounded-lg bg-white/[0.08] border border-white/[0.12] text-white font-mono text-xs font-bold mb-3 group-hover:bg-white/[0.16] transition-all duration-200 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2)]"
                   >
                     {item.step}
                   </div>
