@@ -88,8 +88,8 @@ function StatusBadge({ status }: { status: string }) {
       return (
         <Tooltip>
           <TooltipTrigger asChild>
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[11px] font-medium cursor-default select-none shadow-2xs">
-              <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium cursor-default select-none shadow-2xs">
+              <span className="size-1.5 rounded-full bg-emerald-400" />
               Active
             </span>
           </TooltipTrigger>
@@ -102,9 +102,9 @@ function StatusBadge({ status }: { status: string }) {
       return (
         <Tooltip>
           <TooltipTrigger asChild>
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-[11px] font-medium cursor-default select-none shadow-2xs">
-              <span className="size-1.5 rounded-full bg-amber-400 animate-pulse" />
-              Pending Review
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-medium cursor-default select-none shadow-2xs">
+              <span className="size-1.5 rounded-full bg-amber-400" />
+              Pending
             </span>
           </TooltipTrigger>
           <TooltipContent side="top" className="text-xs">
@@ -116,7 +116,7 @@ function StatusBadge({ status }: { status: string }) {
       return (
         <Tooltip>
           <TooltipTrigger asChild>
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-destructive/10 border border-destructive/20 text-destructive text-[11px] font-medium cursor-default select-none">
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-destructive/10 border border-destructive/20 text-destructive text-xs font-medium cursor-default select-none">
               Suspended
             </span>
           </TooltipTrigger>
@@ -127,7 +127,7 @@ function StatusBadge({ status }: { status: string }) {
       );
     default:
       return (
-        <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-muted text-muted-foreground text-[11px] font-medium capitalize">
+        <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-muted text-muted-foreground text-xs font-medium capitalize">
           {status}
         </span>
       );
@@ -317,7 +317,7 @@ function DomainsListInner() {
   const isQuotaReached = usedSlots >= MAX_SUBDOMAINS;
 
   return (
-    <div className="space-y-5 max-w-6xl mx-auto">
+    <div className="space-y-6 w-full">
       {/* Page Header */}
       <div>
         <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">My Subdomains</h1>
@@ -330,7 +330,7 @@ function DomainsListInner() {
       {claimSuccessMsg && (
         <div className="flex items-center justify-between p-3.5 rounded-lg border bg-amber-500/10 border-amber-500/30 text-amber-300 text-xs sm:text-sm shadow-sm animate-in fade-in slide-in-from-top-2 duration-200">
           <div className="flex items-center gap-2.5">
-            <span className="size-2 rounded-full bg-amber-400 animate-pulse shrink-0" />
+            <span className="size-2 rounded-full bg-amber-400 shrink-0" />
             <p className="font-medium">{claimSuccessMsg}</p>
           </div>
           <button
@@ -361,13 +361,13 @@ function DomainsListInner() {
       )}
 
       {/* Control Action Toolbar */}
-      <div className="flex items-center gap-2">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-2">
         {/* Search Input with '/' hotkey */}
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
           <Input
             ref={searchInputRef}
-            placeholder="Search projects..."
+            placeholder="Search subdomains..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="pl-8.5 pr-10 h-9 w-full text-xs sm:text-sm bg-card/60 border-input rounded-md focus-visible:ring-1 focus-visible:ring-ring transition-all placeholder:text-muted-foreground"
@@ -387,124 +387,129 @@ function DomainsListInner() {
           )}
         </div>
 
-        {/* Filter Dropdown Button */}
-        <DropdownMenu>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className={`size-9 shrink-0 rounded-md border-input bg-card/60 hover:bg-secondary transition-colors ${
-                    statusFilter !== "all" ? "border-primary text-primary" : "text-muted-foreground"
-                  }`}
-                  aria-label="Filter projects by status"
-                >
-                  <SlidersHorizontal className="size-3.5" />
-                </Button>
-              </DropdownMenuTrigger>
-            </TooltipTrigger>
-            <TooltipContent side="top" className="text-xs">
-              Filter status ({statusFilter})
-            </TooltipContent>
-          </Tooltip>
+        {/* Action Controls Group */}
+        <div className="flex items-center justify-between sm:justify-start gap-2 shrink-0">
+          <div className="flex items-center gap-2">
+            {/* Filter Dropdown Button */}
+            <DropdownMenu>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className={`size-9 shrink-0 rounded-md border-input bg-card/60 hover:bg-secondary transition-colors ${
+                        statusFilter !== "all" ? "border-primary text-primary" : "text-muted-foreground"
+                      }`}
+                      aria-label="Filter projects by status"
+                    >
+                      <SlidersHorizontal className="size-3.5" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                </TooltipTrigger>
+                <TooltipContent side="top" className="text-xs">
+                  Filter status ({statusFilter})
+                </TooltipContent>
+              </Tooltip>
 
-          <DropdownMenuContent align="end" className="w-44 border-border shadow-xl">
-            <DropdownMenuLabel className="text-xs font-semibold text-muted-foreground">
-              Filter Status
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuRadioGroup
-              value={statusFilter}
-              onValueChange={(v) => setStatusFilter(v as any)}
+              <DropdownMenuContent align="end" className="w-44 border-border shadow-xl">
+                <DropdownMenuLabel className="text-xs font-semibold text-muted-foreground">
+                  Filter Status
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuRadioGroup
+                  value={statusFilter}
+                  onValueChange={(v) => setStatusFilter(v as any)}
+                >
+                  <DropdownMenuRadioItem value="all" className="text-xs cursor-pointer">
+                    All ({subdomains.length})
+                  </DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="active" className="text-xs cursor-pointer">
+                    Active ({subdomains.filter((s) => s.status === "active").length})
+                  </DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="pending" className="text-xs cursor-pointer">
+                    Pending ({subdomains.filter((s) => s.status === "pending").length})
+                  </DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="suspended" className="text-xs cursor-pointer">
+                    Suspended ({subdomains.filter((s) => s.status === "suspended").length})
+                  </DropdownMenuRadioItem>
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* Grid vs List View Mode Switcher */}
+            <div className="flex items-center rounded-md border border-input bg-card/60 p-0.5 shrink-0">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={() => setViewMode("grid")}
+                    className={`flex size-7.5 items-center justify-center rounded transition-colors ${
+                      viewMode === "grid"
+                        ? "bg-secondary text-foreground font-semibold shadow-2xs"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                    aria-label="Switch to grid view"
+                  >
+                    <LayoutGrid className="size-3.5" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="top" className="text-xs">
+                  Grid View
+                </TooltipContent>
+              </Tooltip>
+
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={() => setViewMode("list")}
+                    className={`flex size-7.5 items-center justify-center rounded transition-colors ${
+                      viewMode === "list"
+                        ? "bg-secondary text-foreground font-semibold shadow-2xs"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                    aria-label="Switch to list view"
+                  >
+                    <List className="size-3.5" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="top" className="text-xs">
+                  List View
+                </TooltipContent>
+              </Tooltip>
+            </div>
+          </div>
+
+          {/* Action Button: Add New */}
+          {isQuotaReached ? (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div>
+                  <Button
+                    disabled
+                    className="h-9 px-3.5 rounded-md font-semibold text-xs bg-muted text-muted-foreground cursor-not-allowed opacity-60 shrink-0 gap-1.5"
+                  >
+                    <Plus className="size-3.5" />
+                    <span>Add New</span>
+                  </Button>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="left" className="text-xs">
+                Quota reached ({usedSlots} of {MAX_SUBDOMAINS} subdomains claimed)
+              </TooltipContent>
+            </Tooltip>
+          ) : (
+            <Button
+              onClick={() => {
+                setClaimError(null);
+                setShowClaimDialog(true);
+              }}
+              className="h-9 px-3.5 rounded-md font-semibold text-xs bg-foreground text-background hover:bg-foreground/90 shrink-0 gap-1.5 shadow-xs transition-all"
             >
-              <DropdownMenuRadioItem value="all" className="text-xs cursor-pointer">
-                All ({subdomains.length})
-              </DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="active" className="text-xs cursor-pointer">
-                Active ({subdomains.filter((s) => s.status === "active").length})
-              </DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="pending" className="text-xs cursor-pointer">
-                Pending ({subdomains.filter((s) => s.status === "pending").length})
-              </DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="suspended" className="text-xs cursor-pointer">
-                Suspended ({subdomains.filter((s) => s.status === "suspended").length})
-              </DropdownMenuRadioItem>
-            </DropdownMenuRadioGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
-
-        {/* Grid vs List View Mode Switcher */}
-        <div className="flex items-center rounded-md border border-input bg-card/60 p-0.5 shrink-0">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                onClick={() => setViewMode("grid")}
-                className={`flex size-7.5 items-center justify-center rounded transition-colors ${
-                  viewMode === "grid"
-                    ? "bg-secondary text-foreground font-semibold shadow-2xs"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-                aria-label="Switch to grid view"
-              >
-                <LayoutGrid className="size-3.5" />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent side="top" className="text-xs">
-              Grid View
-            </TooltipContent>
-          </Tooltip>
-
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                onClick={() => setViewMode("list")}
-                className={`flex size-7.5 items-center justify-center rounded transition-colors ${
-                  viewMode === "list"
-                    ? "bg-secondary text-foreground font-semibold shadow-2xs"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-                aria-label="Switch to list view"
-              >
-                <List className="size-3.5" />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent side="top" className="text-xs">
-              List View
-            </TooltipContent>
-          </Tooltip>
+              <Plus className="size-3.5" />
+              <span>Add New</span>
+            </Button>
+          )}
         </div>
-
-        {/* Action Button: Add New */}
-        {isQuotaReached ? (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div>
-                <Button
-                  disabled
-                  className="h-9 px-3.5 rounded-md font-semibold text-xs bg-muted text-muted-foreground cursor-not-allowed opacity-60 shrink-0 gap-1.5"
-                >
-                  <Plus className="size-3.5" />
-                  <span>Add New</span>
-                </Button>
-              </div>
-            </TooltipTrigger>
-            <TooltipContent side="left" className="text-xs">
-              Quota reached ({usedSlots} of {MAX_SUBDOMAINS} subdomains claimed)
-            </TooltipContent>
-          </Tooltip>
-        ) : (
-          <Button
-            onClick={() => {
-              setClaimError(null);
-              setShowClaimDialog(true);
-            }}
-            className="h-9 px-3.5 rounded-md font-semibold text-xs bg-foreground text-background hover:bg-foreground/90 shrink-0 gap-1.5 shadow-xs transition-all"
-          >
-            <Plus className="size-3.5" />
-            <span>Add New</span>
-          </Button>
-        )}
       </div>
 
       {/* Claim Subdomain Dialog */}
@@ -603,26 +608,34 @@ function DomainsListInner() {
         </DialogContent>
       </Dialog>
 
-      {/* Delete Confirmation Alert Dialog */}
+      {/* Delete / Cancel Confirmation Alert Dialog */}
       <AlertDialog open={!!deleteTarget} onOpenChange={() => setDeleteTarget(null)}>
         <AlertDialogContent className="border-border bg-card shadow-2xl">
           <AlertDialogHeader>
             <AlertDialogTitle className="text-lg">
-              Delete {deleteTarget?.full_domain}?
+              {deleteTarget?.status === "pending"
+                ? `Cancel Claim for ${deleteTarget?.full_domain}?`
+                : `Delete ${deleteTarget?.full_domain}?`}
             </AlertDialogTitle>
             <AlertDialogDescription className="text-xs text-muted-foreground leading-relaxed">
-              This will permanently delete <strong>{deleteTarget?.full_domain}</strong> and remove all DNS records from Cloudflare Edge. Connected websites and services will stop resolving immediately. This action cannot be undone.
+              {deleteTarget?.status === "pending" ? (
+                <>This will withdraw your pending claim for <strong>{deleteTarget?.full_domain}</strong> and return the name to the available pool. You will immediately regain 1 free subdomain slot.</>
+              ) : (
+                <>This will permanently delete <strong>{deleteTarget?.full_domain}</strong> and remove all DNS records from Cloudflare Edge. Connected websites and services will stop resolving immediately. This action cannot be undone.</>
+              )}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Keep Subdomain</AlertDialogCancel>
+            <AlertDialogCancel>
+              {deleteTarget?.status === "pending" ? "Keep Claim" : "Keep Subdomain"}
+            </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
               disabled={deleting}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90 font-semibold"
             >
               {deleting && <Loader2 className="size-4 mr-2 animate-spin" />}
-              Delete Subdomain
+              {deleteTarget?.status === "pending" ? "Cancel Claim" : "Delete Subdomain"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -681,7 +694,7 @@ function DomainsListInner() {
             const hasDns = domain.dns_records && domain.dns_records.length > 0;
             const target =
               domain.status === "pending"
-                ? "Pending review"
+                ? "Awaiting review"
                 : domain.status === "suspended"
                 ? "Suspended"
                 : hasDns
@@ -695,19 +708,28 @@ function DomainsListInner() {
               >
                 <CardHeader className="pb-3 p-4">
                   <div className="flex items-start justify-between gap-2">
-                    <div className="size-8.5 rounded-lg bg-secondary flex items-center justify-center shrink-0 group-hover:bg-primary/15 group-hover:text-primary transition-colors">
-                      <Globe className="size-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                    <div className={`size-8.5 rounded-lg flex items-center justify-center shrink-0 transition-all ${
+                      domain.status === "active"
+                        ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 group-hover:bg-emerald-500/15 group-hover:border-emerald-500/30"
+                        : domain.status === "pending"
+                        ? "bg-amber-500/10 text-amber-400 border border-amber-500/20 group-hover:bg-amber-500/15 group-hover:border-amber-500/30"
+                        : "bg-destructive/10 text-destructive border border-destructive/20"
+                    }`}>
+                      <Globe className="size-4" />
                     </div>
                     <StatusBadge status={domain.status} />
                   </div>
                   <div className="pt-2">
-                    <div className="flex items-center gap-1.5">
-                      <h3 className="font-semibold text-sm text-foreground truncate">
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <Link
+                        href={`/dashboard/domains/${domain.id}`}
+                        className="font-semibold text-sm text-foreground truncate hover:text-primary transition-colors"
+                      >
                         {domain.full_domain}
-                      </h3>
+                      </Link>
                       <button
                         onClick={(e) => handleCopy(domain.full_domain, e)}
-                        className="opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground transition-opacity p-0.5 rounded"
+                        className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 text-muted-foreground hover:text-foreground transition-opacity p-0.5 rounded touch-manipulation shrink-0"
                         aria-label={`Copy https://${domain.full_domain}`}
                       >
                         {copiedDomain === domain.full_domain ? (
@@ -724,7 +746,7 @@ function DomainsListInner() {
                 </CardHeader>
 
                 <CardContent className="pt-0 border-t border-border/50 flex items-center justify-between gap-2 py-2.5 px-4 bg-muted/20 rounded-b-xl">
-                  <span className="text-[11px] text-muted-foreground">
+                  <span className="text-xs font-mono text-muted-foreground">
                     {formatDate(domain.created_at)}
                   </span>
                   <div className="flex items-center gap-1">
@@ -732,7 +754,7 @@ function DomainsListInner() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="size-7 text-muted-foreground hover:text-foreground"
+                        className="size-7.5 text-muted-foreground hover:text-foreground rounded-md"
                         asChild
                       >
                         <a
@@ -741,16 +763,25 @@ function DomainsListInner() {
                           rel="noopener noreferrer"
                           aria-label={`Visit https://${domain.full_domain}`}
                         >
-                          <ExternalLink className="size-3" />
+                          <ExternalLink className="size-3.5" />
                         </a>
                       </Button>
                     )}
-                    <Button variant="ghost" size="sm" className="h-7 text-xs gap-1" asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className={`h-7.5 text-xs gap-1.5 px-2.5 rounded-md transition-all ${
+                        domain.status === "active"
+                          ? "hover:bg-secondary hover:text-foreground"
+                          : "text-amber-300 hover:bg-amber-500/10"
+                      }`}
+                      asChild
+                    >
                       <Link href={`/dashboard/domains/${domain.id}`}>
                         {domain.status === "active" ? (
-                          <Settings className="size-3 text-muted-foreground" />
+                          <Settings className="size-3.5 text-muted-foreground" />
                         ) : (
-                          <Lock className="size-3 text-muted-foreground" />
+                          <Lock className="size-3.5 text-amber-400" />
                         )}
                         <span>Configure</span>
                       </Link>
@@ -758,11 +789,11 @@ function DomainsListInner() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="size-7 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                      className="size-7.5 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-md"
                       onClick={() => setDeleteTarget(domain)}
                       aria-label={`Delete ${domain.full_domain}`}
                     >
-                      <Trash2 className="size-3" />
+                      <Trash2 className="size-3.5" />
                     </Button>
                   </div>
                 </CardContent>
@@ -774,158 +805,298 @@ function DomainsListInner() {
         /* List / Table View */
         <Card className="border-border/80 shadow-2xs overflow-hidden rounded-xl bg-card">
           <CardContent className="p-0">
-            <Table>
-              <TableHeader>
-                <TableRow className="hover:bg-transparent border-border/70 bg-muted/30">
-                  <TableHead className="text-[11px] uppercase tracking-wider text-muted-foreground/70 font-semibold py-3 px-4">Domain Name</TableHead>
-                  <TableHead className="text-[11px] uppercase tracking-wider text-muted-foreground/70 font-semibold py-3 px-4">Status</TableHead>
-                  <TableHead className="text-[11px] uppercase tracking-wider text-muted-foreground/70 font-semibold hidden sm:table-cell py-3 px-4">DNS Target</TableHead>
-                  <TableHead className="text-[11px] uppercase tracking-wider text-muted-foreground/70 font-semibold hidden md:table-cell py-3 px-4">Created</TableHead>
-                  <TableHead className="text-[11px] uppercase tracking-wider text-muted-foreground/70 font-semibold text-right py-3 px-4">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filtered.map((domain) => {
-                  const hasDns = domain.dns_records && domain.dns_records.length > 0;
-                  const target =
-                    domain.status === "pending"
-                      ? "—"
-                      : domain.status === "suspended"
-                      ? "Suspended"
-                      : hasDns
-                      ? `${domain.dns_records![0].type} → ${domain.dns_records![0].content}`
-                      : "No records";
+            {/* Mobile View: Clean Card Rows */}
+            <div className="divide-y divide-border/60 sm:hidden">
+              {filtered.map((domain) => {
+                const hasDns = domain.dns_records && domain.dns_records.length > 0;
+                const target =
+                  domain.status === "pending"
+                    ? "Awaiting review"
+                    : domain.status === "suspended"
+                    ? "Suspended"
+                    : hasDns
+                    ? `${domain.dns_records![0].type} → ${domain.dns_records![0].content}`
+                    : "No DNS records";
 
-                  return (
-                    <TableRow key={domain.id} className="border-border/60 hover:bg-muted/40 transition-colors group">
-                      {/* Domain Name Cell */}
-                      <TableCell className="font-medium text-foreground py-3.5 px-4">
-                        <div className="flex items-center gap-2.5">
-                          <div className="size-8 rounded-lg bg-secondary/80 flex items-center justify-center shrink-0 group-hover:bg-primary/15 group-hover:text-primary transition-colors">
-                            <Globe className="size-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
+                return (
+                  <div key={domain.id} className="p-4 space-y-3 hover:bg-muted/20 transition-colors">
+                    {/* Row 1: Domain + Status */}
+                    <div className="flex items-start justify-between gap-2.5">
+                      <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                        <div className={`size-8.5 rounded-lg flex items-center justify-center shrink-0 transition-all ${
+                          domain.status === "active"
+                            ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                            : domain.status === "pending"
+                            ? "bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                            : "bg-destructive/10 text-destructive border border-destructive/20"
+                        }`}>
+                          <Globe className="size-4" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-1.5 min-w-0">
+                            <Link
+                              href={`/dashboard/domains/${domain.id}`}
+                              className="text-sm font-semibold text-foreground truncate hover:text-primary transition-colors"
+                            >
+                              {domain.full_domain}
+                            </Link>
+                            <button
+                              onClick={(e) => handleCopy(domain.full_domain, e)}
+                              className="text-muted-foreground hover:text-foreground p-1 rounded hover:bg-secondary transition-colors shrink-0"
+                              aria-label={`Copy https://${domain.full_domain}`}
+                            >
+                              {copiedDomain === domain.full_domain ? (
+                                <Check className="size-3.5 text-emerald-400" />
+                              ) : (
+                                <Copy className="size-3.5" />
+                              )}
+                            </button>
                           </div>
-                          <div className="min-w-0">
-                            <div className="flex items-center gap-1.5">
-                              <span className="text-sm font-semibold truncate">
-                                {domain.full_domain}
+                          <p className="text-xs text-muted-foreground font-mono truncate mt-0.5">
+                            {target}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="shrink-0 pt-0.5">
+                        <StatusBadge status={domain.status} />
+                      </div>
+                    </div>
+
+                    {/* Row 2: Date + Actions */}
+                    <div className="flex items-center justify-between pt-2.5 border-t border-border/40 text-xs">
+                      <span className="text-muted-foreground/70 font-mono text-[11px]">
+                        {formatDate(domain.created_at)}
+                      </span>
+
+                      <div className="flex items-center gap-1.5">
+                        {domain.status === "active" && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="size-8 text-muted-foreground hover:text-foreground hover:bg-secondary rounded-md"
+                            asChild
+                          >
+                            <a
+                              href={`https://${domain.full_domain}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              aria-label={`Visit https://${domain.full_domain}`}
+                            >
+                              <ExternalLink className="size-3.5" />
+                            </a>
+                          </Button>
+                        )}
+
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className={`h-8 px-3 text-xs gap-1.5 font-medium rounded-md transition-all ${
+                            domain.status === "active"
+                              ? "border-border/80 hover:bg-secondary hover:text-foreground"
+                              : "border-amber-500/20 bg-amber-500/5 text-amber-300 hover:bg-amber-500/10 hover:border-amber-500/30"
+                          }`}
+                          asChild
+                        >
+                          <Link href={`/dashboard/domains/${domain.id}`}>
+                            {domain.status === "active" ? (
+                              <Settings className="size-3.5 text-muted-foreground" />
+                            ) : (
+                              <Lock className="size-3.5 text-amber-400" />
+                            )}
+                            <span>Configure</span>
+                          </Link>
+                        </Button>
+
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="size-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-md"
+                          onClick={() => setDeleteTarget(domain)}
+                          aria-label={`Delete ${domain.full_domain}`}
+                        >
+                          <Trash2 className="size-3.5" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Desktop View: Full Data Table */}
+            <div className="hidden sm:block">
+              <Table>
+                <TableHeader>
+                  <TableRow className="hover:bg-transparent border-border/70 bg-muted/30">
+                    <TableHead className="text-xs uppercase tracking-wider text-muted-foreground/70 font-semibold py-3 px-4">Domain Name</TableHead>
+                    <TableHead className="text-xs uppercase tracking-wider text-muted-foreground/70 font-semibold py-3 px-4">Status</TableHead>
+                    <TableHead className="text-xs uppercase tracking-wider text-muted-foreground/70 font-semibold py-3 px-4">DNS Target</TableHead>
+                    <TableHead className="text-xs uppercase tracking-wider text-muted-foreground/70 font-semibold hidden md:table-cell py-3 px-4">Created</TableHead>
+                    <TableHead className="text-xs uppercase tracking-wider text-muted-foreground/70 font-semibold text-right py-3 px-4">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filtered.map((domain) => {
+                    const hasDns = domain.dns_records && domain.dns_records.length > 0;
+                    const target =
+                      domain.status === "pending"
+                        ? "—"
+                        : domain.status === "suspended"
+                        ? "Suspended"
+                        : hasDns
+                        ? `${domain.dns_records![0].type} → ${domain.dns_records![0].content}`
+                        : "No records";
+
+                    return (
+                      <TableRow key={domain.id} className="border-border/60 hover:bg-muted/40 transition-colors group">
+                        {/* Domain Name Cell */}
+                        <TableCell className="font-medium text-foreground py-3.5 px-4">
+                          <div className="flex items-center gap-2.5">
+                            <div className={`size-8 rounded-lg flex items-center justify-center shrink-0 transition-all ${
+                              domain.status === "active"
+                                ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 group-hover:bg-emerald-500/20 group-hover:border-emerald-500/30"
+                                : domain.status === "pending"
+                                ? "bg-amber-500/10 text-amber-400 border border-amber-500/20 group-hover:bg-amber-500/20 group-hover:border-amber-500/30"
+                                : "bg-destructive/10 text-destructive border border-destructive/20"
+                            }`}>
+                              <Globe className="size-3.5" />
+                            </div>
+                            <div className="min-w-0">
+                              <div className="flex items-center gap-1.5">
+                                <Link
+                                  href={`/dashboard/domains/${domain.id}`}
+                                  className="text-sm font-semibold truncate hover:text-primary transition-colors"
+                                >
+                                  {domain.full_domain}
+                                </Link>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <button
+                                      onClick={(e) => handleCopy(domain.full_domain, e)}
+                                      className="opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground transition-opacity p-1 rounded hover:bg-secondary touch-manipulation"
+                                      aria-label={`Copy https://${domain.full_domain}`}
+                                    >
+                                      {copiedDomain === domain.full_domain ? (
+                                        <Check className="size-3 text-emerald-400" />
+                                      ) : (
+                                        <Copy className="size-3" />
+                                      )}
+                                    </button>
+                                  </TooltipTrigger>
+                                  <TooltipContent side="top" className="text-xs">
+                                    {copiedDomain === domain.full_domain ? "Copied to clipboard!" : "Copy domain URL"}
+                                  </TooltipContent>
+                                </Tooltip>
+                              </div>
+                              <span className="text-xs text-muted-foreground sm:hidden block truncate mt-0.5">
+                                {target}
                               </span>
+                            </div>
+                          </div>
+                        </TableCell>
+
+                        {/* Status Cell */}
+                        <TableCell className="py-3.5 px-4">
+                          <StatusBadge status={domain.status} />
+                        </TableCell>
+
+                        {/* DNS Target Cell */}
+                        <TableCell className="text-xs max-w-[220px] truncate py-3.5 px-4">
+                          {domain.status === "pending" ? (
+                            <span className="text-amber-400/80 font-mono text-xs">Awaiting approval</span>
+                          ) : hasDns ? (
+                            <div className="flex items-center gap-1.5 font-mono">
+                              <span className="px-1.5 py-0.5 rounded bg-primary/10 text-primary border border-primary/20 text-[10px] font-semibold">
+                                {domain.dns_records![0].type}
+                              </span>
+                              <span className="text-muted-foreground truncate">{domain.dns_records![0].content}</span>
+                            </div>
+                          ) : (
+                            <span className="text-muted-foreground/60 italic text-xs">No records configured</span>
+                          )}
+                        </TableCell>
+
+                        {/* Created Date Cell */}
+                        <TableCell className="text-xs text-muted-foreground hidden md:table-cell py-3.5 px-4">
+                          {formatDate(domain.created_at)}
+                        </TableCell>
+
+                        {/* Actions Cell */}
+                        <TableCell className="text-right py-3.5 px-4">
+                          <div className="flex items-center justify-end gap-1">
+                            {/* Live Site External Trigger */}
+                            {domain.status === "active" && (
                               <Tooltip>
                                 <TooltipTrigger asChild>
-                                  <button
-                                    onClick={(e) => handleCopy(domain.full_domain, e)}
-                                    className="opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground transition-opacity p-1 rounded hover:bg-secondary"
-                                    aria-label={`Copy https://${domain.full_domain}`}
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="size-8 text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors hidden sm:inline-flex rounded-md"
+                                    asChild
                                   >
-                                    {copiedDomain === domain.full_domain ? (
-                                      <Check className="size-3 text-emerald-400" />
-                                    ) : (
-                                      <Copy className="size-3" />
-                                    )}
-                                  </button>
+                                    <a
+                                      href={`https://${domain.full_domain}`}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      aria-label={`Visit https://${domain.full_domain}`}
+                                    >
+                                      <ExternalLink className="size-3.5" />
+                                    </a>
+                                  </Button>
                                 </TooltipTrigger>
                                 <TooltipContent side="top" className="text-xs">
-                                  {copiedDomain === domain.full_domain ? "Copied to clipboard!" : "Copy domain URL"}
+                                  Visit Live Website
                                 </TooltipContent>
                               </Tooltip>
-                            </div>
-                            <span className="text-[11px] text-muted-foreground sm:hidden block truncate mt-0.5">
-                              {target}
-                            </span>
-                          </div>
-                        </div>
-                      </TableCell>
+                            )}
 
-                      {/* Status Cell */}
-                      <TableCell className="py-3.5 px-4">
-                        <StatusBadge status={domain.status} />
-                      </TableCell>
+                            {/* Configure Button */}
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className={`h-8 text-xs gap-1.5 font-medium rounded-md transition-all ${
+                                domain.status === "active"
+                                  ? "border-border/80 hover:border-primary/40 hover:bg-primary/5 hover:text-primary"
+                                  : "border-amber-500/20 bg-amber-500/5 text-amber-300 hover:bg-amber-500/10 hover:border-amber-500/30"
+                              }`}
+                              asChild
+                            >
+                              <Link href={`/dashboard/domains/${domain.id}`}>
+                                {domain.status === "active" ? (
+                                  <Settings className="size-3.5 text-muted-foreground" />
+                                ) : (
+                                  <Lock className="size-3.5 text-amber-400" />
+                                )}
+                                <span>Configure</span>
+                              </Link>
+                            </Button>
 
-                      {/* DNS Target Cell */}
-                      <TableCell className="text-xs hidden sm:table-cell max-w-[220px] truncate py-3.5 px-4">
-                        {domain.status === "pending" ? (
-                          <span className="text-muted-foreground/60 font-mono">—</span>
-                        ) : hasDns ? (
-                          <span className="font-mono text-muted-foreground">{target}</span>
-                        ) : (
-                          <span className="text-muted-foreground/60 italic text-[11px]">No records configured</span>
-                        )}
-                      </TableCell>
-
-                      {/* Created Date Cell */}
-                      <TableCell className="text-xs text-muted-foreground hidden md:table-cell py-3.5 px-4">
-                        {formatDate(domain.created_at)}
-                      </TableCell>
-
-                      {/* Actions Cell */}
-                      <TableCell className="text-right py-3.5 px-4">
-                        <div className="flex items-center justify-end gap-1">
-                          {/* Live Site External Trigger */}
-                          {domain.status === "active" && (
+                            {/* Delete Trigger */}
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <Button
                                   variant="ghost"
                                   size="icon"
-                                  className="size-8 text-muted-foreground hover:text-foreground hover:bg-secondary hidden sm:inline-flex"
-                                  asChild
+                                  className="size-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors rounded-md"
+                                  onClick={() => setDeleteTarget(domain)}
+                                  aria-label={`Delete ${domain.full_domain}`}
                                 >
-                                  <a
-                                    href={`https://${domain.full_domain}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    aria-label={`Visit https://${domain.full_domain}`}
-                                  >
-                                    <ExternalLink className="size-3.5" />
-                                  </a>
+                                  <Trash2 className="size-3.5" />
                                 </Button>
                               </TooltipTrigger>
                               <TooltipContent side="top" className="text-xs">
-                                Visit Live Website
+                                Delete Subdomain
                               </TooltipContent>
                             </Tooltip>
-                          )}
-
-                          {/* Configure Button */}
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="h-8 text-xs gap-1.5 font-medium border-border/80 hover:bg-secondary hover:text-foreground transition-colors"
-                            asChild
-                          >
-                            <Link href={`/dashboard/domains/${domain.id}`}>
-                              {domain.status === "active" ? (
-                                <Settings className="size-3.5 text-muted-foreground" />
-                              ) : (
-                                <Lock className="size-3 text-muted-foreground" />
-                              )}
-                              <span>Configure</span>
-                            </Link>
-                          </Button>
-
-                          {/* Delete Trigger */}
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="size-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
-                                onClick={() => setDeleteTarget(domain)}
-                                aria-label={`Delete ${domain.full_domain}`}
-                              >
-                                <Trash2 className="size-3.5" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent side="top" className="text-xs">
-                              Delete Subdomain
-                            </TooltipContent>
-                          </Tooltip>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </div>
           </CardContent>
         </Card>
       )}

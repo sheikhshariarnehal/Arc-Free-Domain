@@ -171,10 +171,42 @@ export async function deletePowerDNSRecord(
 }
 
 /**
+ * Fetch detailed zone information including serial, kind, and rrsets
+ */
+export async function getZoneDetails(zone: string = ROOT_ZONE) {
+  const canonicalZone = normalizeCanonicalName(zone);
+  const data = await pdnsFetch(`/zones/${canonicalZone}`);
+  return data;
+}
+
+/**
  * Fetch all active records for a specific zone
  */
 export async function getZoneRecords(zone: string = ROOT_ZONE) {
-  const canonicalZone = normalizeCanonicalName(zone);
-  const data = await pdnsFetch(`/zones/${canonicalZone}`);
+  const data = await getZoneDetails(zone);
   return data?.rrsets || [];
 }
+
+/**
+ * Fetch PowerDNS Server metadata & version
+ */
+export async function getServerInfo() {
+  return await pdnsFetch("");
+}
+
+/**
+ * Fetch PowerDNS live server statistics
+ */
+export async function getServerStats() {
+  const statsArray = await pdnsFetch("/statistics");
+  if (!Array.isArray(statsArray)) return {};
+
+  const statsObj: Record<string, string> = {};
+  for (const item of statsArray) {
+    if (item.name && item.value !== undefined) {
+      statsObj[item.name] = String(item.value);
+    }
+  }
+  return statsObj;
+}
+

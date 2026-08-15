@@ -146,14 +146,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 className="size-7.5 object-contain rounded-md shrink-0 transition-transform duration-200 group-hover:scale-105"
               />
               {sidebarOpen && (
-                <div className="flex flex-col leading-none min-w-0">
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-sm font-bold tracking-tight text-sidebar-foreground">ARC.BD</span>
-                    <Badge variant="outline" className="text-[9px] px-1 py-0 h-3.5 bg-primary/10 text-primary border-primary/20 font-mono">
-                      FREE
-                    </Badge>
-                  </div>
-                  <span className="text-[10.5px] text-muted-foreground truncate mt-0.5">Free Subdomains</span>
+                <div className="flex items-center gap-1.5 min-w-0">
+                  <span className="text-sm font-bold tracking-tight text-sidebar-foreground">ARC.BD</span>
+                  <Badge variant="outline" className="text-xs px-1.5 py-0 h-4 bg-primary/10 text-primary border-primary/20 font-mono">
+                    DEV
+                  </Badge>
                 </div>
               )}
             </Link>
@@ -167,15 +164,109 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
 
           {/* Navigation Links Area */}
-          <nav className="flex-1 px-2.5 py-4 space-y-4 overflow-y-auto overflow-x-hidden">
-            {/* Admin Section (If Administrator) */}
+          <nav className="flex-1 px-2.5 py-3 space-y-1 overflow-y-auto overflow-x-hidden">
+            {/* Primary Dashboard Links */}
+            {mainNavItems.map((item) => {
+              const isActive =
+                pathname === item.href ||
+                (item.href !== "/dashboard" && pathname.startsWith(item.href));
+
+              if (!sidebarOpen) {
+                return (
+                  <Tooltip key={item.name}>
+                    <TooltipTrigger asChild>
+                      <Link
+                        href={item.href}
+                        onClick={() => setMobileNavOpen(false)}
+                        className={`flex items-center justify-center size-10 mx-auto rounded-lg transition-colors ${
+                          isActive
+                            ? "bg-secondary text-primary font-semibold shadow-xs"
+                            : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground"
+                        }`}
+                      >
+                        <item.icon className={`size-4 shrink-0 ${isActive ? "text-primary" : ""}`} />
+                        <span className="sr-only">{item.name}</span>
+                      </Link>
+                    </TooltipTrigger>
+                    <TooltipContent side="right" className="text-xs font-medium">
+                      {item.name}
+                    </TooltipContent>
+                  </Tooltip>
+                );
+              }
+
+              return (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  onClick={() => setMobileNavOpen(false)}
+                  className={`flex items-center justify-between gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                    isActive
+                      ? "bg-primary/10 text-primary font-semibold shadow-xs border border-primary/20"
+                      : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground"
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5 truncate">
+                    <item.icon className={`size-4 shrink-0 ${isActive ? "text-primary" : ""}`} />
+                    <span className="truncate">{item.name}</span>
+                  </div>
+                </Link>
+              );
+            })}
+
+            {/* Documentation Links */}
+            {resourceNavItems.map((item) => {
+              const isActive = pathname === item.href || pathname.startsWith(item.href);
+
+              if (!sidebarOpen) {
+                return (
+                  <Tooltip key={item.name}>
+                    <TooltipTrigger asChild>
+                      <Link
+                        href={item.href}
+                        onClick={() => setMobileNavOpen(false)}
+                        className={`flex items-center justify-center size-10 mx-auto rounded-lg transition-colors ${
+                          isActive
+                            ? "bg-secondary text-primary font-semibold"
+                            : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground"
+                        }`}
+                      >
+                        <item.icon className="size-4 shrink-0" />
+                        <span className="sr-only">{item.name}</span>
+                      </Link>
+                    </TooltipTrigger>
+                    <TooltipContent side="right" className="text-xs font-medium">
+                      {item.name}
+                    </TooltipContent>
+                  </Tooltip>
+                );
+              }
+
+              return (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  onClick={() => setMobileNavOpen(false)}
+                  className={`flex items-center justify-between gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                    isActive
+                      ? "bg-primary/10 text-primary font-semibold shadow-xs border border-primary/20"
+                      : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground"
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5 truncate">
+                    <item.icon className={`size-4 shrink-0 ${isActive ? "text-primary" : ""}`} />
+                    <span className="truncate">{item.name}</span>
+                  </div>
+                </Link>
+              );
+            })}
+
+            {/* Admin Panel (If Administrator) */}
             {isAdmin && (
-              <div className="space-y-1">
-                {sidebarOpen && (
-                  <p className="px-2 text-[10px] font-bold uppercase tracking-wider text-amber-400/80">
-                    Administration
-                  </p>
-                )}
+              <>
+                <div className="pt-2 pb-1">
+                  <Separator className="bg-sidebar-border/60" />
+                </div>
                 {sidebarOpen ? (
                   <Link
                     href="/admin"
@@ -186,7 +277,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                       <Shield className="size-4 shrink-0 text-amber-400 group-hover:scale-110 transition-transform" />
                       <span className="truncate">Admin Panel</span>
                     </div>
-                    <ChevronRight className="size-3.5 text-amber-400/70 shrink-0 group-hover:translate-x-0.5 transition-transform" />
                   </Link>
                 ) : (
                   <Tooltip>
@@ -205,148 +295,31 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     </TooltipContent>
                   </Tooltip>
                 )}
-              </div>
+              </>
             )}
-
-            {/* Main Navigation Section */}
-            <div className="space-y-1">
-              {sidebarOpen && (
-                <p className="px-2 text-[10px] font-bold uppercase tracking-wider text-muted-foreground/70">
-                  Manage
-                </p>
-              )}
-
-              {mainNavItems.map((item) => {
-                const isActive =
-                  pathname === item.href ||
-                  (item.href !== "/dashboard" && pathname.startsWith(item.href));
-
-                if (!sidebarOpen) {
-                  return (
-                    <Tooltip key={item.name}>
-                      <TooltipTrigger asChild>
-                        <Link
-                          href={item.href}
-                          onClick={() => setMobileNavOpen(false)}
-                          className={`flex items-center justify-center size-10 mx-auto rounded-lg transition-colors relative ${
-                            isActive
-                              ? "bg-secondary text-primary font-semibold shadow-xs"
-                              : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground"
-                          }`}
-                        >
-                          <item.icon className={`size-4 shrink-0 ${isActive ? "text-primary" : ""}`} />
-                          {isActive && (
-                            <span className="absolute left-0 top-2 bottom-2 w-0.5 rounded-r bg-primary" />
-                          )}
-                          <span className="sr-only">{item.name}</span>
-                        </Link>
-                      </TooltipTrigger>
-                      <TooltipContent side="right" className="text-xs font-medium">
-                        {item.name}
-                      </TooltipContent>
-                    </Tooltip>
-                  );
-                }
-
-                return (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    onClick={() => setMobileNavOpen(false)}
-                    className={`flex items-center justify-between gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                      isActive
-                        ? "bg-secondary text-foreground font-semibold shadow-2xs border border-border/60"
-                        : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground"
-                    }`}
-                  >
-                    <div className="flex items-center gap-2.5 truncate">
-                      <item.icon className={`size-4 shrink-0 ${isActive ? "text-primary" : ""}`} />
-                      <span className="truncate">{item.name}</span>
-                    </div>
-                    {isActive ? (
-                      <span className="size-1.5 rounded-full bg-primary" />
-                    ) : (
-                      <ChevronRight className="size-3.5 text-muted-foreground/40 shrink-0" />
-                    )}
-                  </Link>
-                );
-              })}
-            </div>
-
-            {/* Resources Section */}
-            <div className="space-y-1">
-              {sidebarOpen && (
-                <p className="px-2 text-[10px] font-bold uppercase tracking-wider text-muted-foreground/70">
-                  Resources
-                </p>
-              )}
-
-              {resourceNavItems.map((item) => {
-                const isActive = pathname === item.href || pathname.startsWith(item.href);
-
-                if (!sidebarOpen) {
-                  return (
-                    <Tooltip key={item.name}>
-                      <TooltipTrigger asChild>
-                        <Link
-                          href={item.href}
-                          onClick={() => setMobileNavOpen(false)}
-                          className={`flex items-center justify-center size-10 mx-auto rounded-lg transition-colors ${
-                            isActive
-                              ? "bg-secondary text-primary font-semibold"
-                              : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground"
-                          }`}
-                        >
-                          <item.icon className="size-4 shrink-0" />
-                          <span className="sr-only">{item.name}</span>
-                        </Link>
-                      </TooltipTrigger>
-                      <TooltipContent side="right" className="text-xs font-medium">
-                        {item.name}
-                      </TooltipContent>
-                    </Tooltip>
-                  );
-                }
-
-                return (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    onClick={() => setMobileNavOpen(false)}
-                    className={`flex items-center justify-between gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                      isActive
-                        ? "bg-secondary text-foreground font-semibold shadow-2xs border border-border/60"
-                        : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground"
-                    }`}
-                  >
-                    <div className="flex items-center gap-2.5 truncate">
-                      <item.icon className="size-4 shrink-0" />
-                      <span className="truncate">{item.name}</span>
-                    </div>
-                    <ChevronRight className="size-3.5 text-muted-foreground/40 shrink-0" />
-                  </Link>
-                );
-              })}
-            </div>
           </nav>
 
-          {/* Subdomain Quota Widget */}
+          {/* Subdomain Quota Capsule */}
           {sidebarOpen && (
-            <div className="px-3 py-3 mx-2.5 mb-2 rounded-xl bg-secondary/40 border border-border/60 text-xs space-y-2">
-              <div className="flex items-center justify-between text-[11px]">
-                <span className="text-muted-foreground font-medium">Subdomains Claimed</span>
-                <span className="font-mono font-semibold text-foreground">{subdomainCount} of 5</span>
+            <div className={`mx-2.5 mb-2 px-3 py-2 rounded-lg border text-xs flex items-center justify-between transition-colors ${
+              remainingSlots === 0
+                ? "bg-amber-500/10 border-amber-500/25 text-amber-300"
+                : "bg-secondary/40 border-border/60 text-foreground"
+            }`}>
+              <div className="flex items-center gap-2">
+                <Globe className={`size-3.5 ${remainingSlots === 0 ? "text-amber-400" : "text-primary"}`} />
+                <span className="font-mono text-xs">{subdomainCount} / 5 Domains</span>
               </div>
-              <Progress value={Math.min((subdomainCount / 5) * 100, 100)} className="h-1.5" />
-              <div className="flex items-center justify-between text-[10px] text-muted-foreground pt-0.5">
-                <span>{remainingSlots === 0 ? "Quota full" : `${remainingSlots} slot(s) left`}</span>
+              {remainingSlots > 0 ? (
                 <Link
                   href="/dashboard/domains?action=claim"
-                  className="text-primary hover:underline font-semibold inline-flex items-center gap-0.5"
+                  className="text-primary hover:underline font-semibold text-xs"
                 >
-                  + Claim <Sparkles className="size-2.5" />
+                  + Claim
                 </Link>
-              </div>
+              ) : (
+                <span className="font-mono text-xs text-amber-400 font-semibold">Full</span>
+              )}
             </div>
           )}
 
@@ -372,7 +345,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     <>
                       <div className="flex-1 min-w-0 text-left">
                         <p className="text-xs font-semibold text-sidebar-foreground truncate">{userName}</p>
-                        <p className="text-[10.5px] text-muted-foreground truncate">{userEmail}</p>
+                        <p className="text-xs text-muted-foreground truncate">{userEmail}</p>
                       </div>
                       <ChevronsUpDown className="size-3.5 text-muted-foreground/70 shrink-0" />
                     </>
@@ -383,13 +356,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <DropdownMenuLabel className="font-normal px-2 py-1.5">
                   <div className="flex flex-col gap-0.5">
                     <p className="text-xs font-semibold text-foreground truncate">{userName}</p>
-                    <p className="text-[11px] text-muted-foreground truncate">{userEmail}</p>
+                    <p className="text-xs text-muted-foreground truncate">{userEmail}</p>
                     {isAdmin ? (
-                      <Badge className="w-fit mt-1 text-[9px] bg-amber-500/10 text-amber-400 border-amber-500/30 font-mono">
+                      <Badge className="w-fit mt-1 text-xs bg-amber-500/10 text-amber-400 border-amber-500/30 font-mono">
                         Administrator
                       </Badge>
                     ) : (
-                      <Badge variant="outline" className="w-fit mt-1 text-[9px] text-muted-foreground font-mono">
+                      <Badge variant="outline" className="w-fit mt-1 text-xs text-muted-foreground font-mono">
                         Free Account (5 Slots)
                       </Badge>
                     )}
@@ -446,8 +419,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             onToggleSidebar={() => setSidebarOpen((prev) => !prev)}
             onOpenMobileNav={() => setMobileNavOpen(true)}
           />
-          <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
-            {children}
+          <main className="flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+            <div className="max-w-7xl mx-auto w-full">
+              {children}
+            </div>
           </main>
         </div>
       </div>

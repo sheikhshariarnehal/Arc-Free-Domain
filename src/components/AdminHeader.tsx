@@ -1,8 +1,16 @@
 "use client";
 
-import { Search, Bell, PanelLeft, Sun, ChevronDown, LogOut, ArrowLeft, Shield } from "lucide-react";
 import Link from "next/link";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import {
+  PanelLeft,
+  ArrowLeft,
+  Shield,
+  LogOut,
+  ExternalLink,
+  Layers,
+  ChevronRight
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -18,21 +26,27 @@ import { createClient } from "@/lib/supabase/client";
 
 interface AdminHeaderProps {
   userEmail?: string;
+  sidebarOpen?: boolean;
   onToggleSidebar?: () => void;
 }
 
-export function AdminHeader({ userEmail = "admin@arc.bd", onToggleSidebar }: AdminHeaderProps) {
+export function AdminHeader({
+  userEmail = "admin@arc.bd",
+  sidebarOpen = true,
+  onToggleSidebar
+}: AdminHeaderProps) {
   const router = useRouter();
   const pathname = usePathname();
 
-  const getPageTitle = () => {
-    if (pathname === "/admin") return "Ecommerce App";
-    if (pathname.startsWith("/admin/users")) return "User Management";
-    if (pathname.startsWith("/admin/subdomains")) return "Subdomain Management";
-    if (pathname.startsWith("/admin/reserved")) return "Reserved Names";
-    if (pathname.startsWith("/admin/reports")) return "Abuse Reports";
-    if (pathname.startsWith("/admin/settings")) return "System Settings";
-    return "Admin Dashboard";
+  const getPageInfo = () => {
+    if (pathname === "/admin") return { title: "Platform Overview", section: "Admin" };
+    if (pathname.startsWith("/admin/dns")) return { title: "Authoritative DNS", section: "Infrastructure" };
+    if (pathname.startsWith("/admin/subdomains")) return { title: "Subdomain Management", section: "Operations" };
+    if (pathname.startsWith("/admin/users")) return { title: "User Directory", section: "Operations" };
+    if (pathname.startsWith("/admin/reserved")) return { title: "Reserved Names", section: "Infrastructure" };
+    if (pathname.startsWith("/admin/reports")) return { title: "Abuse Reports", section: "Infrastructure" };
+    if (pathname.startsWith("/admin/settings")) return { title: "System Settings", section: "Infrastructure" };
+    return { title: "Admin Console", section: "Admin" };
   };
 
   const handleSignOut = async () => {
@@ -42,103 +56,89 @@ export function AdminHeader({ userEmail = "admin@arc.bd", onToggleSidebar }: Adm
     router.refresh();
   };
 
+  const pageInfo = getPageInfo();
+
   return (
-    <header className="bg-background border-b border-border grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 px-4 py-3 sm:gap-3 sm:px-6 sticky top-0 z-40">
-      <div className="flex items-center gap-3">
+    <header className="bg-background/95 backdrop-blur-xs border-b border-border h-14 flex items-center justify-between px-4 sm:px-6 sticky top-0 z-40 select-none">
+      {/* Left: Sidebar Toggle & Semantic Breadcrumb */}
+      <div className="flex items-center gap-3 min-w-0">
         <Button
           onClick={onToggleSidebar}
           variant="ghost"
           size="icon"
-          className="size-8 shrink-0 text-foreground hover:bg-accent"
-          aria-label="Toggle Sidebar"
+          className="size-8 text-muted-foreground hover:text-foreground hover:bg-muted/80 shrink-0 focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
+          aria-label={sidebarOpen ? "Collapse sidebar navigation" : "Expand sidebar navigation"}
+          aria-expanded={sidebarOpen}
         >
           <PanelLeft className="size-4" />
         </Button>
 
-        <div className="min-w-0">
-          <h1 className="truncate text-base font-medium text-foreground">
-            {getPageTitle()}
-          </h1>
-        </div>
+        <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-muted-foreground truncate">
+          <Link
+            href="/admin"
+            className="font-medium hover:text-foreground transition-colors focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none rounded-sm px-1 py-0.5"
+          >
+            ARC.BD
+          </Link>
+          <ChevronRight className="size-3 text-muted-foreground/40 shrink-0" />
+          <span className="font-medium text-foreground truncate">{pageInfo.title}</span>
+        </nav>
       </div>
 
-      <div className="flex justify-end min-w-0 shrink-0 items-center gap-2 ml-auto">
-        {/* Cmd + K Search Trigger */}
-        <Button
-          variant="outline"
-          className="flex h-9 w-9 sm:w-auto shrink-0 items-center justify-center gap-2 px-2.5 text-xs text-muted-foreground border-input bg-background hover:bg-accent hover:text-foreground shadow-xs"
-        >
-          <Search className="size-4 shrink-0" />
-          <kbd className="bg-muted text-muted-foreground pointer-events-none hidden sm:inline-flex rounded border px-1.5 py-0.5 text-[10px] font-medium">
-            ⌘ K
-          </kbd>
-        </Button>
-
-        {/* Notification Bell */}
-        <Button
-          variant="outline"
-          size="icon"
-          className="relative size-9 border-input bg-background hover:bg-accent"
-          aria-label="Notifications"
-        >
-          <Bell className="size-4 text-foreground" />
-          <span className="bg-destructive text-destructive-foreground absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-medium tabular-nums">
-            2
-          </span>
-        </Button>
-
-        {/* Theme & Preset Controls matching shadcnblocks */}
-        <div className="shrink-0 items-center gap-1.5 hidden sm:flex">
-          <Button variant="ghost" size="icon" className="size-9 rounded-lg hover:bg-accent">
-            <Sun className="size-[1.2rem] text-foreground" />
-            <span className="sr-only">Toggle theme</span>
-          </Button>
-
-          <Button variant="outline" className="h-9 gap-2 px-2.5 text-xs border-border bg-background rounded-lg font-normal">
-            <span className="inline-flex gap-0.5">
-              <span className="size-3.5 rounded-sm bg-neutral-900 border border-neutral-700" />
-              <span className="size-3.5 rounded-sm bg-neutral-100 border border-neutral-300" />
-              <span className="size-3.5 rounded-sm bg-neutral-300 border border-neutral-400" />
-            </span>
-            <span className="hidden sm:inline-block text-sm">Default</span>
-            <ChevronDown className="size-4 text-muted-foreground opacity-70" />
-          </Button>
-        </div>
-
-        {/* User Dropdown */}
+      {/* Right: Account Dropdown */}
+      <div className="flex items-center gap-2">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="relative size-9 rounded-full p-0 ml-1">
-              <Avatar className="size-9 border border-border">
+            <Button
+              variant="ghost"
+              className="relative size-8 rounded-full p-0 hover:ring-1 hover:ring-border focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none"
+              aria-label="User account and profile menu"
+            >
+              <Avatar className="size-8 border border-border">
                 <AvatarFallback className="bg-secondary text-foreground font-semibold text-xs">
-                  AD
+                  {userEmail ? userEmail.slice(0, 2).toUpperCase() : "AD"}
                 </AvatarFallback>
               </Avatar>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuLabel className="font-normal">
+          <DropdownMenuContent align="end" className="w-56 text-xs">
+            <DropdownMenuLabel className="font-normal p-2">
               <div className="flex flex-col gap-1">
-                <p className="text-xs font-semibold text-foreground truncate">{userEmail}</p>
-                <Badge variant="outline" className="w-fit text-muted-foreground text-[10px] font-mono">
-                  Administrator
-                </Badge>
+                <p className="font-semibold text-foreground truncate text-xs">{userEmail}</p>
+                <div className="flex items-center gap-1">
+                  <Badge variant="outline" className="w-fit text-muted-foreground text-[10px] font-mono py-0">
+                    Administrator
+                  </Badge>
+                </div>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild className="cursor-pointer">
-              <Link href="/dashboard" className="flex items-center gap-2 text-emerald-400">
-                <ArrowLeft className="size-4" /> User Dashboard
+              <Link href="/admin" className="flex items-center gap-2">
+                <Shield className="size-3.5" /> Overview
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild className="cursor-pointer">
-              <Link href="/admin/settings" className="flex items-center gap-2">
-                <Shield className="size-4" /> System Settings
+              <Link href="/admin/dns" className="flex items-center gap-2">
+                <Layers className="size-3.5" /> Authoritative DNS
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild className="cursor-pointer">
+              <Link href="/dashboard" className="flex items-center gap-2 text-primary">
+                <ArrowLeft className="size-3.5" /> Switch to User App
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild className="cursor-pointer">
+              <Link href="/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+                <ExternalLink className="size-3.5" /> Live Site
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-destructive focus:text-destructive">
-              <LogOut className="size-4 mr-2" /> Sign Out
+            <DropdownMenuItem
+              onClick={handleSignOut}
+              className="cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10"
+            >
+              <LogOut className="size-3.5 mr-2" /> Sign Out
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

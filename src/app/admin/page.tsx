@@ -1,36 +1,37 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
-import { 
-  Users, 
-  Globe, 
-  AlertTriangle, 
-  ShieldBan, 
-  ArrowUpRight, 
-  ArrowDownRight,
-  ClipboardList,
-  CreditCard,
+import {
+  Users,
+  Globe,
+  AlertTriangle,
+  Bookmark,
+  ArrowUpRight,
   ChartColumn,
-  CheckCircle2,
   ShieldCheck,
   Activity,
-  Bookmark,
-  Clock
+  Clock,
+  Layers,
+  ArrowRight,
+  Server,
+  Database,
+  Radio,
+  RefreshCw
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { 
-  ResponsiveContainer, 
-  LineChart, 
-  Line, 
-  XAxis, 
-  YAxis, 
-  Tooltip, 
-  CartesianGrid 
+import {
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid
 } from "recharts";
 
 export default function AdminOverview() {
@@ -48,62 +49,58 @@ export default function AdminOverview() {
     targetBreakdown: Array<{ name: string; percentage: number; color: string }>;
   }>({
     metrics: {
-      totalUsers: 5,
-      activeSubdomains: 4,
+      totalUsers: 0,
+      activeSubdomains: 0,
       pendingSubdomains: 0,
       suspendedSubdomains: 0,
       pendingReports: 0,
       reservedNames: 36,
-      totalDns: 4
+      totalDns: 0,
     },
-    chartData: [
-      { name: "Mon", claims: 1 },
-      { name: "Tue", claims: 2 },
-      { name: "Wed", claims: 4 },
-      { name: "Thu", claims: 1 },
-      { name: "Fri", claims: 3 },
-      { name: "Sat", claims: 2 },
-      { name: "Sun", claims: 4 }
-    ],
-    targetBreakdown: [
-      { name: "CNAME Records", percentage: 50, color: "#fafafa" },
-      { name: "A Records (IPv4)", percentage: 50, color: "#a1a1aa" },
-      { name: "Reserved System", percentage: 0, color: "#71717a" },
-      { name: "Other Targets", percentage: 0, color: "#3f3f46" }
-    ]
+    chartData: [],
+    targetBreakdown: [],
   });
   const [loading, setLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const loadStats = useCallback(async (background = false) => {
+    try {
+      if (!background) setIsRefreshing(true);
+      const res = await fetch("/api/admin/stats");
+      if (res.ok) {
+        const stats = await res.json();
+        if (stats.metrics) {
+          setData(stats);
+        }
+      }
+    } catch (err) {
+      console.error("Failed to load platform stats:", err);
+    } finally {
+      setLoading(false);
+      setIsRefreshing(false);
+    }
+  }, []);
 
   useEffect(() => {
-    async function loadRealStats() {
-      try {
-        const res = await fetch("/api/admin/stats");
-        if (res.ok) {
-          const stats = await res.json();
-          if (stats.metrics) {
-            setData(stats);
-          }
-        }
-      } catch (err) {
-        console.error("Failed to load real Supabase stats:", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadRealStats();
-  }, []);
+    loadStats(false);
+  }, [loadStats]);
 
   if (loading) {
     return (
-      <div className="flex flex-col gap-6">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">System Overview</h1>
-          <p className="text-sm text-muted-foreground">Fetching real-time Supabase platform metrics...</p>
+      <div className="space-y-5">
+        <div className="flex items-center justify-between border-b border-border pb-4">
+          <Skeleton className="h-6 w-48" />
+          <Skeleton className="h-8 w-24" />
         </div>
-        <Skeleton className="h-32 w-full rounded-xl" />
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-          <Skeleton className="h-72 xl:col-span-2 rounded-xl" />
-          <Skeleton className="h-72 rounded-xl" />
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5">
+          <Skeleton className="h-24 rounded-lg" />
+          <Skeleton className="h-24 rounded-lg" />
+          <Skeleton className="h-24 rounded-lg" />
+          <Skeleton className="h-24 rounded-lg" />
+        </div>
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+          <Skeleton className="h-64 xl:col-span-2 rounded-lg" />
+          <Skeleton className="h-64 rounded-lg" />
         </div>
       </div>
     );
@@ -111,223 +108,303 @@ export default function AdminOverview() {
 
   const { metrics, chartData, targetBreakdown } = data;
 
+  const dnsTypeColors: Record<string, string> = {
+    "CNAME Records": "bg-blue-500",
+    "A Records (IPv4)": "bg-emerald-500",
+    "Reserved System": "bg-purple-500",
+    "Other Targets": "bg-zinc-500",
+  };
+
   return (
-    <div className="flex flex-col gap-6">
-      {/* Pending Approvals Action Banner */}
+    <div className="space-y-5">
+      {/* 1. Header & Live Status */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border pb-4">
+        <div>
+          <div className="flex items-center gap-2.5">
+            <h1 className="text-xl font-semibold tracking-tight text-foreground flex items-center gap-2">
+              <Activity className="size-5 text-primary" />
+              Platform Overview
+            </h1>
+            <Badge
+              variant="outline"
+              className="px-2 py-0.5 border-emerald-500/30 bg-emerald-500/10 text-emerald-400 gap-1.5 text-[11px] font-medium"
+            >
+              <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              All Systems Operational
+            </Badge>
+          </div>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            Real-time platform metrics, claim velocities, and authoritative DNS telemetry.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Button
+            onClick={() => loadStats(false)}
+            variant="outline"
+            size="sm"
+            disabled={isRefreshing}
+            className="h-8 text-xs gap-1.5"
+            aria-label="Refresh overview data"
+          >
+            <RefreshCw className={`size-3.5 ${isRefreshing ? "animate-spin" : ""}`} />
+            Refresh
+          </Button>
+
+          <Button
+            variant="default"
+            size="sm"
+            asChild
+            className="h-8 text-xs gap-1.5 font-medium"
+          >
+            <Link href="/admin/dns">
+              <Server className="size-3.5" />
+              DNS Console
+            </Link>
+          </Button>
+        </div>
+      </div>
+
+      {/* 2. Pending Claims Banner (Elevated Priority) */}
       {metrics.pendingSubdomains > 0 && (
-        <Alert className="border-amber-500/30 bg-amber-500/10 text-amber-300 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4">
-          <div className="flex items-center gap-3">
-            <div className="size-9 rounded-lg bg-amber-500/20 flex items-center justify-center shrink-0">
-              <Clock className="size-5 text-amber-400" />
+        <Alert className="border-amber-500/30 bg-amber-500/10 text-amber-300 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-3 rounded-lg">
+          <div className="flex items-center gap-2.5">
+            <div className="size-7 rounded-md bg-amber-500/20 flex items-center justify-center shrink-0">
+              <Clock className="size-4 text-amber-400" />
             </div>
             <div>
-              <AlertTitle className="text-amber-400 font-semibold text-sm">
-                {metrics.pendingSubdomains} Subdomain Claim{metrics.pendingSubdomains > 1 ? "s" : ""} Pending Review
+              <AlertTitle className="text-amber-400 font-semibold text-xs flex items-center gap-1.5">
+                <span>{metrics.pendingSubdomains} Subdomain Claim{metrics.pendingSubdomains > 1 ? "s" : ""} Pending Review</span>
               </AlertTitle>
-              <AlertDescription className="text-amber-300/80 text-xs mt-0.5">
-                New user claims are awaiting admin approval before DNS management is unlocked.
+              <AlertDescription className="text-amber-300/80 text-[11px] mt-0.5">
+                Awaiting moderator approval before authoritative DNS records are unlocked.
               </AlertDescription>
             </div>
           </div>
-          <Button size="sm" className="bg-amber-500 hover:bg-amber-600 text-black font-semibold text-xs whitespace-nowrap" asChild>
+          <Button
+            size="sm"
+            className="h-7 px-3 bg-amber-500 hover:bg-amber-600 text-black font-semibold text-xs whitespace-nowrap gap-1 self-end sm:self-center"
+            asChild
+          >
             <Link href="/admin/subdomains?status=pending">
-              Review Claims ({metrics.pendingSubdomains})
+              Review ({metrics.pendingSubdomains})
+              <ArrowRight className="size-3" />
             </Link>
           </Button>
         </Alert>
       )}
 
-      {/* 1. Real Supabase Metric Banner Grid */}
-      <div className="bg-card grid grid-cols-2 gap-3 rounded-xl border border-border p-4 sm:gap-4 sm:p-5 lg:grid-cols-4 lg:gap-6 lg:p-6 shadow-sm">
-        {/* Metric 1: Total Platform Users */}
-        <div className="flex items-start">
-          <div className="flex-1 space-y-1 sm:space-y-2 lg:space-y-3">
-            <div className="text-muted-foreground flex items-center gap-1.5 sm:gap-2">
-              <Users className="size-3.5 sm:size-4 text-muted-foreground" />
-              <span className="truncate text-[10px] font-medium sm:text-xs lg:text-sm">Total Platform Users</span>
-            </div>
-            <p className="text-muted-foreground/70 hidden text-[10px] sm:block sm:text-xs">{metrics.totalUsers} registered accounts</p>
-            <p className="text-xl leading-tight font-semibold tracking-tight sm:text-2xl lg:text-[28px] text-foreground">
-              {metrics.totalUsers}
-            </p>
-            <div className="flex flex-wrap items-center gap-x-1 gap-y-0.5 text-[10px] sm:text-xs">
-              <ArrowUpRight className="size-3 shrink-0 text-emerald-500 sm:size-3.5" />
-              <span className="whitespace-nowrap text-emerald-500 font-semibold">+20.8%</span>
-              <span className="text-muted-foreground whitespace-nowrap">vs last month</span>
-            </div>
+      {/* 3. Primary KPI Cards Grid */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {/* Metric 1: Registered Users */}
+        <Link
+          href="/admin/users"
+          className="group block p-3.5 rounded-lg border border-border bg-card/60 hover:border-primary/40 hover:bg-card transition-all"
+        >
+          <div className="flex items-center justify-between text-muted-foreground text-xs">
+            <span className="font-medium text-foreground">Registered Users</span>
+            <Users className="size-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
           </div>
-          <div className="bg-border mx-4 hidden h-full w-px lg:block xl:mx-6" />
-        </div>
+          <div className="mt-1.5 text-xl font-bold tracking-tight text-foreground font-mono">
+            {metrics.totalUsers}
+          </div>
+          <div className="mt-1 flex items-center gap-1 text-[11px] text-emerald-500 font-medium">
+            <ArrowUpRight className="size-3" />
+            <span>Active accounts</span>
+          </div>
+        </Link>
 
         {/* Metric 2: Active Subdomains */}
-        <div className="flex items-start">
-          <div className="flex-1 space-y-1 sm:space-y-2 lg:space-y-3">
-            <div className="text-muted-foreground flex items-center gap-1.5 sm:gap-2">
-              <Globe className="size-3.5 sm:size-4 text-muted-foreground" />
-              <span className="truncate text-[10px] font-medium sm:text-xs lg:text-sm">Active Subdomains</span>
-            </div>
-            <p className="text-muted-foreground/70 hidden text-[10px] sm:block sm:text-xs">{metrics.activeSubdomains} live Cloudflare records</p>
-            <p className="text-xl leading-tight font-semibold tracking-tight sm:text-2xl lg:text-[28px] text-foreground">
-              {metrics.activeSubdomains}
-            </p>
-            <div className="flex flex-wrap items-center gap-x-1 gap-y-0.5 text-[10px] sm:text-xs">
-              <ArrowUpRight className="size-3 shrink-0 text-emerald-500 sm:size-3.5" />
-              <span className="whitespace-nowrap text-emerald-500 font-semibold">+27.9%</span>
-              <span className="text-muted-foreground whitespace-nowrap">vs last month</span>
-            </div>
+        <Link
+          href="/admin/subdomains"
+          className="group block p-3.5 rounded-lg border border-border bg-card/60 hover:border-primary/40 hover:bg-card transition-all"
+        >
+          <div className="flex items-center justify-between text-muted-foreground text-xs">
+            <span className="font-medium text-foreground">Active Subdomains</span>
+            <Globe className="size-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
           </div>
-          <div className="bg-border mx-4 hidden h-full w-px lg:block xl:mx-6" />
-        </div>
+          <div className="mt-1.5 text-xl font-bold tracking-tight text-foreground font-mono">
+            {metrics.activeSubdomains}
+          </div>
+          <div className="mt-1 flex items-center gap-1 text-[11px] text-muted-foreground font-mono">
+            <span>{metrics.totalDns} DNS RRsets</span>
+          </div>
+        </Link>
 
-        {/* Metric 3: Pending Abuse Reports */}
-        <div className="flex items-start">
-          <div className="flex-1 space-y-1 sm:space-y-2 lg:space-y-3">
-            <div className="text-muted-foreground flex items-center gap-1.5 sm:gap-2">
-              <AlertTriangle className="size-3.5 sm:size-4 text-muted-foreground" />
-              <span className="truncate text-[10px] font-medium sm:text-xs lg:text-sm">Pending Abuse Flags</span>
-            </div>
-            <p className="text-muted-foreground/70 hidden text-[10px] sm:block sm:text-xs">0 safety reports</p>
-            <p className="text-xl leading-tight font-semibold tracking-tight sm:text-2xl lg:text-[28px] text-foreground">
-              {metrics.pendingReports}
-            </p>
-            <div className="flex flex-wrap items-center gap-x-1 gap-y-0.5 text-[10px] sm:text-xs">
-              <span className="text-emerald-500 font-semibold">Clean</span>
-              <span className="text-muted-foreground whitespace-nowrap">0 flags pending review</span>
-            </div>
+        {/* Metric 3: Pending Abuse Flags */}
+        <Link
+          href="/admin/reports"
+          className="group block p-3.5 rounded-lg border border-border bg-card/60 hover:border-primary/40 hover:bg-card transition-all"
+        >
+          <div className="flex items-center justify-between text-muted-foreground text-xs">
+            <span className="font-medium text-foreground">Abuse Reports</span>
+            <AlertTriangle className="size-3.5 text-muted-foreground group-hover:text-amber-400 transition-colors" />
           </div>
-          <div className="bg-border mx-4 hidden h-full w-px lg:block xl:mx-6" />
-        </div>
+          <div className="mt-1.5 text-xl font-bold tracking-tight text-foreground font-mono">
+            {metrics.pendingReports}
+          </div>
+          <div className="mt-1 flex items-center gap-1 text-[11px]">
+            {metrics.pendingReports === 0 ? (
+              <span className="text-emerald-500 font-medium">0 active safety flags</span>
+            ) : (
+              <span className="text-amber-400 font-medium">{metrics.pendingReports} pending review</span>
+            )}
+          </div>
+        </Link>
 
-        {/* Metric 4: Reserved System Names */}
-        <div className="flex items-start">
-          <div className="flex-1 space-y-1 sm:space-y-2 lg:space-y-3">
-            <div className="text-muted-foreground flex items-center gap-1.5 sm:gap-2">
-              <Bookmark className="size-3.5 sm:size-4 text-muted-foreground" />
-              <span className="truncate text-[10px] font-medium sm:text-xs lg:text-sm">Reserved Names</span>
-            </div>
-            <p className="text-muted-foreground/70 hidden text-[10px] sm:block sm:text-xs">Blocked keywords</p>
-            <p className="text-xl leading-tight font-semibold tracking-tight sm:text-2xl lg:text-[28px] text-foreground">
-              {metrics.reservedNames}
-            </p>
-            <div className="flex flex-wrap items-center gap-x-1 gap-y-0.5 text-[10px] sm:text-xs">
-              <span className="text-muted-foreground whitespace-nowrap">Protected system keywords</span>
-            </div>
+        {/* Metric 4: Reserved Names */}
+        <Link
+          href="/admin/reserved"
+          className="group block p-3.5 rounded-lg border border-border bg-card/60 hover:border-primary/40 hover:bg-card transition-all"
+        >
+          <div className="flex items-center justify-between text-muted-foreground text-xs">
+            <span className="font-medium text-foreground">Reserved Names</span>
+            <Bookmark className="size-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
           </div>
-        </div>
+          <div className="mt-1.5 text-xl font-bold tracking-tight text-foreground font-mono">
+            {metrics.reservedNames}
+          </div>
+          <div className="mt-1 flex items-center gap-1 text-[11px] text-muted-foreground">
+            <span>Protected prefixes</span>
+          </div>
+        </Link>
       </div>
 
-      {/* 2. Real Data Chart Section matching shadcnblocks-admin */}
-      <div className="flex flex-col gap-4 sm:gap-6 xl:flex-row">
-        {/* Left: Total Subdomain Activity Line Chart */}
-        <div className="bg-card flex min-w-0 flex-1 flex-col rounded-xl border border-border shadow-sm">
-          <div className="flex h-14 items-center justify-between border-b border-border px-4 sm:px-5">
-            <div className="flex items-center gap-2.5">
-              <Button variant="outline" size="icon" className="size-7 sm:size-8 border-border">
-                <ChartColumn className="text-muted-foreground size-4" />
-              </Button>
-              <h2 className="text-sm font-medium text-pretty sm:text-base text-foreground">Subdomain Registration Activity</h2>
-            </div>
-            <div className="flex items-center gap-3 sm:gap-5">
-              <div className="flex items-center gap-1.5">
-                <div className="size-2 rounded-full sm:size-2.5 bg-foreground" />
-                <span className="text-muted-foreground text-[10px] sm:text-xs">Active Subdomains</span>
+      {/* 4. Velocity Chart & Record Topology Breakdown */}
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+        {/* Left: Provisioning Velocity Chart */}
+        <Card className="xl:col-span-2 border-border bg-card">
+          <CardHeader className="pb-2.5 border-b border-border/60">
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-xs font-semibold flex items-center gap-2">
+                  <ChartColumn className="size-3.5 text-primary" />
+                  Subdomain Provisioning Velocity
+                </CardTitle>
+                <CardDescription className="text-[11px]">
+                  7-day registration trend across authoritative zone <code className="font-mono text-primary font-semibold">arc.bd.</code>
+                </CardDescription>
               </div>
-              <div className="flex items-center gap-1.5">
-                <div className="size-2 rounded-full sm:size-2.5 bg-muted-foreground/50" />
-                <span className="text-muted-foreground text-[10px] sm:text-xs">DNS Records</span>
-              </div>
+              <Badge variant="outline" className="font-mono text-[10px] text-muted-foreground px-1.5 py-0">
+                Supabase Telemetry
+              </Badge>
             </div>
-          </div>
-
-          <div className="flex flex-col gap-4 p-4 sm:gap-5 sm:p-5">
-            <div className="flex flex-col gap-1">
-              <p className="text-xl leading-tight font-semibold tracking-tight sm:text-2xl text-foreground">
-                {metrics.activeSubdomains} Active Claims
-              </p>
-              <p className="text-muted-foreground text-[10px] tracking-wider uppercase sm:text-xs">REAL SUPABASE DATA TELEMETRY</p>
-            </div>
-            <div className="h-[200px] w-full min-w-0 sm:h-[240px] lg:h-[280px]">
+          </CardHeader>
+          <CardContent className="pt-3 space-y-2">
+            <div className="h-[210px] w-full min-w-0">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={chartData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#27272a" opacity={0.5} />
+                <LineChart data={chartData} margin={{ top: 8, right: 8, left: -24, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#27272a" opacity={0.4} />
                   <XAxis dataKey="name" stroke="#71717a" fontSize={11} tickLine={false} axisLine={false} />
                   <YAxis stroke="#71717a" fontSize={11} tickLine={false} axisLine={false} allowDecimals={false} />
                   <Tooltip
-                    contentStyle={{ backgroundColor: "#18181b", borderColor: "#27272a", borderRadius: "8px", color: "#fafafa" }}
+                    contentStyle={{
+                      backgroundColor: "#18181b",
+                      borderColor: "#3f3f46",
+                      borderRadius: "6px",
+                      color: "#fafafa",
+                      fontSize: "11px",
+                      padding: "4px 8px",
+                    }}
+                    labelStyle={{ fontWeight: "bold", marginBottom: "2px" }}
                   />
-                  <Line type="monotone" dataKey="claims" stroke="#fafafa" strokeWidth={2} dot={true} />
+                  <Line
+                    type="monotone"
+                    dataKey="claims"
+                    name="Claims"
+                    stroke="#10b981"
+                    strokeWidth={2}
+                    dot={{ r: 2.5, fill: "#10b981", strokeWidth: 0 }}
+                    activeDot={{ r: 4.5, fill: "#10b981" }}
+                  />
                 </LineChart>
               </ResponsiveContainer>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
-        {/* Right: DNS Record Types */}
-        <div className="bg-card flex min-w-0 flex-col rounded-xl border border-border shadow-sm xl:w-[410px]">
-          <div className="flex h-14 items-center justify-between border-b border-border px-4 sm:px-5">
-            <div className="flex items-center gap-2.5">
-              <Button variant="outline" size="icon" className="size-7 sm:size-8 border-border">
-                <ChartColumn className="text-muted-foreground size-4" />
-              </Button>
-              <h2 className="text-sm font-medium text-pretty sm:text-base text-foreground">DNS Record Breakdown</h2>
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-4 p-4 sm:p-5">
-            <div className="flex flex-wrap items-center gap-3 sm:gap-5">
+        {/* Right: Record Type Breakdown */}
+        <Card className="border-border bg-card flex flex-col justify-between">
+          <div>
+            <CardHeader className="pb-2.5 border-b border-border/60">
+              <CardTitle className="text-xs font-semibold flex items-center gap-2">
+                <Layers className="size-3.5 text-primary" />
+                DNS Record Topology
+              </CardTitle>
+              <CardDescription className="text-[11px]">
+                Distribution of active RRsets in PowerDNS.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="pt-3 space-y-3">
               {targetBreakdown.map((item, i) => (
-                <div key={i} className="flex items-center gap-1.5">
-                  <div className="size-2 rounded-full sm:size-2.5" style={{ backgroundColor: item.color }} />
-                  <span className="text-muted-foreground text-[10px] sm:text-xs">{item.name}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="flex flex-col gap-4 pt-4">
-              {targetBreakdown.map((item, i) => (
-                <div key={i} className="flex flex-col gap-1.5">
-                  <div className="flex justify-between text-xs">
+                <div key={i} className="space-y-1">
+                  <div className="flex justify-between text-xs font-mono">
                     <span className="text-muted-foreground">{item.name}</span>
                     <span className="font-semibold text-foreground">{item.percentage}%</span>
                   </div>
-                  <div className="h-2.5 w-full bg-secondary rounded-full overflow-hidden">
-                    <div className="h-full rounded-full" style={{ width: `${item.percentage}%`, backgroundColor: item.color }} />
+                  <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
+                    <div
+                      className={`h-full rounded-full transition-all ${dnsTypeColors[item.name] || "bg-primary"}`}
+                      style={{ width: `${Math.max(item.percentage, item.percentage > 0 ? 5 : 0)}%` }}
+                    />
                   </div>
                 </div>
               ))}
+            </CardContent>
+          </div>
+
+          <div className="p-3 border-t border-border">
+            <Button variant="outline" size="sm" asChild className="w-full text-xs h-7 gap-1.5">
+              <Link href="/admin/dns">
+                <Server className="size-3 text-primary" />
+                Open Authoritative DNS Console
+              </Link>
+            </Button>
+          </div>
+        </Card>
+      </div>
+
+      {/* 5. Infrastructure & Security Services Ribbon */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3 rounded-lg border border-border bg-card/40 text-xs">
+        <div className="flex items-center justify-between sm:justify-start gap-2.5 sm:border-r sm:border-border/60 sm:pr-3">
+          <div className="size-7 rounded-md bg-primary/10 flex items-center justify-center shrink-0">
+            <Server className="size-3.5 text-primary" />
+          </div>
+          <div>
+            <div className="font-medium text-foreground flex items-center gap-1.5">
+              PowerDNS v4.9
+              <span className="size-1.5 rounded-full bg-emerald-500" />
             </div>
+            <div className="text-[11px] text-muted-foreground font-mono">ns1.arc.bd &amp; ns2.arc.bd:53</div>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between sm:justify-start gap-2.5 sm:border-r sm:border-border/60 sm:pr-3">
+          <div className="size-7 rounded-md bg-emerald-500/10 flex items-center justify-center shrink-0">
+            <Database className="size-3.5 text-emerald-400" />
+          </div>
+          <div>
+            <div className="font-medium text-foreground flex items-center gap-1.5">
+              Supabase PostgreSQL
+              <span className="size-1.5 rounded-full bg-emerald-500" />
+            </div>
+            <div className="text-[11px] text-muted-foreground font-mono">RLS Security Definer Active</div>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between sm:justify-start gap-2.5">
+          <div className="size-7 rounded-md bg-cyan-500/10 flex items-center justify-center shrink-0">
+            <Radio className="size-3.5 text-cyan-400" />
+          </div>
+          <div>
+            <div className="font-medium text-foreground flex items-center gap-1.5">
+              DNS Engine Resolver
+              <span className="size-1.5 rounded-full bg-emerald-500" />
+            </div>
+            <div className="text-[11px] text-muted-foreground font-mono">&lt; 1ms latency UDP/TCP</div>
           </div>
         </div>
       </div>
-
-      {/* 3. Platform Health Monitor */}
-      <Card className="border-border">
-        <CardHeader className="border-b border-border">
-          <CardTitle className="text-base flex items-center gap-2 font-semibold">
-            <Activity className="size-4 text-emerald-400" /> Platform Infrastructure & Security Health
-          </CardTitle>
-          <CardDescription>Live operational monitors for Cloudflare DNS and Supabase Security Policies.</CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-4 pt-6">
-          <Alert className="border-emerald-500/30 bg-emerald-500/5">
-            <CheckCircle2 className="size-4 text-emerald-400" />
-            <AlertTitle className="text-emerald-400 font-semibold">Cloudflare DNS API</AlertTitle>
-            <AlertDescription className="text-muted-foreground flex justify-between items-center">
-              <span>Direct zone record management & proxy synchronization active on zone `5ccd02615f5276fec72d7537b62c79c8`.</span>
-              <Badge variant="outline" className="border-emerald-500/30 text-emerald-400 bg-emerald-500/10 font-mono">Operational</Badge>
-            </AlertDescription>
-          </Alert>
-
-          <Alert className="border-emerald-500/30 bg-emerald-500/5">
-            <ShieldCheck className="size-4 text-emerald-400" />
-            <AlertTitle className="text-emerald-400 font-semibold">Supabase PostgreSQL RLS</AlertTitle>
-            <AlertDescription className="text-muted-foreground flex justify-between items-center">
-              <span>Security Definer policy functions (`is_admin`) running non-recursively.</span>
-              <Badge variant="outline" className="border-emerald-500/30 text-emerald-400 bg-emerald-500/10 font-mono">Protected</Badge>
-            </AlertDescription>
-          </Alert>
-        </CardContent>
-      </Card>
     </div>
   );
 }

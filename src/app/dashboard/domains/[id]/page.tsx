@@ -71,7 +71,7 @@ function StatusBadge({ status }: { status: string }) {
         <Tooltip>
           <TooltipTrigger asChild>
             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium cursor-default select-none shadow-2xs">
-              <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="size-1.5 rounded-full bg-emerald-400" />
               Active
             </span>
           </TooltipTrigger>
@@ -85,7 +85,7 @@ function StatusBadge({ status }: { status: string }) {
         <Tooltip>
           <TooltipTrigger asChild>
             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-medium cursor-default select-none shadow-2xs">
-              <span className="size-1.5 rounded-full bg-amber-400 animate-pulse" />
+              <span className="size-1.5 rounded-full bg-amber-400" />
               Pending Review
             </span>
           </TooltipTrigger>
@@ -134,6 +134,7 @@ export default function DomainDetail() {
   const [recordTarget, setRecordTarget] = useState("");
   const [addingRecord, setAddingRecord] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
 
   // Deletion dialogs
   const [deleteSubdomainOpen, setDeleteSubdomainOpen] = useState(false);
@@ -180,10 +181,35 @@ export default function DomainDetail() {
 
   const handleAddDNS = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!subdomain || !recordTarget.trim()) return;
-    if (isLocked) {
-      setError("DNS management is locked until your domain claim is verified by an administrator.");
+    setFormError(null);
+    if (!subdomain) return;
+    
+    let target = recordTarget.trim();
+    if (!target) {
+      setFormError("Target content cannot be empty.");
       return;
+    }
+
+    if (isLocked) {
+      setFormError("DNS management is locked until your domain claim is verified by an administrator.");
+      return;
+    }
+
+    // Client-side validation by record type
+    if (recordType === "A") {
+      const ipv4Regex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+      if (!ipv4Regex.test(target)) {
+        setFormError("Invalid IPv4 address format. Example: 185.199.108.153");
+        return;
+      }
+    } else if (recordType === "CNAME") {
+      // Auto-strip protocol or trailing paths if pasted
+      target = target.replace(/^https?:\/\//i, "").replace(/\/.*$/, "").trim();
+      const fqdnRegex = /^([a-zA-Z0-9_]([a-zA-Z0-9-_]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
+      if (!fqdnRegex.test(target)) {
+        setFormError("Invalid CNAME target hostname. Example: cname.vercel-dns.com (no http:// or /paths)");
+        return;
+      }
     }
 
     setAddingRecord(true);
@@ -198,7 +224,7 @@ export default function DomainDetail() {
           subdomain_id: subdomain.id,
           type: recordType,
           name: recordName.trim() || "@",
-          content: recordTarget.trim(),
+          content: target,
         }),
       });
       const data = await res.json();
@@ -211,7 +237,7 @@ export default function DomainDetail() {
       setSuccessMsg("DNS record created and synced to Cloudflare Edge.");
       fetchDomain();
     } catch (err: any) {
-      setError(err.message || "Failed to add DNS record");
+      setFormError(err.message || "Failed to add DNS record");
     } finally {
       setAddingRecord(false);
     }
@@ -257,6 +283,7 @@ export default function DomainDetail() {
 
   const applyPreset = (type: "A" | "CNAME" | "TXT", target: string, name: string = "@") => {
     if (isLocked) return;
+    setFormError(null);
     setRecordType(type);
     setRecordName(name);
     setRecordTarget(target);
@@ -265,7 +292,7 @@ export default function DomainDetail() {
 
   if (loading) {
     return (
-      <div className="space-y-6 max-w-5xl mx-auto animate-pulse">
+      <div className="space-y-6 w-full animate-pulse">
         <Skeleton className="h-4 w-36" />
         <Skeleton className="h-12 w-72" />
         <Skeleton className="h-28 rounded-xl" />
@@ -276,7 +303,7 @@ export default function DomainDetail() {
 
   if (error && !subdomain) {
     return (
-      <div className="max-w-5xl mx-auto space-y-4 py-8">
+      <div className="w-full space-y-4 py-8">
         <Alert variant="destructive" className="rounded-xl">
           <AlertTitle>Error Loading Subdomain</AlertTitle>
           <AlertDescription>{error}</AlertDescription>
@@ -291,7 +318,7 @@ export default function DomainDetail() {
   }
 
   return (
-    <div className="space-y-6 pb-12 max-w-5xl mx-auto">
+    <div className="space-y-6 pb-12 w-full">
       {/* Back Link */}
       <div>
         <Link
@@ -503,7 +530,7 @@ export default function DomainDetail() {
             <CardTitle className="text-base font-semibold flex items-center gap-2">
               DNS Records
               {isLocked && (
-                <Badge variant="outline" className="text-amber-400 border-amber-500/30 bg-amber-500/10 text-[10px] font-mono">
+                <Badge variant="outline" className="text-amber-400 border-amber-500/30 bg-amber-500/10 text-xs font-mono">
                   <Lock className="size-3 mr-1" /> Controls Locked
                 </Badge>
               )}
@@ -526,6 +553,12 @@ export default function DomainDetail() {
 
         {showAddForm && !isLocked && (
           <form onSubmit={handleAddDNS} className="p-4 bg-muted/20 border-b border-border space-y-3">
+            {formError && (
+              <div className="flex items-center gap-2 p-2.5 rounded-lg border border-destructive/30 bg-destructive/10 text-destructive text-xs">
+                <AlertCircle className="size-4 shrink-0" />
+                <span className="font-medium">{formError}</span>
+              </div>
+            )}
             <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
               <div className="sm:col-span-3">
                 <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Record Type</label>
@@ -575,8 +608,8 @@ export default function DomainDetail() {
                 </Button>
               </div>
             </div>
-            <p className="text-[11px] text-muted-foreground">
-              Tip: Use <code className="text-foreground bg-muted px-1 py-0.5 rounded font-mono">@</code> for root domain, or a prefix like <code className="text-foreground bg-muted px-1 py-0.5 rounded font-mono">_vercel</code> for domain verification.
+            <p className="text-xs text-muted-foreground">
+              Tip: Use <code className="text-foreground bg-muted px-1 py-0.5 rounded font-mono text-xs">@</code> for root domain, or a prefix like <code className="text-foreground bg-muted px-1 py-0.5 rounded font-mono text-xs">_vercel</code> for domain verification.
             </p>
           </form>
         )}
@@ -585,11 +618,11 @@ export default function DomainDetail() {
           <Table className="min-w-full">
             <TableHeader>
               <TableRow className="hover:bg-transparent border-border/70 bg-muted/20">
-                <TableHead className="text-[11px] uppercase tracking-wider text-muted-foreground/70 font-semibold py-3 px-4 whitespace-nowrap">Type</TableHead>
-                <TableHead className="text-[11px] uppercase tracking-wider text-muted-foreground/70 font-semibold py-3 px-4 whitespace-nowrap">Host / Name</TableHead>
-                <TableHead className="text-[11px] uppercase tracking-wider text-muted-foreground/70 font-semibold py-3 px-4 whitespace-nowrap">Target Content</TableHead>
-                <TableHead className="text-[11px] uppercase tracking-wider text-muted-foreground/70 font-semibold py-3 px-4 whitespace-nowrap">TTL</TableHead>
-                <TableHead className="text-[11px] uppercase tracking-wider text-muted-foreground/70 font-semibold text-right py-3 px-4 whitespace-nowrap">Actions</TableHead>
+                <TableHead className="text-xs uppercase tracking-wider text-muted-foreground/70 font-semibold py-3 px-4 whitespace-nowrap">Type</TableHead>
+                <TableHead className="text-xs uppercase tracking-wider text-muted-foreground/70 font-semibold py-3 px-4 whitespace-nowrap">Host / Name</TableHead>
+                <TableHead className="text-xs uppercase tracking-wider text-muted-foreground/70 font-semibold py-3 px-4 whitespace-nowrap">Target Content</TableHead>
+                <TableHead className="text-xs uppercase tracking-wider text-muted-foreground/70 font-semibold py-3 px-4 whitespace-nowrap">TTL</TableHead>
+                <TableHead className="text-xs uppercase tracking-wider text-muted-foreground/70 font-semibold text-right py-3 px-4 whitespace-nowrap">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -611,7 +644,7 @@ export default function DomainDetail() {
                 subdomain.dns_records.map((rec) => (
                   <TableRow key={rec.id} className="border-border/60 hover:bg-muted/30 group">
                     <TableCell className="font-semibold text-primary whitespace-nowrap py-3.5 px-4">
-                      <Badge variant="outline" className="font-mono text-[11px] bg-primary/10 text-primary border-primary/20">
+                      <Badge variant="outline" className="font-mono text-xs bg-primary/10 text-primary border-primary/20">
                         {rec.type}
                       </Badge>
                     </TableCell>
@@ -681,10 +714,14 @@ export default function DomainDetail() {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-xl border border-destructive/20 bg-destructive/5 gap-3">
           <div>
             <p className="text-sm font-semibold text-destructive flex items-center gap-1.5">
-              <ShieldAlert className="size-4" /> Delete Subdomain
+              <ShieldAlert className="size-4" /> {isPending ? "Cancel Domain Claim" : "Delete Subdomain"}
             </p>
             <p className="text-xs text-muted-foreground mt-0.5">
-              Permanently delete <strong className="text-foreground">{subdomain?.full_domain}</strong> and release all active Cloudflare DNS records.
+              {isPending ? (
+                <>Withdraw your pending claim for <strong className="text-foreground">{subdomain?.full_domain}</strong> and immediately free up 1 slot on your account.</>
+              ) : (
+                <>Permanently delete <strong className="text-foreground">{subdomain?.full_domain}</strong> and release all active Cloudflare DNS records.</>
+              )}
             </p>
           </div>
           <Button
@@ -694,7 +731,7 @@ export default function DomainDetail() {
             className="h-8.5 px-3.5 text-xs font-semibold rounded-md shrink-0 gap-1.5"
           >
             <Trash2 className="size-3.5" />
-            <span>Delete Subdomain</span>
+            <span>{isPending ? "Cancel Claim" : "Delete Subdomain"}</span>
           </Button>
         </div>
       </div>
@@ -724,24 +761,30 @@ export default function DomainDetail() {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Delete Subdomain Alert Dialog */}
+      {/* Delete / Cancel Subdomain Alert Dialog */}
       <AlertDialog open={deleteSubdomainOpen} onOpenChange={setDeleteSubdomainOpen}>
         <AlertDialogContent className="border-border bg-card shadow-2xl">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-lg">Delete {subdomain?.full_domain}?</AlertDialogTitle>
+            <AlertDialogTitle className="text-lg">
+              {isPending ? `Cancel Claim for ${subdomain?.full_domain}?` : `Delete ${subdomain?.full_domain}?`}
+            </AlertDialogTitle>
             <AlertDialogDescription className="text-xs text-muted-foreground leading-relaxed">
-              This will permanently delete <strong>{subdomain?.full_domain}</strong> and release all DNS records from Cloudflare. Visitors will see an error, and the name will become available for others to claim. This action cannot be undone.
+              {isPending ? (
+                <>This will withdraw your pending claim for <strong>{subdomain?.full_domain}</strong> and return the name to the available pool. You will immediately regain 1 free subdomain slot.</>
+              ) : (
+                <>This will permanently delete <strong>{subdomain?.full_domain}</strong> and release all DNS records from Cloudflare. Visitors will see an error, and the name will become available for others to claim. This action cannot be undone.</>
+              )}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Keep Subdomain</AlertDialogCancel>
+            <AlertDialogCancel>{isPending ? "Keep Claim" : "Keep Subdomain"}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteSubdomain}
               disabled={deletingSubdomain}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90 font-semibold"
             >
               {deletingSubdomain && <Loader2 className="size-4 mr-2 animate-spin" />}
-              Delete Subdomain
+              {isPending ? "Cancel Claim" : "Delete Subdomain"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

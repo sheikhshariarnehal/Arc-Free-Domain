@@ -52,27 +52,27 @@ function statusBadge(status: string) {
   switch (status) {
     case "active":
       return (
-        <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20 font-mono text-[11px]">
-          <span className="size-1.5 rounded-full bg-emerald-400 mr-1.5 animate-pulse inline-block" />
+        <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20 font-mono text-xs">
+          <span className="size-1.5 rounded-full bg-emerald-400 mr-1.5 inline-block" />
           Active
         </Badge>
       );
     case "pending":
       return (
-        <Badge className="bg-amber-500/10 text-amber-400 border-amber-500/30 hover:bg-amber-500/20 font-mono text-[11px]">
-          <span className="size-1.5 rounded-full bg-amber-400 mr-1.5 animate-pulse inline-block" />
+        <Badge className="bg-amber-500/10 text-amber-400 border-amber-500/30 hover:bg-amber-500/20 font-mono text-xs">
+          <span className="size-1.5 rounded-full bg-amber-400 mr-1.5 inline-block" />
           Pending Review
         </Badge>
       );
     case "suspended":
       return (
-        <Badge variant="destructive" className="font-mono text-[11px]">
+        <Badge variant="destructive" className="font-mono text-xs">
           Suspended
         </Badge>
       );
     default:
       return (
-        <Badge variant="outline" className="capitalize font-mono text-[11px]">
+        <Badge variant="outline" className="capitalize font-mono text-xs">
           {status}
         </Badge>
       );
@@ -142,7 +142,7 @@ export default function DashboardOverview() {
 
   if (loading) {
     return (
-      <div className="space-y-6 max-w-6xl mx-auto animate-pulse">
+      <div className="space-y-6 w-full animate-pulse">
         <div className="flex justify-between items-center">
           <Skeleton className="h-8 w-56" />
           <Skeleton className="h-9 w-36" />
@@ -162,7 +162,7 @@ export default function DashboardOverview() {
   }
 
   return (
-    <div className="space-y-6 max-w-6xl mx-auto">
+    <div className="space-y-6 w-full">
       {/* Welcome Banner */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
@@ -174,14 +174,16 @@ export default function DashboardOverview() {
           </p>
         </div>
         <div className="flex items-center gap-2 w-full sm:w-auto">
-          <Button variant="outline" size="sm" asChild className="text-xs h-9">
-            <Link href="/docs">
-              <BookOpen className="size-3.5 mr-1.5" /> Documentation
+          <Button variant="outline" size="sm" asChild className="text-xs h-9 flex-1 sm:flex-initial whitespace-nowrap">
+            <Link href="/docs" className="inline-flex items-center justify-center">
+              <BookOpen className="size-3.5 mr-1.5 shrink-0" />
+              <span>Documentation</span>
             </Link>
           </Button>
-          <Button asChild size="sm" className="text-xs h-9 font-semibold">
-            <Link href="/dashboard/domains?action=claim">
-              <Plus className="size-3.5 mr-1.5" /> Claim Subdomain
+          <Button asChild size="sm" className="text-xs h-9 font-semibold flex-1 sm:flex-initial whitespace-nowrap">
+            <Link href="/dashboard/domains?action=claim" className="inline-flex items-center justify-center">
+              <Plus className="size-3.5 mr-1.5 shrink-0" />
+              <span>Claim Subdomain</span>
             </Link>
           </Button>
         </div>
@@ -189,120 +191,123 @@ export default function DashboardOverview() {
 
       {/* Pending Claims Notice */}
       {pendingCount > 0 && (
-        <div className="flex items-center justify-between p-4 rounded-xl border border-amber-500/30 bg-amber-500/10 text-amber-300 gap-4 shadow-sm">
-          <div className="flex items-center gap-3 min-w-0">
-            <div className="size-8 rounded-lg bg-amber-500/20 flex items-center justify-center shrink-0">
-              <Clock className="size-4 text-amber-400" />
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl border border-amber-500/30 bg-amber-500/10 backdrop-blur-xs text-amber-300 gap-4 shadow-xs">
+          <div className="flex items-center gap-3.5 min-w-0">
+            <div className="size-10 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center shrink-0">
+              <Clock className="size-5 text-amber-400" />
             </div>
             <div className="min-w-0">
-              <p className="text-sm font-semibold text-amber-300">
-                {pendingCount} Domain Claim{pendingCount > 1 ? "s" : ""} Pending Review
-              </p>
-              <p className="text-xs text-amber-200/80 mt-0.5 truncate sm:whitespace-normal">
-                Your domain claim is being reviewed by administrators. DNS controls will unlock immediately upon approval.
+              <div className="flex items-center gap-2 flex-wrap">
+                <p className="text-sm font-semibold text-foreground">
+                  {pendingCount} Domain Claim{pendingCount > 1 ? "s" : ""} Pending Review
+                </p>
+                <Badge variant="outline" className="bg-amber-500/15 text-amber-400 border-amber-500/30 font-mono text-[10px] py-0 h-4">
+                  Awaiting Verification
+                </Badge>
+              </div>
+              <p className="text-xs text-muted-foreground mt-0.5 truncate sm:whitespace-normal">
+                Your domain claims are undergoing anti-abuse verification. DNS controls will unlock immediately upon approval.
               </p>
             </div>
           </div>
           <Button
-            variant="outline"
             size="sm"
-            className="border-amber-500/40 text-amber-300 hover:bg-amber-500/20 text-xs shrink-0"
+            className="bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 border border-amber-500/30 text-xs font-semibold shrink-0"
             asChild
           >
-            <Link href="/dashboard/domains">View Domains</Link>
+            <Link href="/dashboard/domains">View Pending Domains</Link>
           </Button>
         </div>
       )}
 
-      {/* Metric Cards Banner */}
-      <div className="bg-card grid grid-cols-2 gap-3 rounded-xl border border-border p-4 sm:gap-4 sm:p-5 lg:grid-cols-4 lg:gap-6 lg:p-6 shadow-sm">
+      {/* Metric Cards Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Metric 1: Subdomains Quota */}
-        <div className="flex items-start">
-          <div className="flex-1 space-y-1 sm:space-y-2 lg:space-y-2.5">
-            <div className="flex items-center gap-1.5 text-muted-foreground">
-              <Globe className="size-3.5 sm:size-4 text-primary" />
-              <span className="text-[11px] font-medium sm:text-xs lg:text-sm truncate text-foreground">
-                Subdomains Used
-              </span>
+        <div className="rounded-xl border border-border/80 bg-card/70 backdrop-blur-xs p-5 space-y-3 hover:border-primary/40 transition-all shadow-xs group">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-muted-foreground group-hover:text-foreground transition-colors">
+              Subdomains Used
+            </span>
+            <div className="size-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
+              <Globe className="size-4" />
             </div>
-            <p className="text-muted-foreground/70 hidden text-[10px] sm:block sm:text-xs">
-              {MAX_SUBDOMAINS} free slots allowed
-            </p>
-            <p className="text-xl leading-tight font-bold tracking-tight sm:text-2xl lg:text-[28px] text-foreground">
-              {usedSlots}{" "}
-              <span className="text-sm font-normal text-muted-foreground">/ {MAX_SUBDOMAINS}</span>
-            </p>
-            <Progress value={usagePercent} className="h-1.5 mt-1" />
           </div>
-          <div className="bg-border mx-4 hidden h-full w-px lg:block xl:mx-6" />
+          <div>
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-3xl font-bold tracking-tight text-foreground font-mono">{usedSlots}</span>
+              <span className="text-sm font-medium text-muted-foreground font-mono">/ {MAX_SUBDOMAINS}</span>
+            </div>
+            <p className="text-xs text-muted-foreground mt-0.5">{MAX_SUBDOMAINS} free slots allocated</p>
+          </div>
+          <Progress value={usagePercent} className="h-1.5 bg-muted" />
         </div>
 
         {/* Metric 2: Active Subdomains */}
-        <div className="flex items-start">
-          <div className="flex-1 space-y-1 sm:space-y-2 lg:space-y-2.5">
-            <div className="flex items-center gap-1.5 text-muted-foreground">
-              <Activity className="size-3.5 sm:size-4 text-emerald-400" />
-              <span className="text-[11px] font-medium sm:text-xs lg:text-sm truncate text-foreground">
-                Active Domains
-              </span>
-            </div>
-            <p className="text-muted-foreground/70 hidden text-[10px] sm:block sm:text-xs">
-              Live Edge DNS
-            </p>
-            <p className="text-xl leading-tight font-bold tracking-tight sm:text-2xl lg:text-[28px] text-foreground">
-              {activeCount}
-            </p>
-            <div className="flex items-center gap-1.5 text-[10px] sm:text-xs">
-              <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse inline-block" />
-              <span className="text-emerald-400 font-semibold">Operational</span>
+        <div className="rounded-xl border border-border/80 bg-card/70 backdrop-blur-xs p-5 space-y-3 hover:border-emerald-500/40 transition-all shadow-xs group">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-muted-foreground group-hover:text-foreground transition-colors">
+              Active Domains
+            </span>
+            <div className="size-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+              <Activity className="size-4" />
             </div>
           </div>
-          <div className="bg-border mx-4 hidden h-full w-px lg:block xl:mx-6" />
+          <div>
+            <span className="text-3xl font-bold tracking-tight text-foreground font-mono">{activeCount}</span>
+            <p className="text-xs text-muted-foreground mt-0.5">Live on Cloudflare Edge</p>
+          </div>
+          <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-medium">
+            <span className="size-1.5 rounded-full bg-emerald-400" />
+            <span>Operational</span>
+          </div>
         </div>
 
         {/* Metric 3: DNS Records */}
-        <div className="flex items-start">
-          <div className="flex-1 space-y-1 sm:space-y-2 lg:space-y-2.5">
-            <div className="flex items-center gap-1.5 text-muted-foreground">
-              <ChartColumn className="size-3.5 sm:size-4 text-primary" />
-              <span className="text-[11px] font-medium sm:text-xs lg:text-sm truncate text-foreground">
-                DNS Records
-              </span>
-            </div>
-            <p className="text-muted-foreground/70 hidden text-[10px] sm:block sm:text-xs">
-              Across all subdomains
-            </p>
-            <p className="text-xl leading-tight font-bold tracking-tight sm:text-2xl lg:text-[28px] text-foreground">
-              {subdomains.reduce((acc, s) => acc + (s.dns_records?.length || 0), 0)}
-            </p>
-            <div className="flex flex-wrap items-center gap-x-1 gap-y-0.5 text-[10px] sm:text-xs">
-              <span className="text-emerald-400 font-semibold whitespace-nowrap">A &amp; CNAME</span>
-              <span className="text-muted-foreground whitespace-nowrap">records synced</span>
+        <div className="rounded-xl border border-border/80 bg-card/70 backdrop-blur-xs p-5 space-y-3 hover:border-cyan-500/40 transition-all shadow-xs group">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-muted-foreground group-hover:text-foreground transition-colors">
+              DNS Records
+            </span>
+            <div className="size-8 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
+              <ChartColumn className="size-4" />
             </div>
           </div>
-          <div className="bg-border mx-4 hidden h-full w-px lg:block xl:mx-6" />
+          <div>
+            <span className="text-3xl font-bold tracking-tight text-foreground font-mono">
+              {subdomains.reduce((acc, s) => acc + (s.dns_records?.length || 0), 0)}
+            </span>
+            <p className="text-xs text-muted-foreground mt-0.5">A &amp; CNAME routing rules</p>
+          </div>
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <Check className="size-3 text-cyan-400" />
+            <span>Instant Edge sync</span>
+          </div>
         </div>
 
         {/* Metric 4: Free Slots Remaining */}
-        <div className="flex items-start">
-          <div className="flex-1 space-y-1 sm:space-y-2 lg:space-y-2.5">
-            <div className="flex items-center gap-1.5 text-muted-foreground">
-              <Clock className="size-3.5 sm:size-4 text-amber-400" />
-              <span className="text-[11px] font-medium sm:text-xs lg:text-sm truncate text-foreground">
-                Available Slots
-              </span>
+        <div className="rounded-xl border border-border/80 bg-card/70 backdrop-blur-xs p-5 space-y-3 hover:border-amber-500/40 transition-all shadow-xs group">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-muted-foreground group-hover:text-foreground transition-colors">
+              Available Slots
+            </span>
+            <div className="size-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+              <Clock className="size-4" />
             </div>
-            <p className="text-muted-foreground/70 hidden text-[10px] sm:block sm:text-xs">
-              Ready to claim
+          </div>
+          <div>
+            <span className="text-3xl font-bold tracking-tight text-foreground font-mono">{MAX_SUBDOMAINS - usedSlots}</span>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              {usedSlots === MAX_SUBDOMAINS ? "Quota limit reached" : "Ready for deployment"}
             </p>
-            <p className="text-xl leading-tight font-bold tracking-tight sm:text-2xl lg:text-[28px] text-foreground">
-              {MAX_SUBDOMAINS - usedSlots}
-            </p>
-            <div className="flex flex-wrap items-center gap-x-1 gap-y-0.5 text-[10px] sm:text-xs">
-              <span className="text-muted-foreground whitespace-nowrap">
-                {usedSlots === MAX_SUBDOMAINS ? "Quota limit reached" : "free slots remaining"}
-              </span>
-            </div>
+          </div>
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            {usedSlots < MAX_SUBDOMAINS ? (
+              <Link href="/dashboard/domains?action=claim" className="text-primary hover:underline font-medium inline-flex items-center gap-1">
+                Claim another <ArrowUpRight className="size-3" />
+              </Link>
+            ) : (
+              <span className="text-amber-400/80 font-mono text-xs">Maximum 5 reached</span>
+            )}
           </div>
         </div>
       </div>
@@ -310,10 +315,10 @@ export default function DashboardOverview() {
       {/* Charts + Platform Status Grid */}
       <div className="flex flex-col gap-6 xl:flex-row">
         {/* Activity Chart Card */}
-        <div className="bg-card flex min-w-0 flex-1 flex-col rounded-xl border border-border shadow-sm">
-          <div className="flex h-14 items-center justify-between border-b border-border px-4 sm:px-5">
+        <div className="bg-card/70 backdrop-blur-xs flex min-w-0 flex-1 flex-col rounded-xl border border-border/80 shadow-xs">
+          <div className="flex h-14 items-center justify-between border-b border-border/80 px-4 sm:px-5">
             <div className="flex items-center gap-2.5">
-              <div className="size-8 rounded-lg bg-secondary flex items-center justify-center">
+              <div className="size-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
                 <ChartColumn className="size-4 text-primary" />
               </div>
               <div>
@@ -321,7 +326,7 @@ export default function DashboardOverview() {
                 <p className="text-[11px] text-muted-foreground">Registrations over the last 7 days</p>
               </div>
             </div>
-            <Badge variant="outline" className="text-[10px] font-mono">
+            <Badge variant="outline" className="text-[10px] font-mono bg-secondary/50">
               Live
             </Badge>
           </div>
@@ -362,15 +367,15 @@ export default function DashboardOverview() {
         </div>
 
         {/* Quick Platform Status Panel */}
-        <div className="bg-card flex min-w-0 flex-col rounded-xl border border-border shadow-sm xl:w-[360px]">
-          <div className="flex h-14 items-center justify-between border-b border-border px-4 sm:px-5">
+        <div className="bg-card/70 backdrop-blur-xs flex min-w-0 flex-col rounded-xl border border-border/80 shadow-xs xl:w-[360px]">
+          <div className="flex h-14 items-center justify-between border-b border-border/80 px-4 sm:px-5">
             <div className="flex items-center gap-2">
               <div className="size-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
                 <Radio className="size-4 text-emerald-400" />
               </div>
               <h2 className="text-sm font-semibold text-foreground">Infrastructure Status</h2>
             </div>
-            <span className="size-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="size-2 rounded-full bg-emerald-400" />
           </div>
           <div className="p-4 sm:p-5 space-y-3 flex-1 flex flex-col justify-between">
             <div className="space-y-2">
@@ -402,20 +407,20 @@ export default function DashboardOverview() {
       </div>
 
       {/* Recent Subdomains Table Card */}
-      <Card className="border-border shadow-sm">
-        <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-border pb-4 gap-4">
+      <Card className="border-border/80 bg-card/70 backdrop-blur-xs shadow-xs rounded-xl overflow-hidden">
+        <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-border/80 pb-4 gap-3 sm:gap-4">
           <div>
             <CardTitle className="text-base font-semibold">Recent Subdomains</CardTitle>
             <CardDescription>Your claimed .arc.bd subdomains and DNS routing</CardDescription>
           </div>
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
-            <div className="relative">
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <div className="relative flex-1 sm:w-56">
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
               <Input
                 placeholder="Filter subdomains..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-8 pr-8 h-8 w-full sm:w-56 text-xs"
+                className="pl-8 pr-8 h-8 w-full text-xs bg-card/60"
               />
               {search && (
                 <button
@@ -457,24 +462,24 @@ export default function DashboardOverview() {
               )}
             </div>
           ) : (
-            <div className="divide-y divide-border">
+            <div className="divide-y divide-border/80">
               {filtered.slice(0, 5).map((domain) => (
                 <div
                   key={domain.id}
-                  className="flex items-center justify-between px-4 sm:px-6 py-3.5 hover:bg-muted/30 transition-colors group"
+                  className="flex flex-col sm:flex-row sm:items-center justify-between px-4 sm:px-6 py-3.5 hover:bg-muted/30 transition-colors group gap-2.5 sm:gap-4"
                 >
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className="size-8 rounded-lg bg-secondary flex items-center justify-center shrink-0 group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+                  <div className="flex items-start sm:items-center gap-3 min-w-0 flex-1">
+                    <div className="size-8 rounded-lg bg-secondary flex items-center justify-center shrink-0 mt-0.5 sm:mt-0 group-hover:bg-primary/10 group-hover:text-primary transition-colors">
                       <Globe className="size-4 text-muted-foreground group-hover:text-primary" />
                     </div>
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm font-semibold text-foreground truncate">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="text-sm font-semibold text-foreground truncate max-w-[200px] sm:max-w-xs">
                           {domain.full_domain}
                         </span>
                         <button
                           onClick={(e) => handleCopy(domain.full_domain, e)}
-                          className="opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground transition-opacity p-0.5 rounded"
+                          className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 text-muted-foreground hover:text-foreground transition-opacity p-1 sm:p-0.5 rounded touch-manipulation shrink-0"
                           title="Copy URL"
                           aria-label={`Copy https://${domain.full_domain}`}
                         >
@@ -495,12 +500,14 @@ export default function DashboardOverview() {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2 sm:gap-4 shrink-0 ml-3">
-                    {statusBadge(domain.status)}
-                    <span className="text-xs text-muted-foreground hidden md:block">
-                      {formatDate(domain.created_at)}
-                    </span>
-                    <Button variant="ghost" size="sm" className="h-8 text-xs gap-1" asChild>
+                  <div className="flex items-center justify-between sm:justify-end gap-2 sm:gap-4 shrink-0 pl-11 sm:pl-0">
+                    <div className="flex items-center gap-2">
+                      {statusBadge(domain.status)}
+                      <span className="text-xs text-muted-foreground hidden md:block">
+                        {formatDate(domain.created_at)}
+                      </span>
+                    </div>
+                    <Button variant="ghost" size="sm" className="h-8 text-xs gap-1 hover:bg-secondary" asChild>
                       <Link href={`/dashboard/domains/${domain.id}`}>
                         {domain.status === "active" ? (
                           <Settings className="size-3.5 text-muted-foreground" />

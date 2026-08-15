@@ -62,6 +62,7 @@ export function DashboardHeader({
   avatarUrl,
   isAdmin = false,
   onToggleSidebar,
+  onOpenMobileNav,
 }: DashboardHeaderProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -136,7 +137,7 @@ export function DashboardHeader({
     { title: "Connect to GitHub Pages", subtitle: "Configure CNAME records for repository sites", href: "/docs/github-pages", icon: FileText, category: "Documentation" },
     { title: "Connect to VPS / Nginx", subtitle: "Point an A record to your server IPv4 address", href: "/docs/vps", icon: FileText, category: "Documentation" },
     { title: "Infrastructure Status", subtitle: "Check Cloudflare Edge and database health", href: "/subdomain-status", icon: Radio, category: "System" },
-    { title: "Public Website", subtitle: "Visit the ARC.BD homepage and search domains", href: "/", icon: ArrowUpRight, category: "Links" },
+    { title: "Public Website", subtitle: "Visit the ARC.BD homepage and search domains", href: "/docs", icon: ArrowUpRight, category: "Links" },
     { title: "Report Abuse", subtitle: "Report phishing, scam, or malicious subdomains", href: "/report", icon: Shield, category: "Support" },
   ];
 
@@ -160,23 +161,29 @@ export function DashboardHeader({
   return (
     <>
       <header className="sticky top-0 z-40 w-full border-b border-border/70 bg-background/80 backdrop-blur-md transition-all">
-        <div className="flex h-14 items-center justify-between gap-2 px-3 sm:px-6">
+        <div className="flex h-14 items-center justify-between gap-2 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
           {/* Left Section: Sidebar Toggle & Breadcrumbs */}
           <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-            {/* Desktop Sidebar Toggle */}
+            {/* Unified Sidebar Toggle */}
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
-                  onClick={onToggleSidebar}
+                  onClick={() => {
+                    if (typeof window !== "undefined" && window.innerWidth < 768) {
+                      onOpenMobileNav?.();
+                    } else {
+                      onToggleSidebar?.();
+                    }
+                  }}
                   variant="ghost"
                   size="icon"
-                  className="hidden md:flex size-8.5 text-muted-foreground hover:text-foreground hover:bg-secondary shrink-0 focus-visible:ring-1 focus-visible:ring-ring"
-                  aria-label="Toggle sidebar width"
+                  className="size-8.5 text-muted-foreground hover:text-foreground hover:bg-secondary shrink-0 focus-visible:ring-1 focus-visible:ring-ring rounded-lg"
+                  aria-label="Toggle navigation menu"
                 >
                   <PanelLeft className="size-4" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="bottom" className="text-xs">
+              <TooltipContent side="bottom" className="text-xs hidden md:block">
                 Toggle Sidebar
               </TooltipContent>
             </Tooltip>
@@ -188,8 +195,8 @@ export function DashboardHeader({
               {breadcrumbs.map((crumb, idx) => {
                 const isLast = idx === breadcrumbs.length - 1;
                 return (
-                  <div key={crumb.href} className="flex items-center gap-1.5 min-w-0">
-                    {idx > 0 && <ChevronRight className="size-3.5 text-muted-foreground/60 shrink-0" />}
+                  <div key={crumb.href} className={`flex items-center gap-1.5 min-w-0 ${!isLast ? "hidden sm:flex" : ""}`}>
+                    {idx > 0 && <ChevronRight className="size-3.5 text-muted-foreground/60 shrink-0 hidden sm:inline-block" />}
                     {isLast ? (
                       <span className="text-sm font-semibold text-foreground truncate">
                         {crumb.label}
@@ -197,7 +204,7 @@ export function DashboardHeader({
                     ) : (
                       <Link
                         href={crumb.href}
-                        className="text-xs sm:text-sm font-medium text-muted-foreground hover:text-foreground transition-colors truncate hidden sm:inline-block"
+                        className="text-xs sm:text-sm font-medium text-muted-foreground hover:text-foreground transition-colors truncate"
                       >
                         {crumb.label}
                       </Link>
@@ -223,161 +230,123 @@ export function DashboardHeader({
               </kbd>
             </button>
 
-            {/* System Notifications Popover */}
-            <DropdownMenu>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="relative size-9 text-muted-foreground hover:text-foreground hover:bg-secondary"
-                      aria-label="System status notifications"
+              {/* System Status Popover */}
+              <DropdownMenu>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="relative size-9 text-muted-foreground hover:text-foreground hover:bg-secondary rounded-lg"
+                        aria-label="System status notifications"
+                      >
+                        <Bell className="size-4" />
+                        <span className="absolute top-2 right-2 size-2 rounded-full bg-emerald-500 ring-2 ring-background" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom" className="text-xs">
+                    System Health
+                  </TooltipContent>
+                </Tooltip>
+
+                <DropdownMenuContent align="end" className="w-72 p-0 shadow-2xl border-border">
+                  <div className="flex items-center justify-between px-3.5 py-2.5 border-b border-border bg-muted/20">
+                    <div className="flex items-center gap-2">
+                      <Zap className="size-3.5 text-primary" />
+                      <span className="text-xs font-semibold text-foreground">Infrastructure</span>
+                    </div>
+                    <Badge variant="outline" className="text-xs bg-emerald-500/10 text-emerald-400 border-emerald-500/20 font-mono py-0 h-5">
+                      Operational
+                    </Badge>
+                  </div>
+                  <div className="p-3 space-y-2 text-xs">
+                    <div className="flex items-center justify-between text-muted-foreground">
+                      <span>Cloudflare Edge DNS</span>
+                      <span className="text-emerald-400 font-medium">Connected</span>
+                    </div>
+                    <div className="flex items-center justify-between text-muted-foreground">
+                      <span>SSL Provisioning</span>
+                      <span className="text-emerald-400 font-medium">Active</span>
+                    </div>
+                    <div className="flex items-center justify-between text-muted-foreground">
+                      <span>Database Sync</span>
+                      <span className="text-emerald-400 font-medium">Healthy</span>
+                    </div>
+                  </div>
+                  <div className="p-2 border-t border-border bg-muted/20 text-center">
+                    <Link
+                      href="/subdomain-status"
+                      className="text-xs text-primary hover:underline inline-flex items-center gap-1 font-medium"
                     >
-                      <Bell className="size-4" />
-                      <span className="absolute top-2 right-2 size-2 rounded-full bg-emerald-500 ring-2 ring-background animate-pulse" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                </TooltipTrigger>
-                <TooltipContent side="bottom" className="text-xs">
-                  System Notifications
-                </TooltipContent>
-              </Tooltip>
+                      Full Status Page <ArrowUpRight className="size-3" />
+                    </Link>
+                  </div>
+                </DropdownMenuContent>
+              </DropdownMenu>
 
-              <DropdownMenuContent align="end" className="w-80 p-0 shadow-2xl border-border">
-                <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-muted/30">
-                  <div className="flex items-center gap-2">
-                    <Zap className="size-4 text-primary" />
-                    <span className="text-sm font-semibold text-foreground">Infrastructure Status</span>
-                  </div>
-                  <Badge variant="outline" className="text-[10px] bg-emerald-500/10 text-emerald-400 border-emerald-500/20 font-mono">
-                    All Systems Operational
-                  </Badge>
-                </div>
-                <div className="p-3 space-y-2.5 max-h-72 overflow-y-auto">
-                  <div className="flex items-start gap-2.5 p-2.5 rounded-lg bg-secondary/50 border border-border/50 text-xs">
-                    <CheckCircle2 className="size-4 text-emerald-400 shrink-0 mt-0.5" />
-                    <div>
-                      <p className="font-semibold text-foreground">Cloudflare Edge DNS Connected</p>
-                      <p className="text-muted-foreground text-[11px] mt-0.5">Automated DNS synchronization is running smoothly across all edge nodes.</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-2.5 p-2.5 rounded-lg bg-secondary/50 border border-border/50 text-xs">
-                    <Globe className="size-4 text-primary shrink-0 mt-0.5" />
-                    <div>
-                      <p className="font-semibold text-foreground">5 Free Subdomain Slots</p>
-                      <p className="text-muted-foreground text-[11px] mt-0.5">Each developer account receives up to 5 custom .arc.bd subdomains.</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-2.5 p-2.5 rounded-lg bg-secondary/50 border border-border/50 text-xs">
-                    <Sparkles className="size-4 text-amber-400 shrink-0 mt-0.5" />
-                    <div>
-                      <p className="font-semibold text-foreground">Instant Edge SSL Security</p>
-                      <p className="text-muted-foreground text-[11px] mt-0.5">Automated SSL certificates are provisioned for every active subdomain.</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="p-2 border-t border-border bg-muted/20 text-center">
-                  <Link
-                    href="/subdomain-status"
-                    className="text-xs font-medium text-primary hover:underline inline-flex items-center gap-1"
+              {/* User Account Menu */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    className="flex items-center gap-2 p-0.5 rounded-full hover:ring-2 hover:ring-primary/40 focus:outline-none focus:ring-2 focus:ring-ring transition-all"
+                    aria-label="User account options"
                   >
-                    View Infrastructure Health <ArrowUpRight className="size-3" />
-                  </Link>
-                </div>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            {/* User Account Menu */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button
-                  className="flex items-center gap-2 p-0.5 rounded-full hover:ring-2 hover:ring-primary/40 focus:outline-none focus:ring-2 focus:ring-ring transition-all"
-                  aria-label="User account options"
-                >
-                  <Avatar className="size-8 border border-border shadow-2xs">
-                    {avatarUrl && <AvatarImage src={avatarUrl} alt={userName} />}
-                    <AvatarFallback className="bg-primary/20 text-primary font-bold text-xs">
-                      {getInitials(userName)}
-                    </AvatarFallback>
-                  </Avatar>
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-64 p-1.5 shadow-2xl border-border">
-                <DropdownMenuLabel className="font-normal px-2 py-2">
-                  <div className="flex flex-col gap-1">
-                    <p className="text-sm font-semibold text-foreground truncate">{userName}</p>
-                    <p className="text-xs text-muted-foreground truncate">{userEmail}</p>
-                    <div className="flex items-center gap-1.5 mt-1">
-                      {isAdmin ? (
-                        <Badge className="bg-amber-500/10 text-amber-400 border-amber-500/30 text-[10px] font-mono">
-                          <Shield className="size-3 mr-1" /> Administrator
-                        </Badge>
-                      ) : (
-                        <Badge variant="outline" className="text-[10px] text-muted-foreground font-mono">
-                          Free Developer Account
-                        </Badge>
-                      )}
+                    <Avatar className="size-8 border border-border shadow-2xs">
+                      {avatarUrl && <AvatarImage src={avatarUrl} alt={userName} />}
+                      <AvatarFallback className="bg-primary/20 text-primary font-bold text-xs">
+                        {getInitials(userName)}
+                      </AvatarFallback>
+                    </Avatar>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56 p-1.5 shadow-2xl border-border">
+                  <DropdownMenuLabel className="font-normal px-2 py-2">
+                    <div className="flex flex-col gap-0.5">
+                      <p className="text-xs font-semibold text-foreground truncate">{userName}</p>
+                      <p className="text-xs text-muted-foreground truncate">{userEmail}</p>
+                      <Badge variant="outline" className={`w-fit mt-1 text-xs font-mono ${isAdmin ? "bg-amber-500/10 text-amber-400 border-amber-500/30" : "text-muted-foreground"}`}>
+                        {isAdmin ? "Administrator" : "Free Plan (5 Slots)"}
+                      </Badge>
                     </div>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  <DropdownMenuItem asChild className="cursor-pointer">
-                    <Link href="/dashboard" className="flex items-center gap-2.5">
-                      <Home className="size-4 text-muted-foreground" />
-                      <span>Overview</span>
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild className="cursor-pointer">
-                    <Link href="/dashboard/domains" className="flex items-center gap-2.5">
-                      <Globe className="size-4 text-muted-foreground" />
-                      <span>My Subdomains</span>
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild className="cursor-pointer">
-                    <Link href="/docs" className="flex items-center gap-2.5">
-                      <BookOpen className="size-4 text-muted-foreground" />
-                      <span>Documentation</span>
-                    </Link>
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  <DropdownMenuItem asChild className="cursor-pointer">
-                    <Link href="/" className="flex items-center gap-2.5">
-                      <ArrowUpRight className="size-4 text-muted-foreground" />
-                      <span>Public Homepage</span>
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild className="cursor-pointer">
-                    <Link href="/report" className="flex items-center gap-2.5">
-                      <Shield className="size-4 text-muted-foreground" />
-                      <span>Report Abuse</span>
-                    </Link>
-                  </DropdownMenuItem>
-                  {isAdmin && (
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuGroup>
                     <DropdownMenuItem asChild className="cursor-pointer">
-                      <Link href="/admin" className="flex items-center gap-2.5 text-amber-400 hover:text-amber-300 font-medium">
-                        <Shield className="size-4" />
-                        <span>Admin Panel</span>
+                      <Link href="/docs" className="flex items-center gap-2.5">
+                        <BookOpen className="size-4 text-muted-foreground" />
+                        <span>Documentation</span>
                       </Link>
                     </DropdownMenuItem>
-                  )}
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={handleSignOut}
-                  className="cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 flex items-center gap-2.5"
-                >
-                  <LogOut className="size-4" />
-                  <span>Sign Out</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                    <DropdownMenuItem asChild className="cursor-pointer">
+                      <Link href="/report" className="flex items-center gap-2.5">
+                        <Shield className="size-4 text-muted-foreground" />
+                        <span>Report Abuse</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    {isAdmin && (
+                      <DropdownMenuItem asChild className="cursor-pointer">
+                        <Link href="/admin" className="flex items-center gap-2.5 text-amber-400 hover:text-amber-300 font-medium">
+                          <Shield className="size-4" />
+                          <span>Admin Panel</span>
+                        </Link>
+                      </DropdownMenuItem>
+                    )}
+                  </DropdownMenuGroup>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={handleSignOut}
+                    className="cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 flex items-center gap-2.5"
+                  >
+                    <LogOut className="size-4" />
+                    <span>Sign Out</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
-        </div>
-      </header>
+        </header>
 
       {/* Global Command / Search Palette Dialog */}
       <Dialog open={searchOpen} onOpenChange={setSearchOpen}>

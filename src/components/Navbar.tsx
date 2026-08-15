@@ -152,84 +152,84 @@ export default function Navbar({ transparent = false }: { transparent?: boolean 
           ) : session ? (
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-1.5 h-7.5 rounded-full bg-gradient-to-b from-white/[0.22] to-white/[0.08] hover:from-white/[0.30] hover:to-white/[0.14] px-2.5 text-xs text-white shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.35)] transition-all duration-200 outline-none">
-                  <Avatar className="size-4.5">
+                <button className="flex items-center gap-2 h-8 rounded-full bg-gradient-to-b from-white/[0.20] to-white/[0.08] hover:from-white/[0.28] hover:to-white/[0.14] pl-1 pr-2.5 text-xs text-white shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.35)] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 group cursor-pointer">
+                  <Avatar className="size-6 border border-white/20 shadow-2xs">
                     {avatarUrl && <AvatarImage src={avatarUrl} alt={`${userName}'s profile`} className="object-cover" />}
-                    <AvatarFallback className="bg-blue-500/30 text-blue-400 text-[8px] font-bold font-mono">
+                    <AvatarFallback className="bg-primary/20 text-primary text-[10px] font-bold font-mono">
                       {getInitials(userName)}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="max-w-[75px] sm:max-w-[100px] truncate text-white text-[11px] font-medium">
+                  <span className="max-w-[130px] lg:max-w-[170px] truncate text-white text-xs font-medium tracking-tight">
                     {userName}
                   </span>
-                  <ChevronDown className="size-3 text-slate-400" />
+                  <ChevronDown className="size-3.5 text-white/60 group-hover:text-white transition-colors shrink-0" />
                 </button>
               </DropdownMenuTrigger>
 
-              <DropdownMenuContent align="end" sideOffset={8} className="w-60 p-2 space-y-1 bg-[#0e1015]/95 backdrop-blur-2xl border border-white/10 shadow-2xl rounded-2xl">
-                <DropdownMenuLabel className="font-normal p-2.5">
+              <DropdownMenuContent align="end" sideOffset={8} className="w-64 p-1.5 space-y-1 bg-card/95 backdrop-blur-xl border border-border/80 shadow-2xl rounded-xl">
+                <DropdownMenuLabel className="font-normal px-2.5 py-2">
                   <div className="flex flex-col space-y-1">
-                    <div className="flex items-center justify-between">
-                      <p className="text-xs font-semibold text-white truncate">{userName}</p>
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="text-xs font-semibold text-foreground truncate">{userName}</p>
                       {isAdmin ? (
-                        <Badge variant="destructive" className="text-[9px] px-1.5 py-0 h-4">Admin</Badge>
+                        <Badge variant="destructive" className="text-xs px-1.5 py-0 h-4 font-mono">Admin</Badge>
                       ) : (
-                        <Badge variant="outline" className="text-[9px] px-1.5 py-0 h-4 text-blue-400 border-none bg-blue-500/20 font-semibold">Developer</Badge>
+                        <Badge variant="outline" className="text-xs px-1.5 py-0 h-4 text-primary border-primary/20 bg-primary/10 font-mono">Developer</Badge>
                       )}
                     </div>
-                    <p className="text-[11px] text-slate-400 truncate font-mono">{userEmail}</p>
+                    <p className="text-xs text-muted-foreground truncate font-mono">{userEmail}</p>
                   </div>
                 </DropdownMenuLabel>
-                <DropdownMenuSeparator className="bg-white/10" />
+                <DropdownMenuSeparator className="bg-border/60" />
 
                 <DropdownMenuGroup>
-                  <DropdownMenuItem asChild className="text-xs cursor-pointer focus:bg-white/10 rounded-lg text-slate-200 focus:text-white font-medium">
-                    <Link href="/dashboard" className="flex items-center py-1.5">
-                      <LayoutDashboard className="size-3.5 mr-2.5 text-blue-400" />
-                      Dashboard Overview
+                  <DropdownMenuItem asChild className="text-xs cursor-pointer focus:bg-accent focus:text-accent-foreground rounded-lg py-2 font-medium">
+                    <Link href="/dashboard" className="flex items-center">
+                      <LayoutDashboard className="size-4 mr-2.5 text-primary shrink-0" />
+                      <span>Dashboard Overview</span>
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem asChild className="text-xs cursor-pointer focus:bg-white/10 rounded-lg text-slate-200 focus:text-white font-medium">
-                    <Link href="/dashboard/domains" className="flex items-center py-1.5">
-                      <Globe2 className="size-3.5 mr-2.5 text-blue-400" />
-                      My Subdomains
+                  <DropdownMenuItem asChild className="text-xs cursor-pointer focus:bg-accent focus:text-accent-foreground rounded-lg py-2 font-medium">
+                    <Link href="/dashboard/domains" className="flex items-center">
+                      <Globe2 className="size-4 mr-2.5 text-primary shrink-0" />
+                      <span>My Subdomains</span>
                     </Link>
                   </DropdownMenuItem>
                   {isAdmin && (
-                    <DropdownMenuItem asChild className="text-xs cursor-pointer focus:bg-white/10 rounded-lg text-slate-200 focus:text-white font-medium">
-                      <Link href="/admin" className="flex items-center py-1.5">
-                        <Shield className="size-3.5 mr-2.5 text-destructive" />
-                        Admin Management
+                    <DropdownMenuItem asChild className="text-xs cursor-pointer focus:bg-amber-500/15 focus:text-amber-300 text-amber-400 rounded-lg py-2 font-medium">
+                      <Link href="/admin" className="flex items-center">
+                        <Shield className="size-4 mr-2.5 text-amber-400 shrink-0" />
+                        <span>Admin Management</span>
                       </Link>
                     </DropdownMenuItem>
                   )}
                 </DropdownMenuGroup>
 
-                <DropdownMenuSeparator className="bg-white/10" />
+                <DropdownMenuSeparator className="bg-border/60" />
 
                 <DropdownMenuGroup>
-                  <DropdownMenuItem asChild className="text-xs cursor-pointer focus:bg-white/10 rounded-lg text-slate-200 focus:text-white font-medium">
-                    <Link href="/docs" className="flex items-center py-1.5">
-                      <BookOpen className="size-3.5 mr-2.5 text-slate-400" />
-                      Guides &amp; API Docs
+                  <DropdownMenuItem asChild className="text-xs cursor-pointer focus:bg-accent focus:text-accent-foreground rounded-lg py-2 font-medium text-foreground">
+                    <Link href="/docs" className="flex items-center">
+                      <BookOpen className="size-4 mr-2.5 text-muted-foreground shrink-0" />
+                      <span>Guides &amp; API Docs</span>
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem asChild className="text-xs cursor-pointer focus:bg-white/10 rounded-lg text-slate-200 focus:text-white font-medium">
-                    <Link href="/report" className="flex items-center py-1.5">
-                      <AlertTriangle className="size-3.5 mr-2.5 text-slate-400" />
-                      Report Abuse
+                  <DropdownMenuItem asChild className="text-xs cursor-pointer focus:bg-accent focus:text-accent-foreground rounded-lg py-2 font-medium text-foreground">
+                    <Link href="/report" className="flex items-center">
+                      <Shield className="size-4 mr-2.5 text-muted-foreground shrink-0" />
+                      <span>Report Abuse</span>
                     </Link>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
 
-                <DropdownMenuSeparator className="bg-white/10" />
+                <DropdownMenuSeparator className="bg-border/60" />
 
                 <DropdownMenuItem
                   onClick={handleSignOut}
-                  className="text-xs text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer rounded-lg py-1.5 font-medium"
+                  className="text-xs text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer rounded-lg py-2 font-medium"
                 >
-                  <LogOut className="size-3.5 mr-2.5" />
-                  Sign Out
+                  <LogOut className="size-4 mr-2.5 shrink-0" />
+                  <span>Sign Out</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -286,7 +286,7 @@ export default function Navbar({ transparent = false }: { transparent?: boolean 
               className="flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-slate-200 hover:text-white hover:bg-white/10 transition-all"
             >
               <span className="flex items-center gap-3">
-                <AlertTriangle className="size-4 text-amber-400 shrink-0" />
+                <Shield className="size-4 text-amber-400 shrink-0" />
                 Report Abuse
               </span>
             </Link>
@@ -295,12 +295,16 @@ export default function Navbar({ transparent = false }: { transparent?: boolean 
           <div className="pt-3 border-t border-white/10 flex flex-col space-y-2.5">
             {session ? (
               <>
-                <div className="flex items-center justify-between px-3.5 py-2 rounded-2xl bg-white/[0.06] border border-white/10">
-                  <div className="text-xs">
-                    <p className="font-semibold text-white truncate max-w-[200px]">{userName}</p>
-                    <p className="text-slate-400 font-mono text-[11px] truncate max-w-[200px]">{userEmail}</p>
+                <div className="flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-card/60 border border-border/80">
+                  <div className="text-xs min-w-0 pr-2">
+                    <p className="font-semibold text-foreground truncate">{userName}</p>
+                    <p className="text-muted-foreground font-mono text-xs truncate">{userEmail}</p>
                   </div>
-                  {isAdmin && <Badge variant="destructive" className="text-[9px]">Admin</Badge>}
+                  {isAdmin ? (
+                    <Badge variant="destructive" className="text-xs font-mono shrink-0">Admin</Badge>
+                  ) : (
+                    <Badge variant="outline" className="text-xs text-primary border-primary/20 bg-primary/10 font-mono shrink-0">Developer</Badge>
+                  )}
                 </div>
                 <Button
                   asChild
