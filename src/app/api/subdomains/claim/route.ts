@@ -104,8 +104,8 @@ export async function POST(request: Request) {
   }
 
   // Send transactional email confirming claim receipt & pending review
-  const recipientEmail = userEmail || existingProfile?.email
-  if (recipientEmail) {
+  const recipientEmail = userEmail || existingProfile?.email || ''
+  if (recipientEmail.trim()) {
     try {
       const emailResult = await sendClaimPendingEmail({
         to: recipientEmail,

@@ -89,7 +89,7 @@ export async function sendEmail({ to, subject, html, text }: SendEmailParams): P
       });
 
       const info = await transporter.sendMail({
-        from: DEFAULT_FROM,
+        from: fromAddress,
         to,
         replyTo: REPLY_TO,
         subject,
@@ -114,7 +114,7 @@ export async function sendEmail({ to, subject, html, text }: SendEmailParams): P
   console.log(`⚠️  [EMAIL NOTICE - NO MAIL PROVIDER CONFIGURED]`);
   console.log(`To send real emails to inboxes, set either RESEND_API_KEY or SMTP variables in .env.local.`);
   console.log(`To: ${to}`);
-  console.log(`From: ${DEFAULT_FROM}`);
+  console.log(`From: ${fromAddress}`);
   console.log(`Subject: ${subject}`);
   console.log(`-------------------------------------------------------`);
   console.log(text);
@@ -203,6 +203,94 @@ function emailLayout(title: string, preheaderText: string, contentHtml: string):
   </table>
 </body>
 </html>`;
+}
+
+/**
+ * 0. Send Welcome Email for new OAuth sign-ups (Google, GitHub)
+ *    Called from /auth/callback after first-time sign-in is detected.
+ */
+export async function sendWelcomeEmail({
+  to,
+  userName,
+}: {
+  to: string;
+  userName?: string;
+}) {
+  const greeting = userName ? `Hi ${userName},` : "Hi there,";
+  const subject = `Welcome to ARC.BD — your free subdomain platform`;
+  const preheader = `You're now signed in to ARC.BD. Claim your free .arc.bd subdomain to get started.`;
+
+  const html = emailLayout(
+    subject,
+    preheader,
+    `
+    <div style="display: inline-block; padding: 3px 10px; border-radius: 6px; background-color: rgba(96, 165, 250, 0.12); border: 1px solid rgba(96, 165, 250, 0.25); color: #60a5fa; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 16px;">
+      🎉 Welcome
+    </div>
+
+    <h1 style="margin: 0 0 12px 0; font-size: 18px; font-weight: 700; color: #ffffff; line-height: 1.3;">
+      You're in. Let's get your subdomain.
+    </h1>
+
+    <p style="margin: 0 0 12px 0; font-size: 14px; line-height: 1.6; color: #cbd5e1;">
+      ${greeting}
+    </p>
+
+    <p style="margin: 0 0 16px 0; font-size: 14px; line-height: 1.6; color: #cbd5e1;">
+      Your ARC.BD account is ready. You can now claim a free <strong style="color: #ffffff; font-family: monospace;">yourname.arc.bd</strong> subdomain and point it anywhere — Vercel, GitHub Pages, Netlify, or your own server.
+    </p>
+
+    <!-- Feature highlights -->
+    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #1b202e; border: 1px solid #283046; border-radius: 8px; margin: 16px 0;">
+      <tr>
+        <td style="padding: 14px 18px;">
+          <div style="font-size: 13px; color: #94a3b8; line-height: 1.7;">
+            ✦ &nbsp;<span style="color: #e2e8f0;">Free subdomains</span> — no credit card required<br/>
+            ✦ &nbsp;<span style="color: #e2e8f0;">Authoritative DNS</span> — A, CNAME, TXT records<br/>
+            ✦ &nbsp;<span style="color: #e2e8f0;">1-click presets</span> — Vercel, GitHub Pages, Netlify
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <!-- CTA Button -->
+    <table border="0" cellpadding="0" cellspacing="0" style="margin: 18px 0 6px 0;">
+      <tr>
+        <td align="center" style="border-radius: 6px; background-color: #2563eb;">
+          <a href="${APP_URL}/dashboard/domains" target="_blank" style="display: inline-block; padding: 10px 22px; font-size: 13px; font-weight: 600; color: #ffffff; text-decoration: none; border-radius: 6px;">
+            Claim your subdomain &rarr;
+          </a>
+        </td>
+      </tr>
+    </table>
+
+    <p style="margin: 16px 0 0 0; font-size: 12px; line-height: 1.5; color: #64748b;">
+      Questions? Reply to this email or reach us at <a href="mailto:${REPLY_TO}" style="color: #60a5fa; text-decoration: none;">${REPLY_TO}</a>.
+    </p>
+    `
+  );
+
+  const text = `
+${greeting}
+
+Welcome to ARC.BD! Your account is ready.
+
+Claim a free yourname.arc.bd subdomain and point it anywhere:
+${APP_URL}/dashboard/domains
+
+Features:
+- Free subdomains (no credit card required)
+- Authoritative DNS — A, CNAME, TXT records
+- 1-click presets for Vercel, GitHub Pages, Netlify
+
+Questions? Contact ${REPLY_TO}
+
+--
+ARC.BD Team
+https://arc.bd
+`;
+
+  return await sendEmail({ to, subject, html, text });
 }
 
 /**
