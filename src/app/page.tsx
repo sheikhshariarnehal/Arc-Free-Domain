@@ -221,13 +221,13 @@ export default function LandingPage() {
 
       <main className="relative z-10 flex-1 flex min-w-0 w-full flex-col items-center">
         {/* Hero Section */}
-        <section className="relative mx-auto flex w-full min-w-0 max-w-5xl flex-1 flex-col items-center justify-center px-4 pt-24 pb-10 text-center sm:px-6 sm:pt-28 sm:pb-14 lg:px-8">
+        <section className="relative mx-auto flex w-full min-w-0 max-w-5xl flex-1 flex-col items-center justify-center px-4 pt-20 pb-8 text-center sm:px-6 sm:pt-28 sm:pb-14 lg:px-8">
 
           {/* .arc.bd — Display-scale centrepiece badge */}
           <div
-            className="mb-5 sm:mb-6 inline-flex items-center justify-center font-mono font-bold tracking-[-0.04em] select-none"
+            className="mb-4 sm:mb-6 inline-flex items-center justify-center font-mono font-bold tracking-[-0.04em] select-none"
             style={{
-              fontSize: "clamp(2.6rem, 9vw, 6rem)",
+              fontSize: "clamp(2.4rem, 8.5vw, 6rem)",
               lineHeight: 1,
               color: "rgba(255,255,255,0.92)",
               textShadow: "0 0 60px rgba(255,255,255,0.07), 0 2px 0 rgba(0,0,0,0.5)",
@@ -240,12 +240,12 @@ export default function LandingPage() {
           </div>
 
           {/* Headline — single grammatical arc orbiting the badge */}
-          <h1 className="mb-3 w-full max-w-xl text-[clamp(1.15rem,2.8vw,1.5rem)] font-semibold leading-snug tracking-[-0.02em] text-zinc-300 sm:mb-4">
+          <h1 className="mb-2.5 sm:mb-4 w-full max-w-xl text-[clamp(1.1rem,2.8vw,1.5rem)] font-semibold leading-snug tracking-[-0.02em] text-zinc-300 px-1">
             Free subdomains for developers, students &amp; side projects.
           </h1>
 
           {/* Subheadline */}
-          <p className="mb-8 w-full max-w-md px-2 text-sm font-normal leading-relaxed text-zinc-500 sm:mb-9 sm:px-0">
+          <p className="mb-6 sm:mb-8 w-full max-w-md px-2 text-xs sm:text-sm font-normal leading-relaxed text-zinc-500 sm:px-0">
             Search a name, claim it in seconds, point it anywhere. Cloudflare DNS included.
           </p>
 
@@ -254,8 +254,8 @@ export default function LandingPage() {
             <form onSubmit={checkAvailability} className="w-full">
               {/* Mobile Input Container */}
               <div className="flex flex-col gap-2.5 sm:hidden w-full">
-                <div className="relative flex items-center skeuo-input rounded-full px-4.5 py-3 transition-all duration-200 group w-full overflow-hidden">
-                  <Search className="size-4 text-zinc-400 shrink-0 mr-2.5 group-focus-within:text-blue-400 transition-colors duration-200" strokeWidth={1.5} />
+                <div className="relative flex items-center skeuo-input rounded-full px-4 py-2.5 transition-all duration-200 group w-full overflow-hidden">
+                  <Search className="size-4 text-zinc-400 shrink-0 mr-2 group-focus-within:text-blue-400 transition-colors duration-200" strokeWidth={1.5} />
                   <input
                     ref={mobileInputRef}
                     type="text"
@@ -265,7 +265,7 @@ export default function LandingPage() {
                     onChange={(e) => {
                       setSearchQuery(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''));
                     }}
-                    className="w-full min-w-0 bg-transparent text-sm text-white placeholder:text-zinc-500 focus:outline-none font-mono font-medium pr-2"
+                    className="w-full min-w-0 bg-transparent text-sm text-white placeholder:text-zinc-500 focus:outline-none font-mono font-medium pr-1"
                   />
                   {searchQuery && (
                     <button 
@@ -277,14 +277,14 @@ export default function LandingPage() {
                       <X className="size-3.5" strokeWidth={2} />
                     </button>
                   )}
-                  <span className="text-xs text-zinc-400 font-mono font-semibold mr-1.5 shrink-0 select-none">
+                  <span className="text-xs text-zinc-400 font-mono font-semibold mr-1 shrink-0 select-none">
                     .arc.bd
                   </span>
                 </div>
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="w-full h-11 text-xs font-semibold rounded-full bg-blue-600 hover:bg-blue-500 text-white shadow-md shadow-blue-600/25 active:scale-[0.99] transition-all duration-150 cursor-pointer"
+                  className="w-full h-10.5 text-xs font-semibold rounded-full bg-blue-600 hover:bg-blue-500 text-white shadow-md shadow-blue-600/25 active:scale-[0.99] transition-all duration-150 cursor-pointer"
                 >
                   {loading ? <Loader2 className="size-3.5 animate-spin mr-1.5" /> : <Search className="size-3.5 mr-1.5" strokeWidth={2} />}
                   {loading ? "Checking..." : "Check availability"}
@@ -396,26 +396,30 @@ export default function LandingPage() {
               </div>
             )}
 
-            {/* Feature caption — single slim row beneath search */}
-            <p className="mt-4 text-[11px] font-mono text-zinc-500 select-none tracking-wide">
-              Free forever&nbsp;&nbsp;·&nbsp;&nbsp;Anycast DNS&nbsp;&nbsp;·&nbsp;&nbsp;Edge SSL included
-            </p>
+            {/* Feature caption — responsive row with subtle separators */}
+            <div className="mt-3.5 sm:mt-4 flex flex-wrap items-center justify-center gap-x-2.5 sm:gap-x-3 gap-y-1 text-[10.5px] sm:text-[11px] font-mono text-zinc-500 select-none">
+              <span>Free forever</span>
+              <span className="text-zinc-700 select-none">·</span>
+              <span>Anycast DNS</span>
+              <span className="text-zinc-700 select-none">·</span>
+              <span>Edge SSL included</span>
+            </div>
           </div>
 
           {/* Supported Stacks & Deployments Ticker / Pill Strip */}
-          <div className="w-full max-w-4xl mx-auto mt-14 sm:mt-16 flex flex-col items-center">
+          <div className="w-full max-w-4xl mx-auto mt-10 sm:mt-16 flex flex-col items-center">
             {/* Soft Faded Divider that blends into darkness */}
-            <div className="w-full max-w-xl h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent mb-6 sm:mb-8" />
-            <div className="text-[10px] font-mono text-zinc-600 tracking-[0.14em] uppercase mb-4 text-center select-none">
+            <div className="w-full max-w-xs sm:max-w-xl h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent mb-5 sm:mb-8" />
+            <div className="text-[10px] font-mono text-zinc-600 tracking-[0.14em] uppercase mb-3.5 sm:mb-4 text-center select-none">
               Works with your stack
             </div>
-            <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5">
+            <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2.5 px-2">
               {SUPPORTED_STACKS.map((item) => {
                 const Icon = item.icon;
                 return (
                   <div
                     key={item.name}
-                    className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.06] text-xs font-mono text-zinc-500 hover:border-white/15 hover:text-zinc-200 transition-colors select-none"
+                    className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.06] text-[11px] sm:text-xs font-mono text-zinc-500 hover:border-white/15 hover:text-zinc-200 transition-colors select-none"
                   >
                     <Icon size={12} className="shrink-0 text-zinc-500" strokeWidth={1.5} />
                     <span>{item.name}</span>
