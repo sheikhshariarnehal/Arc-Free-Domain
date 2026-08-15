@@ -18,8 +18,6 @@ precision mediump float;
 #endif
 
 uniform vec3 u_colors[8];
-// Seven packed vectors + eight colour vectors = 15 fragment uniform vectors,
-// one below WebGL1's guaranteed minimum. Macros preserve the public u_* API.
 uniform vec4 u_scene;      // resolution.xy, time, colour count
 uniform vec4 u_shape;      // scale, intensity, paramA, warp
 uniform vec4 u_surface;    // detail, contrast, brightness, saturation
@@ -33,260 +31,114 @@ uniform vec4 u_cursor;
 #define u_colorCount u_scene.w
 #define u_scale u_shape.x
 #define u_intensity u_shape.y
-#define u_paramA u_shape.z
-#define u_warp u_shape.w
-#define u_detail u_surface.x
-#define u_contrast u_surface.y
-#define u_brightness u_surface.z
-#define u_saturation u_surface.w
-#define u_hue u_finish.x
-#define u_vignette u_finish.y
-#define u_blur u_finish.z
-#define u_grain u_finish.w
-#ifdef GL_FRAGMENT_PRECISION_HIGH
-#define u_seed u_transform.x
-#else
-// Keep hash inputs inside mediump's guaranteed ±2^14 range.
-#define u_seed mod(u_transform.x, 31.0)
-#endif
 #define u_rotate u_transform.y
-#define u_drift u_transform.z
-#define u_oklab u_transform.w
-#define u_offset u_space.xy
-#define u_mouse u_space.zw
-#define u_cursorPresence u_cursor.x
-#define u_cursorEffect u_cursor.y
-#define u_cursorStrength u_cursor.z
-#define u_cursorRadius u_cursor.w
 
-float hash21(vec2 p) {
-#ifndef GL_FRAGMENT_PRECISION_HIGH
-  p = mod(p, 31.0);
-#endif
-  p = fract(p * vec2(234.34, 435.345));
-  p += dot(p, p + 34.23);
-  return fract(p.x * p.y);
-}
-
-// Even, un-structured white noise for film grain (Dave Hoskins hash12). The
-// multiply hash above is fine for value noise but shows a faint axis-aligned
-// mesh at integer fragment coords, which reads as a net over flat areas.
-float grainHash(vec2 p) {
-  vec3 p3 = fract(vec3(p.xyx) * 0.1031);
-  p3 += dot(p3, p3.yzx + 33.33);
-  return fract((p3.x + p3.y) * p3.z);
-}
-
-vec2 hash22(vec2 p) {
-#ifndef GL_FRAGMENT_PRECISION_HIGH
-  p = mod(p, 31.0);
-#endif
-  float n = sin(dot(p, vec2(41.0, 289.0)));
-  return fract(vec2(15731.743, 7892.321) * n);
-}
-
-float noise(vec2 p) {
-  vec2 i = floor(p);
-  vec2 f = fract(p);
-  vec2 u = f * f * (3.0 - 2.0 * f);
-  return mix(
-    mix(hash21(i), hash21(i + vec2(1.0, 0.0)), u.x),
-    mix(hash21(i + vec2(0.0, 1.0)), hash21(i + vec2(1.0, 1.0)), u.x),
-    u.y);
-}
-
-float fbm(vec2 p) {
-  return 0.5 * noise(p) + 0.25 * noise(p * 2.03 + vec2(17.0, 9.2));
-}
-
-// Fast linear colour mixing for ultra-lightweight GPU execution
-vec3 mixColour(vec3 a, vec3 b, float t) {
-  return mix(a, b, t);
-}
-
-// Mix through the recipe colours; x is clamped to 0..1. WebGL1 forbids
-// dynamic uniform indexing in fragment shaders, hence the constant loop.
-vec3 palette(float x) {
+// Pure analytical wave field: zero grid noise, zero banding, zero angular creases
+vec3 shade(vec2 p, float t) {
+  vec2 q = p * 1.35;
+  
+  // Smooth continuous harmonic interference
+  float amp = 0.38;
+  q.x += amp * sin(1.4 * q.y + t * 0.45 + 0.8);
+  q.y += amp * cos(1.2 * q.x + t * 0.38 + 1.2);
+  
+  q.x += (amp * 0.55) * sin(2.2 * q.y + t * 0.55 + 2.1);
+  q.y += (amp * 0.55) * cos(1.9 * q.x + t * 0.48 + 0.9);
+  
+  q.x += (amp * 0.28) * sin(3.4 * q.y + t * 0.65 + 3.4);
+  q.y += (amp * 0.28) * cos(2.9 * q.x + t * 0.58 + 2.5);
+  
+  float val = 0.5 + 0.5 * sin(q.x * 1.1 + q.y * 1.3);
+  
+  // Smooth cubic S-curve (infinitely smooth transition, zero harsh lines)
+  val = smoothstep(0.08, 0.96, val);
+  
+  // Interpolate across the dark obsidian color stops with smooth Hermite splines
   float n = max(u_colorCount - 1.0, 1.0);
-  float f = clamp(x, 0.0, 1.0) * n;
+  float f = clamp(val, 0.0, 1.0) * n;
+  
   vec3 col = u_colors[0];
   for (int i = 0; i < 7; i++) {
-    if (float(i) < n)
-      col = mixColour(col, u_colors[i + 1],
-        smoothstep(0.0, 1.0, clamp(f - float(i), 0.0, 1.0)));
+    if (float(i) < n) {
+      float w = smoothstep(0.0, 1.0, clamp(f - float(i), 0.0, 1.0));
+      col = mix(col, u_colors[i + 1], w);
+    }
   }
   return col;
 }
 
-vec3 hueRotate(vec3 col, float a) {
-  const mat3 toYIQ = mat3(0.299, 0.596, 0.211,
-                          0.587, -0.274, -0.523,
-                          0.114, -0.322, 0.312);
-  const mat3 toRGB = mat3(1.0, 1.0, 1.0,
-                          0.956, -0.272, -1.106,
-                          0.621, -0.647, 1.703);
-  vec3 yiq = toYIQ * col;
-  float ca = cos(a), sa = sin(a);
-  yiq = vec3(yiq.x, yiq.y * ca - yiq.z * sa, yiq.y * sa + yiq.z * ca);
-  return toRGB * yiq;
-}
-
-vec3 shade(vec2 uv, vec2 p, float t) {
-  vec2 q = p * 1.6;
-  float amp = 0.22 + u_intensity * 0.80;
-  for (float i = 1.0; i < 4.0; i += 1.0) {
-    q.x += amp / i * cos(i * 2.4 * q.y + t * 0.8 + u_seed);
-    q.y += amp / i * cos(i * 1.7 * q.x + t * 0.6);
-  }
-  float val = 0.5 + 0.5 * sin(q.x + q.y);
-  // Deep obsidian curve: keeps canvas deeply dark with focused glossy highlights
-  val = smoothstep(0.12, 0.98, val);
-  val = pow(val, 1.8);
-  return palette(val);
-}
-
 void main() {
   vec2 uv = gl_FragCoord.xy / u_resolution.xy;
-  vec2 screenUv = uv;
   
-  // Aspect-normalized responsive coordinates for mobile & desktop
+  // Responsive coordinate space centered for both portrait mobile and landscape desktop
   float minDim = min(u_resolution.x, u_resolution.y);
   vec2 p = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / minDim;
   
-  // Mobile portrait adjustment: adapt scale and vertical framing so waves wrap around mobile hero
   if (u_resolution.x < u_resolution.y) {
-    p *= 0.85;
-    p.y -= 0.14;
+    p *= 0.80;
+    p.y -= 0.12;
   }
-  float cursorMask = 0.0;
-
-  // Cursor modes 1–3 are local distortions. Push shifts the same screen-space
-  // coordinates before field transforms, so Zoom/Rotate don't change its feel.
-  if (u_cursorPresence > 0.001) {
-    // u_mouse is normalized to -1..1 in canvas space. Convert it to the same
-    // aspect-corrected screen space as p so effects stay under the cursor.
-    vec2 cursor = (0.5 * u_mouse * u_resolution.xy)
-      / min(u_resolution.x, u_resolution.y);
-    vec2 cursorDelta = p - cursor;
-    if (u_cursorEffect < 0.5) {
-      p += cursor * u_cursorPresence * u_cursorStrength * 0.55;
-    } else {
-      float cursorDistance = length(cursorDelta);
-      vec2 cursorDirection = cursorDelta / max(cursorDistance, 0.0001);
-      cursorMask = u_cursorPresence
-        * (1.0 - smoothstep(0.0, u_cursorRadius, cursorDistance));
-      if (u_cursorEffect < 1.5) {
-        p -= cursorDirection * cursorMask * u_cursorStrength * 0.24;
-      } else if (u_cursorEffect < 2.5) {
-        float cursorAngle = cursorMask * u_cursorStrength * 2.2;
-        float cc = cos(cursorAngle), cs = sin(cursorAngle);
-        p = cursor + mat2(cc, -cs, cs, cc) * cursorDelta;
-      } else if (u_cursorEffect < 3.5) {
-        float ripple = sin(
-          cursorDistance / max(u_cursorRadius, 0.001) * 18.0 - u_time * 5.0);
-        p -= cursorDirection * ripple * cursorMask * u_cursorStrength * 0.07;
-      }
-    }
-  }
-
-  // Keep presets that read uv (rather than p) in the same warped space.
-  uv = p * min(u_resolution.x, u_resolution.y) / u_resolution.xy + 0.5;
+  
   p *= u_scale;
-  // Field transform: rotate, pan, pointer push, slow drift.
   if (abs(u_rotate) > 0.0001) {
     float cr = cos(u_rotate), sr = sin(u_rotate);
     p = mat2(cr, -sr, sr, cr) * p;
   }
-  p += u_offset;
-  if (u_drift > 0.0001)
-    p += u_drift * vec2(sin(u_time * 0.31), cos(u_time * 0.23));
-  // Organic domain warp.
-  if (u_warp > 0.0) {
-    p += u_warp * (vec2(
-      fbm(p * u_detail + u_seed),
-      fbm(p * u_detail + vec2(5.2, 1.3))) - 0.5);
-  }
-  // Shade, with an optional soft 5-tap blur.
-  vec3 col;
-  if (u_blur > 0.0) {
-    float e = u_blur;
-    float pe = e * u_scale;
-    vec2 uvE = vec2(e) * min(u_resolution.x, u_resolution.y) / u_resolution.xy;
-    col  = shade(uv, p, u_time) * 0.36;
-    col += shade(uv + vec2(uvE.x, 0.0), p + vec2(pe, 0.0), u_time) * 0.16;
-    col += shade(uv - vec2(uvE.x, 0.0), p - vec2(pe, 0.0), u_time) * 0.16;
-    col += shade(uv + vec2(0.0, uvE.y), p + vec2(0.0, pe), u_time) * 0.16;
-    col += shade(uv - vec2(0.0, uvE.y), p - vec2(0.0, pe), u_time) * 0.16;
-  } else {
-    col = shade(uv, p, u_time);
-  }
-  // Post: contrast, saturation, hue, brightness, vignette, grain.
-  if (abs(u_contrast - 1.0) > 0.0001)
-    col = (col - 0.5) * u_contrast + 0.5;
-  if (abs(u_saturation - 1.0) > 0.0001) {
-    float luma = dot(col, vec3(0.299, 0.587, 0.114));
-    col = mix(vec3(luma), col, u_saturation);
-  }
-  if (abs(u_hue) > 0.0001)
-    col = hueRotate(col, u_hue);
-  if (abs(u_brightness) > 0.0001)
-    col += u_brightness;
-  if (u_vignette > 0.0001) {
-    float vd = length(screenUv - 0.5) * 1.41421356;
-    col *= 1.0 - u_vignette * smoothstep(0.35, 1.0, vd);
-  }
-  // Smooth natural perimeter falloff: dissolves gracefully to pitch black at outer boundaries
-  float edgeDist = min(min(screenUv.x, 1.0 - screenUv.x), min(screenUv.y, 1.0 - screenUv.y));
-  float edgeThreshold = u_resolution.x < u_resolution.y ? 0.06 : 0.14;
-  float edgeFalloff = smoothstep(0.0, edgeThreshold, edgeDist);
-  col *= edgeFalloff;
-
-  if (u_cursorPresence > 0.001 && u_cursorEffect > 3.5)
-    col += (vec3(0.18) + col * 0.12) * cursorMask * u_cursorStrength;
-  if (u_grain > 0.0001)
-    col += (grainHash(
-      gl_FragCoord.xy + vec2(u_seed * 17.0, u_seed * 31.0)) - 0.5) * u_grain;
+  p += u_space.xy;
+  
+  vec3 col = shade(p, u_time);
+  
+  // Perfectly smooth radial vignette fading directly into theme background (#09090b)
+  vec2 radialUv = (uv - 0.5) * vec2(1.0, u_resolution.y / max(u_resolution.x, 1.0) * 0.85);
+  float dist = length(radialUv);
+  float radialFade = smoothstep(0.20, 0.70, dist);
+  col = mix(col, u_colors[0], radialFade);
+  
+  // Smooth vertical bottom blend to merge into next section seamlessly
+  float bottomFade = smoothstep(0.0, 0.25, uv.y);
+  col = mix(u_colors[0], col, bottomFade);
+  
   gl_FragColor = vec4(clamp(col, 0.0, 1.0), 1.0);
 }
 `
 
-// Optimized high-gloss 3D luminous silk settings: Deep Obsidian Black
+// Smooth luminous 3D obsidian black palette (perfectly calibrated with #09090b)
 const UNIFORMS = {
   colors: [
-    [0.001, 0.002, 0.003], // Pure pitch obsidian void (#09090b)
-    [0.005, 0.007, 0.010], // Deep midnight charcoal
-    [0.018, 0.022, 0.028], // Dark graphite shadow
-    [0.055, 0.065, 0.082], // Subtle 3D dark slate body
-    [0.160, 0.185, 0.225], // Muted liquid chrome specular sheen
-    [0.360, 0.400, 0.470], // Sleek dark silver crest peak
-    [0.360, 0.400, 0.470],
-    [0.360, 0.400, 0.470],
+    [0.0353, 0.0353, 0.0431], // #09090b exact site background base
+    [0.0549, 0.0588, 0.0784], // Deep midnight slate
+    [0.0941, 0.1098, 0.1490], // Rich dark graphite
+    [0.1804, 0.2118, 0.2902], // 3D liquid silk body
+    [0.3333, 0.3843, 0.5098], // Specular sheen
+    [0.5098, 0.5686, 0.7255], // Soft luminous silver crest peak
+    [0.5098, 0.5686, 0.7255],
+    [0.5098, 0.5686, 0.7255],
   ] as [number, number, number][],
   colorCount: 6,
-  scale: 0.620,
-  intensity: 0.260,
+  scale: 0.650,
+  intensity: 0.280,
   paramA: 0.500,
-  warp: 0.180,
-  detail: 1.350,
-  contrast: 1.180,
-  brightness: -0.020,
-  saturation: 0.150, // Pure monochromatic deep obsidian aesthetic
+  warp: 0.000,
+  detail: 1.000,
+  contrast: 1.000,
+  brightness: 0.000,
+  saturation: 0.200,
   hue: 0.0000,
-  vignette: 0.250,
-  blur: 0.0000, // 0.0 bypasses 5-tap multi-sampling (80% GPU performance boost)
-  grain: 0.006,
+  vignette: 0.300,
+  blur: 0.0000,
+  grain: 0.000,
   seed: 707.0,
-  rotate: 2.5133,
-  offsetX: 0.060,
-  offsetY: 0.600,
+  rotate: 2.350,
+  offsetX: 0.040,
+  offsetY: 0.450,
   drift: 0.000,
   cursorEnabled: false,
   cursorEffect: 2.0,
   cursorStrength: 0.650,
   cursorRadius: 0.460,
   oklab: 1.0,
-  timeOffset: 4.800, // Starts with the sleek left-flank silk highlight visible on app open
-  timeScale: 0.200, // Smooth, organic breathing oscillation anchored near corner/flank
+  timeOffset: 3.500,
+  timeScale: 0.180,
 }
 
 const pendingContextReleases = new WeakMap<HTMLCanvasElement, number>()

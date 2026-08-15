@@ -139,17 +139,16 @@ export default function LandingPage() {
 
   return (
     <div className="flex-1 flex flex-col min-h-screen bg-background text-foreground selection:bg-primary/20 selection:text-primary overflow-x-hidden relative">
-      {/* Full-bleed Silk Shader Background with Ambient Underlay */}
+      {/* Full-bleed Silk Shader Background */}
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-[580px] sm:h-[840px] z-0 overflow-hidden"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[660px] sm:h-[840px] z-0 overflow-hidden"
         style={{
-          background: "radial-gradient(ellipse 70% 60% at 20% 25%, rgba(255, 255, 255, 0.02) 0%, transparent 60%)",
           contain: "paint layout",
         }}
       >
-        <ShaderBackground className="h-full w-full opacity-90 sm:opacity-95" />
+        <ShaderBackground className="h-full w-full" />
         {/* Soft bottom blend to seamlessly bridge hero into features */}
-        <div className="absolute inset-x-0 bottom-0 h-32 sm:h-52 bg-gradient-to-t from-background via-background/70 to-transparent pointer-events-none" />
+        <div className="absolute inset-x-0 bottom-0 h-40 sm:h-56 bg-gradient-to-t from-background via-background/80 to-transparent pointer-events-none" />
       </div>
 
       <Navbar transparent />
