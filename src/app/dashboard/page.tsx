@@ -149,14 +149,14 @@ export default function DashboardOverview() {
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {[...Array(4)].map((_, i) => (
-            <Skeleton key={i} className="h-32 rounded-xl" />
+            <Skeleton key={i} className="h-32 rounded-[4px]" />
           ))}
         </div>
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-          <Skeleton className="h-72 rounded-xl xl:col-span-2" />
-          <Skeleton className="h-72 rounded-xl" />
+          <Skeleton className="h-72 rounded-[4px] xl:col-span-2" />
+          <Skeleton className="h-72 rounded-[4px]" />
         </div>
-        <Skeleton className="h-64 rounded-xl" />
+        <Skeleton className="h-64 rounded-[4px]" />
       </div>
     );
   }
@@ -191,9 +191,9 @@ export default function DashboardOverview() {
 
       {/* Pending Claims Notice */}
       {pendingCount > 0 && (
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl border border-amber-500/30 bg-amber-500/10 backdrop-blur-xs text-amber-300 gap-4 shadow-xs">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-[4px] border-none bg-amber-500/10 backdrop-blur-xs text-amber-300 gap-4 shadow-none">
           <div className="flex items-center gap-3.5 min-w-0">
-            <div className="size-10 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center shrink-0">
+            <div className="size-10 rounded-[4px] bg-amber-500/20 border-none flex items-center justify-center shrink-0">
               <Clock className="size-5 text-amber-400" />
             </div>
             <div className="min-w-0">
@@ -201,7 +201,7 @@ export default function DashboardOverview() {
                 <p className="text-sm font-semibold text-foreground">
                   {pendingCount} Domain Claim{pendingCount > 1 ? "s" : ""} Pending Review
                 </p>
-                <Badge variant="outline" className="bg-amber-500/15 text-amber-400 border-amber-500/30 font-mono text-[10px] py-0 h-4">
+                <Badge variant="outline" className="bg-amber-500/15 text-amber-400 border-none font-mono text-[10px] py-0 h-4">
                   Awaiting Verification
                 </Badge>
               </div>
@@ -212,7 +212,7 @@ export default function DashboardOverview() {
           </div>
           <Button
             size="sm"
-            className="bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 border border-amber-500/30 text-xs font-semibold shrink-0"
+            className="rounded-[4px] bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 border-none text-xs font-semibold shrink-0"
             asChild
           >
             <Link href="/dashboard/domains">View Pending Domains</Link>
@@ -223,12 +223,12 @@ export default function DashboardOverview() {
       {/* Metric Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Metric 1: Subdomains Quota */}
-        <div className="rounded-xl border border-border/80 bg-card/70 backdrop-blur-xs p-5 space-y-3 hover:border-primary/40 transition-all shadow-xs group">
+        <div className="rounded-[4px] border-none bg-card/70 backdrop-blur-xs p-5 space-y-3 hover:bg-card transition-all shadow-none group">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-muted-foreground group-hover:text-foreground transition-colors">
               Subdomains Used
             </span>
-            <div className="size-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
+            <div className="size-8 rounded-[4px] bg-primary/10 border-none flex items-center justify-center text-primary">
               <Globe className="size-4" />
             </div>
           </div>
@@ -243,12 +243,12 @@ export default function DashboardOverview() {
         </div>
 
         {/* Metric 2: Active Subdomains */}
-        <div className="rounded-xl border border-border/80 bg-card/70 backdrop-blur-xs p-5 space-y-3 hover:border-emerald-500/40 transition-all shadow-xs group">
+        <div className="rounded-[4px] border-none bg-card/70 backdrop-blur-xs p-5 space-y-3 hover:bg-card transition-all shadow-none group">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-muted-foreground group-hover:text-foreground transition-colors">
               Active Domains
             </span>
-            <div className="size-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+            <div className="size-8 rounded-[4px] bg-emerald-500/10 border-none flex items-center justify-center text-emerald-400">
               <Activity className="size-4" />
             </div>
           </div>
@@ -263,12 +263,12 @@ export default function DashboardOverview() {
         </div>
 
         {/* Metric 3: DNS Records */}
-        <div className="rounded-xl border border-border/80 bg-card/70 backdrop-blur-xs p-5 space-y-3 hover:border-cyan-500/40 transition-all shadow-xs group">
+        <div className="rounded-[4px] border-none bg-card/70 backdrop-blur-xs p-5 space-y-3 hover:bg-card transition-all shadow-none group">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-muted-foreground group-hover:text-foreground transition-colors">
               DNS Records
             </span>
-            <div className="size-8 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
+            <div className="size-8 rounded-[4px] bg-cyan-500/10 border-none flex items-center justify-center text-cyan-400">
               <ChartColumn className="size-4" />
             </div>
           </div>
@@ -285,12 +285,12 @@ export default function DashboardOverview() {
         </div>
 
         {/* Metric 4: Free Slots Remaining */}
-        <div className="rounded-xl border border-border/80 bg-card/70 backdrop-blur-xs p-5 space-y-3 hover:border-amber-500/40 transition-all shadow-xs group">
+        <div className="rounded-[4px] border-none bg-card/70 backdrop-blur-xs p-5 space-y-3 hover:bg-card transition-all shadow-none group">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-muted-foreground group-hover:text-foreground transition-colors">
               Available Slots
             </span>
-            <div className="size-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+            <div className="size-8 rounded-[4px] bg-amber-500/10 border-none flex items-center justify-center text-amber-400">
               <Clock className="size-4" />
             </div>
           </div>
@@ -315,10 +315,10 @@ export default function DashboardOverview() {
       {/* Charts + Platform Status Grid */}
       <div className="flex flex-col gap-6 xl:flex-row">
         {/* Activity Chart Card */}
-        <div className="bg-card/70 backdrop-blur-xs flex min-w-0 flex-1 flex-col rounded-xl border border-border/80 shadow-xs">
-          <div className="flex h-14 items-center justify-between border-b border-border/80 px-4 sm:px-5">
+        <div className="bg-card/70 backdrop-blur-xs flex min-w-0 flex-1 flex-col rounded-[4px] border-none shadow-none">
+          <div className="flex h-14 items-center justify-between border-none px-4 sm:px-5">
             <div className="flex items-center gap-2.5">
-              <div className="size-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
+              <div className="size-8 rounded-[4px] bg-primary/10 border-none flex items-center justify-center">
                 <ChartColumn className="size-4 text-primary" />
               </div>
               <div>
@@ -367,10 +367,10 @@ export default function DashboardOverview() {
         </div>
 
         {/* Quick Platform Status Panel */}
-        <div className="bg-card/70 backdrop-blur-xs flex min-w-0 flex-col rounded-xl border border-border/80 shadow-xs xl:w-[360px]">
-          <div className="flex h-14 items-center justify-between border-b border-border/80 px-4 sm:px-5">
+        <div className="bg-card/70 backdrop-blur-xs flex min-w-0 flex-col rounded-[4px] border-none shadow-none xl:w-[360px]">
+          <div className="flex h-14 items-center justify-between border-none px-4 sm:px-5">
             <div className="flex items-center gap-2">
-              <div className="size-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+              <div className="size-8 rounded-[4px] bg-emerald-500/10 border-none flex items-center justify-center">
                 <Radio className="size-4 text-emerald-400" />
               </div>
               <h2 className="text-sm font-semibold text-foreground">Infrastructure Status</h2>
@@ -385,7 +385,7 @@ export default function DashboardOverview() {
                 { label: "Subdomain Registrar", status: "Active", color: "text-emerald-400", dot: "bg-emerald-400" },
                 { label: "Edge SSL Termination", status: "Enabled", color: "text-emerald-400", dot: "bg-emerald-400" },
               ].map((item, i) => (
-                <div key={i} className="flex items-center justify-between py-2 border-b border-border/60 last:border-0">
+                <div key={i} className="flex items-center justify-between py-2 border-none">
                   <span className="text-xs text-muted-foreground">{item.label}</span>
                   <div className="flex items-center gap-1.5">
                     <span className={`size-1.5 rounded-full ${item.dot}`} />
@@ -407,8 +407,8 @@ export default function DashboardOverview() {
       </div>
 
       {/* Recent Subdomains Table Card */}
-      <Card className="border-border/80 bg-card/70 backdrop-blur-xs shadow-xs rounded-xl overflow-hidden">
-        <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-border/80 pb-4 gap-3 sm:gap-4">
+      <Card className="border-none bg-card/70 backdrop-blur-xs shadow-none rounded-[4px] overflow-hidden">
+        <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-none pb-4 gap-3 sm:gap-4">
           <div>
             <CardTitle className="text-base font-semibold">Recent Subdomains</CardTitle>
             <CardDescription>Your claimed .arc.bd subdomains and DNS routing</CardDescription>
@@ -420,7 +420,7 @@ export default function DashboardOverview() {
                 placeholder="Filter subdomains..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-8 pr-8 h-8 w-full text-xs bg-card/60"
+                className="pl-8 pr-8 h-8 w-full text-xs bg-card/60 rounded-[4px] border-none shadow-none"
               />
               {search && (
                 <button
@@ -440,7 +440,7 @@ export default function DashboardOverview() {
         <CardContent className="p-0">
           {filtered.length === 0 ? (
             <div className="flex flex-col items-center gap-3 py-16 text-center px-4">
-              <div className="size-12 rounded-xl bg-secondary flex items-center justify-center">
+              <div className="size-12 rounded-[4px] bg-secondary flex items-center justify-center">
                 <Globe className="size-6 text-muted-foreground" />
               </div>
               <div>
@@ -462,14 +462,14 @@ export default function DashboardOverview() {
               )}
             </div>
           ) : (
-            <div className="divide-y divide-border/80">
+            <div className="">
               {filtered.slice(0, 5).map((domain) => (
                 <div
                   key={domain.id}
                   className="flex flex-col sm:flex-row sm:items-center justify-between px-4 sm:px-6 py-3.5 hover:bg-muted/30 transition-colors group gap-2.5 sm:gap-4"
                 >
                   <div className="flex items-start sm:items-center gap-3 min-w-0 flex-1">
-                    <div className="size-8 rounded-lg bg-secondary flex items-center justify-center shrink-0 mt-0.5 sm:mt-0 group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+                    <div className="size-8 rounded-[4px] bg-secondary border-none flex items-center justify-center shrink-0 mt-0.5 sm:mt-0 group-hover:bg-primary/10 group-hover:text-primary transition-colors">
                       <Globe className="size-4 text-muted-foreground group-hover:text-primary" />
                     </div>
                     <div className="min-w-0 flex-1">
@@ -479,7 +479,7 @@ export default function DashboardOverview() {
                         </span>
                         <button
                           onClick={(e) => handleCopy(domain.full_domain, e)}
-                          className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 text-muted-foreground hover:text-foreground transition-opacity p-1 sm:p-0.5 rounded touch-manipulation shrink-0"
+                          className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 text-muted-foreground hover:text-foreground transition-opacity p-1 sm:p-0.5 rounded-[3px] touch-manipulation shrink-0"
                           title="Copy URL"
                           aria-label={`Copy https://${domain.full_domain}`}
                         >

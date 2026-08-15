@@ -220,12 +220,12 @@ export function DashboardHeader({
             {/* Search Trigger */}
             <button
               onClick={() => setSearchOpen(true)}
-              className="flex h-9 items-center gap-2 rounded-lg border border-input bg-card/60 px-2.5 sm:px-3 text-xs text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors shadow-2xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring group"
+              className="flex h-9 items-center gap-2 rounded-[4px] border-none bg-card/60 px-2.5 sm:px-3 text-xs text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring group"
               aria-label="Search pages and documentation"
             >
               <Search className="size-3.5 sm:size-4 shrink-0 text-muted-foreground group-hover:text-foreground transition-colors" />
               <span className="hidden sm:inline-block">Search...</span>
-              <kbd className="pointer-events-none hidden sm:inline-flex h-5 select-none items-center gap-0.5 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
+              <kbd className="pointer-events-none hidden sm:inline-flex h-5 select-none items-center gap-0.5 rounded-[3px] border-none bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
                 {isMac ? <span>⌘K</span> : <span>Ctrl K</span>}
               </kbd>
             </button>

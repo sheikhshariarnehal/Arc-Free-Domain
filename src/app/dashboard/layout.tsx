@@ -178,13 +178,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                       <Link
                         href={item.href}
                         onClick={() => setMobileNavOpen(false)}
-                        className={`flex items-center justify-center size-10 mx-auto rounded-lg transition-colors ${
+                        className={`flex items-center justify-center size-10 mx-auto rounded-[4px] transition-colors ${
                           isActive
-                            ? "bg-secondary text-primary font-semibold shadow-xs"
+                            ? "bg-secondary text-foreground font-semibold"
                             : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground"
                         }`}
                       >
-                        <item.icon className={`size-4 shrink-0 ${isActive ? "text-primary" : ""}`} />
+                        <item.icon className={`size-4 shrink-0 ${isActive ? "text-foreground" : ""}`} />
                         <span className="sr-only">{item.name}</span>
                       </Link>
                     </TooltipTrigger>
@@ -200,14 +200,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   key={item.name}
                   href={item.href}
                   onClick={() => setMobileNavOpen(false)}
-                  className={`flex items-center justify-between gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                  className={`flex items-center justify-between gap-2.5 px-3 py-2 rounded-[4px] text-sm font-medium transition-all ${
                     isActive
-                      ? "bg-primary/10 text-primary font-semibold shadow-xs border border-primary/20"
+                      ? "bg-secondary text-foreground font-semibold"
                       : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground"
                   }`}
                 >
                   <div className="flex items-center gap-2.5 truncate">
-                    <item.icon className={`size-4 shrink-0 ${isActive ? "text-primary" : ""}`} />
+                    <item.icon className={`size-4 shrink-0 ${isActive ? "text-foreground" : ""}`} />
                     <span className="truncate">{item.name}</span>
                   </div>
                 </Link>
@@ -225,13 +225,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                       <Link
                         href={item.href}
                         onClick={() => setMobileNavOpen(false)}
-                        className={`flex items-center justify-center size-10 mx-auto rounded-lg transition-colors ${
+                        className={`flex items-center justify-center size-10 mx-auto rounded-[4px] transition-colors ${
                           isActive
-                            ? "bg-secondary text-primary font-semibold"
+                            ? "bg-secondary text-foreground font-semibold"
                             : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground"
                         }`}
                       >
-                        <item.icon className="size-4 shrink-0" />
+                        <item.icon className={`size-4 shrink-0 ${isActive ? "text-foreground" : ""}`} />
                         <span className="sr-only">{item.name}</span>
                       </Link>
                     </TooltipTrigger>
@@ -247,14 +247,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   key={item.name}
                   href={item.href}
                   onClick={() => setMobileNavOpen(false)}
-                  className={`flex items-center justify-between gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                  className={`flex items-center justify-between gap-2.5 px-3 py-2 rounded-[4px] text-sm font-medium transition-all ${
                     isActive
-                      ? "bg-primary/10 text-primary font-semibold shadow-xs border border-primary/20"
+                      ? "bg-secondary text-foreground font-semibold"
                       : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground"
                   }`}
                 >
                   <div className="flex items-center gap-2.5 truncate">
-                    <item.icon className={`size-4 shrink-0 ${isActive ? "text-primary" : ""}`} />
+                    <item.icon className={`size-4 shrink-0 ${isActive ? "text-foreground" : ""}`} />
                     <span className="truncate">{item.name}</span>
                   </div>
                 </Link>
@@ -271,7 +271,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   <Link
                     href="/admin"
                     onClick={() => setMobileNavOpen(false)}
-                    className="flex items-center justify-between gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-amber-400 hover:bg-amber-500/15 border border-amber-500/20 transition-all shadow-2xs group"
+                    className="flex items-center justify-between gap-2.5 px-3 py-2 rounded-md text-sm font-medium text-amber-400 hover:bg-amber-500/15 transition-all group"
                   >
                     <div className="flex items-center gap-2.5 truncate">
                       <Shield className="size-4 shrink-0 text-amber-400 group-hover:scale-110 transition-transform" />
@@ -284,7 +284,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                       <Link
                         href="/admin"
                         onClick={() => setMobileNavOpen(false)}
-                        className="flex items-center justify-center size-10 mx-auto rounded-lg text-amber-400 hover:bg-amber-500/15 border border-amber-500/20 transition-colors"
+                        className="flex items-center justify-center size-10 mx-auto rounded-md text-amber-400 hover:bg-amber-500/15 transition-colors"
                       >
                         <Shield className="size-4 shrink-0" />
                         <span className="sr-only">Admin Panel</span>
@@ -301,10 +301,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
           {/* Subdomain Quota Capsule */}
           {sidebarOpen && (
-            <div className={`mx-2.5 mb-2 px-3 py-2 rounded-lg border text-xs flex items-center justify-between transition-colors ${
+            <div className={`mx-2.5 mb-2 px-3 py-2 rounded-md text-xs flex items-center justify-between transition-colors ${
               remainingSlots === 0
-                ? "bg-amber-500/10 border-amber-500/25 text-amber-300"
-                : "bg-secondary/40 border-border/60 text-foreground"
+                ? "bg-amber-500/15 text-amber-300"
+                : "bg-secondary/60 text-foreground"
             }`}>
               <div className="flex items-center gap-2">
                 <Globe className={`size-3.5 ${remainingSlots === 0 ? "text-amber-400" : "text-primary"}`} />

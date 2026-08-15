@@ -88,7 +88,7 @@ function StatusBadge({ status }: { status: string }) {
       return (
         <Tooltip>
           <TooltipTrigger asChild>
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium cursor-default select-none shadow-2xs">
+            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-[4px] bg-emerald-500/15 text-emerald-400 text-xs font-medium cursor-default select-none">
               <span className="size-1.5 rounded-full bg-emerald-400" />
               Active
             </span>
@@ -102,7 +102,7 @@ function StatusBadge({ status }: { status: string }) {
       return (
         <Tooltip>
           <TooltipTrigger asChild>
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-medium cursor-default select-none shadow-2xs">
+            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-[4px] bg-amber-500/15 text-amber-400 text-xs font-medium cursor-default select-none">
               <span className="size-1.5 rounded-full bg-amber-400" />
               Pending
             </span>
@@ -116,7 +116,7 @@ function StatusBadge({ status }: { status: string }) {
       return (
         <Tooltip>
           <TooltipTrigger asChild>
-            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-destructive/10 border border-destructive/20 text-destructive text-xs font-medium cursor-default select-none">
+            <span className="inline-flex items-center px-2 py-0.5 rounded-[4px] bg-destructive/15 text-destructive text-xs font-medium cursor-default select-none">
               Suspended
             </span>
           </TooltipTrigger>
@@ -127,7 +127,7 @@ function StatusBadge({ status }: { status: string }) {
       );
     default:
       return (
-        <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-muted text-muted-foreground text-xs font-medium capitalize">
+        <span className="inline-flex items-center px-2 py-0.5 rounded-[4px] bg-muted text-muted-foreground text-xs font-medium capitalize">
           {status}
         </span>
       );
@@ -370,18 +370,18 @@ function DomainsListInner() {
             placeholder="Search subdomains..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-8.5 pr-10 h-9 w-full text-xs sm:text-sm bg-card/60 border-input rounded-md focus-visible:ring-1 focus-visible:ring-ring transition-all placeholder:text-muted-foreground"
+            className="pl-8.5 pr-10 h-9 w-full text-xs sm:text-sm bg-card/60 border-none shadow-none rounded-[4px] focus-visible:ring-1 focus-visible:ring-ring transition-all placeholder:text-muted-foreground"
           />
           {search ? (
             <button
               onClick={() => setSearch("")}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-1 rounded transition-colors"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-1 rounded-[3px] transition-colors"
               aria-label="Clear search"
             >
               <X className="size-3" />
             </button>
           ) : (
-            <kbd className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 h-4.5 select-none items-center rounded border border-border bg-muted/60 px-1 font-mono text-[10px] text-muted-foreground hidden sm:inline-flex">
+            <kbd className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 h-4.5 select-none items-center rounded-[3px] border-none bg-muted px-1 font-mono text-[10px] text-muted-foreground hidden sm:inline-flex">
               /
             </kbd>
           )}
@@ -438,14 +438,14 @@ function DomainsListInner() {
             </DropdownMenu>
 
             {/* Grid vs List View Mode Switcher */}
-            <div className="flex items-center rounded-md border border-input bg-card/60 p-0.5 shrink-0">
+            <div className="flex items-center rounded-[4px] border-none bg-card/60 p-0.5 shrink-0">
               <Tooltip>
                 <TooltipTrigger asChild>
                   <button
                     onClick={() => setViewMode("grid")}
-                    className={`flex size-7.5 items-center justify-center rounded transition-colors ${
+                    className={`flex size-7.5 items-center justify-center rounded-[3px] transition-colors ${
                       viewMode === "grid"
-                        ? "bg-secondary text-foreground font-semibold shadow-2xs"
+                        ? "bg-secondary text-foreground font-semibold"
                         : "text-muted-foreground hover:text-foreground"
                     }`}
                     aria-label="Switch to grid view"
@@ -462,9 +462,9 @@ function DomainsListInner() {
                 <TooltipTrigger asChild>
                   <button
                     onClick={() => setViewMode("list")}
-                    className={`flex size-7.5 items-center justify-center rounded transition-colors ${
+                    className={`flex size-7.5 items-center justify-center rounded-[3px] transition-colors ${
                       viewMode === "list"
-                        ? "bg-secondary text-foreground font-semibold shadow-2xs"
+                        ? "bg-secondary text-foreground font-semibold"
                         : "text-muted-foreground hover:text-foreground"
                     }`}
                     aria-label="Switch to list view"
@@ -708,12 +708,12 @@ function DomainsListInner() {
               >
                 <CardHeader className="pb-3 p-4">
                   <div className="flex items-start justify-between gap-2">
-                    <div className={`size-8.5 rounded-lg flex items-center justify-center shrink-0 transition-all ${
+                    <div className={`size-8.5 rounded-[4px] flex items-center justify-center shrink-0 transition-all ${
                       domain.status === "active"
-                        ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 group-hover:bg-emerald-500/15 group-hover:border-emerald-500/30"
+                        ? "bg-emerald-500/15 text-emerald-400 group-hover:bg-emerald-500/25"
                         : domain.status === "pending"
-                        ? "bg-amber-500/10 text-amber-400 border border-amber-500/20 group-hover:bg-amber-500/15 group-hover:border-amber-500/30"
-                        : "bg-destructive/10 text-destructive border border-destructive/20"
+                        ? "bg-amber-500/15 text-amber-400 group-hover:bg-amber-500/25"
+                        : "bg-destructive/15 text-destructive"
                     }`}>
                       <Globe className="size-4" />
                     </div>
@@ -823,12 +823,12 @@ function DomainsListInner() {
                     {/* Row 1: Domain + Status */}
                     <div className="flex items-start justify-between gap-2.5">
                       <div className="flex items-center gap-2.5 min-w-0 flex-1">
-                        <div className={`size-8.5 rounded-lg flex items-center justify-center shrink-0 transition-all ${
+                        <div className={`size-8.5 rounded-[4px] flex items-center justify-center shrink-0 transition-all ${
                           domain.status === "active"
-                            ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                            ? "bg-emerald-500/15 text-emerald-400"
                             : domain.status === "pending"
-                            ? "bg-amber-500/10 text-amber-400 border border-amber-500/20"
-                            : "bg-destructive/10 text-destructive border border-destructive/20"
+                            ? "bg-amber-500/15 text-amber-400"
+                            : "bg-destructive/15 text-destructive"
                         }`}>
                           <Globe className="size-4" />
                         </div>
@@ -874,7 +874,7 @@ function DomainsListInner() {
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="size-8 text-muted-foreground hover:text-foreground hover:bg-secondary rounded-md"
+                            className="size-8 text-muted-foreground hover:text-foreground hover:bg-secondary rounded-[4px]"
                             asChild
                           >
                             <a
@@ -891,10 +891,10 @@ function DomainsListInner() {
                         <Button
                           variant="outline"
                           size="sm"
-                          className={`h-8 px-3 text-xs gap-1.5 font-medium rounded-md transition-all ${
+                          className={`h-8 px-3 text-xs gap-1.5 font-medium rounded-[4px] border-none transition-all ${
                             domain.status === "active"
-                              ? "border-border/80 hover:bg-secondary hover:text-foreground"
-                              : "border-amber-500/20 bg-amber-500/5 text-amber-300 hover:bg-amber-500/10 hover:border-amber-500/30"
+                              ? "bg-secondary/50 hover:bg-secondary text-foreground"
+                              : "bg-amber-500/10 text-amber-300 hover:bg-amber-500/20"
                           }`}
                           asChild
                         >
@@ -911,7 +911,7 @@ function DomainsListInner() {
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="size-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-md"
+                          className="size-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-[4px]"
                           onClick={() => setDeleteTarget(domain)}
                           aria-label={`Delete ${domain.full_domain}`}
                         >
@@ -953,12 +953,12 @@ function DomainsListInner() {
                         {/* Domain Name Cell */}
                         <TableCell className="font-medium text-foreground py-3.5 px-4">
                           <div className="flex items-center gap-2.5">
-                            <div className={`size-8 rounded-lg flex items-center justify-center shrink-0 transition-all ${
+                            <div className={`size-8 rounded-[4px] flex items-center justify-center shrink-0 transition-all ${
                               domain.status === "active"
-                                ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 group-hover:bg-emerald-500/20 group-hover:border-emerald-500/30"
+                                ? "bg-emerald-500/15 text-emerald-400 group-hover:bg-emerald-500/25"
                                 : domain.status === "pending"
-                                ? "bg-amber-500/10 text-amber-400 border border-amber-500/20 group-hover:bg-amber-500/20 group-hover:border-amber-500/30"
-                                : "bg-destructive/10 text-destructive border border-destructive/20"
+                                ? "bg-amber-500/15 text-amber-400 group-hover:bg-amber-500/25"
+                                : "bg-destructive/15 text-destructive"
                             }`}>
                               <Globe className="size-3.5" />
                             </div>
@@ -1032,7 +1032,7 @@ function DomainsListInner() {
                                   <Button
                                     variant="ghost"
                                     size="icon"
-                                    className="size-8 text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors hidden sm:inline-flex rounded-md"
+                                    className="size-8 text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors hidden sm:inline-flex rounded-[4px]"
                                     asChild
                                   >
                                     <a
@@ -1055,10 +1055,10 @@ function DomainsListInner() {
                             <Button
                               variant="outline"
                               size="sm"
-                              className={`h-8 text-xs gap-1.5 font-medium rounded-md transition-all ${
+                              className={`h-8 text-xs gap-1.5 font-medium rounded-[4px] border-none transition-all ${
                                 domain.status === "active"
-                                  ? "border-border/80 hover:border-primary/40 hover:bg-primary/5 hover:text-primary"
-                                  : "border-amber-500/20 bg-amber-500/5 text-amber-300 hover:bg-amber-500/10 hover:border-amber-500/30"
+                                  ? "bg-secondary/50 hover:bg-secondary text-foreground"
+                                  : "bg-amber-500/10 text-amber-300 hover:bg-amber-500/20"
                               }`}
                               asChild
                             >
@@ -1078,7 +1078,7 @@ function DomainsListInner() {
                                 <Button
                                   variant="ghost"
                                   size="icon"
-                                  className="size-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors rounded-md"
+                                  className="size-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors rounded-[4px]"
                                   onClick={() => setDeleteTarget(domain)}
                                   aria-label={`Delete ${domain.full_domain}`}
                                 >
