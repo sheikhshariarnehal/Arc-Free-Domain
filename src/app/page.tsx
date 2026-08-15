@@ -436,13 +436,13 @@ export default function LandingPage() {
           style={{ contentVisibility: "auto", containIntrinsicSize: "800px" }}
         >
           {/* Soft Faded Divider */}
-          <div className="w-full max-w-2xl mx-auto h-px bg-gradient-to-r from-transparent via-white/[0.12] to-transparent mb-10 sm:mb-14" />
+          <div className="w-full max-w-3xl mx-auto h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent mb-10 sm:mb-14" />
           <div className="text-center mb-8 sm:mb-12">
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-white">Built for fast deployment</h2>
             <p className="text-xs sm:text-sm text-zinc-400 mt-1 font-normal max-w-md mx-auto">Automated DNS management with zero configuration overhead.</p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
               { icon: Gift, title: "Zero Cost", desc: "No credit card or recurring charges. Free for personal, student, and production projects." },
               { icon: Zap, title: "Instant Propagation", desc: "Records sync to Cloudflare's global edge network within seconds of saving." },
@@ -451,18 +451,20 @@ export default function LandingPage() {
               { icon: Settings, title: "Full Record Control", desc: "Manage root and subdomain A, CNAME, and TXT records right from your dashboard." },
               { icon: Globe, title: "Up to 5 Subdomains", desc: "Claim and manage multiple project addresses from one unified developer account." }
             ].map((item, i) => (
-              <Card 
-                key={i} 
-                className="group p-5 sm:p-6 rounded-2xl flex flex-col gap-3 border border-white/10 bg-gradient-to-b from-white/[0.08] via-white/[0.03] to-white/[0.01] bg-[#0c0c0e]/85 backdrop-blur-xl shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.22),0_10px_30px_-15px_rgba(0,0,0,0.5)] hover:from-white/[0.14] hover:via-white/[0.05] hover:border-white/20 hover:shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.35),0_16px_36px_-12px_rgba(0,0,0,0.7)] hover:-translate-y-1 transition-all duration-300"
+              <Card
+                key={i}
+                style={{ backgroundImage: "none" }}
+                className="group p-5 sm:p-6 rounded-xl flex flex-col gap-3 border border-white/[0.12] bg-gradient-to-b from-white/[0.08] via-white/[0.03] to-white/[0.01] bg-[#0c0c0e]/50 backdrop-blur-xl hover:from-white/[0.12] hover:via-white/[0.05] hover:to-white/[0.02] hover:border-white/25 shadow-[inset_0_1px_0px_0_rgba(255,255,255,0.30)] hover:shadow-[inset_0_1px_0px_0_rgba(255,255,255,0.45)] hover:-translate-y-0.5 transition-all duration-200"
               >
                 <CardContent className="p-0 flex flex-col gap-3">
                   <div
-                    className="size-9 rounded-xl bg-gradient-to-b from-white/[0.15] to-white/[0.04] border border-white/15 flex items-center justify-center text-zinc-200 shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.35)] group-hover:scale-105 group-hover:text-white group-hover:border-white/25 transition-all duration-200"
+                    className="size-8.5 rounded-md bg-white/[0.07] border border-white/[0.14] flex items-center justify-center text-zinc-200 group-hover:border-white/30 group-hover:bg-white/[0.12] group-hover:text-white transition-all duration-150"
+                    style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.25)" }}
                   >
-                    <item.icon className="size-4.5 text-zinc-200 group-hover:text-white transition-colors" strokeWidth={1.5} />
+                    <item.icon className="size-4 text-zinc-200 group-hover:text-white transition-colors" strokeWidth={1.5} />
                   </div>
-                  <h3 className="font-semibold text-sm sm:text-base text-white tracking-tight">{item.title}</h3>
-                  <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed font-normal">{item.desc}</p>
+                  <h3 className="font-semibold text-sm text-white tracking-tight">{item.title}</h3>
+                  <p className="text-xs text-zinc-400 leading-relaxed">{item.desc}</p>
                 </CardContent>
               </Card>
             ))}
@@ -471,11 +473,9 @@ export default function LandingPage() {
 
         {/* How it works */}
         <section
-          className="w-full max-w-4xl mx-auto py-10 sm:py-16 px-4 sm:px-6 lg:px-8 text-center"
+          className="w-full max-w-4xl mx-auto py-10 sm:py-16 px-4 sm:px-6 lg:px-8 border-t border-white/[0.08] text-center"
           style={{ contentVisibility: "auto", containIntrinsicSize: "500px" }}
         >
-          {/* Soft Faded Divider */}
-          <div className="w-full max-w-2xl mx-auto h-px bg-gradient-to-r from-transparent via-white/[0.12] to-transparent mb-10 sm:mb-14" />
           <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-white mb-2">How it works</h2>
           <p className="text-xs sm:text-sm text-zinc-400 mb-8 sm:mb-12 max-w-md mx-auto">Get your domain live in three straightforward steps.</p>
 
@@ -485,16 +485,20 @@ export default function LandingPage() {
               { step: "2", title: "Claim your address", desc: "Sign in with GitHub or email to link the subdomain to your account." },
               { step: "3", title: "Route your traffic", desc: "Add your host's CNAME target or VPS IP address to start receiving requests." }
             ].map((item, i) => (
-              <Card 
-                key={i} 
-                className="group text-center p-5 sm:p-6 rounded-2xl border border-white/10 bg-gradient-to-b from-white/[0.08] via-white/[0.03] to-white/[0.01] bg-[#0c0c0e]/85 backdrop-blur-xl shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.22),0_10px_30px_-15px_rgba(0,0,0,0.5)] hover:from-white/[0.14] hover:via-white/[0.05] hover:border-white/20 hover:shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.35),0_16px_36px_-12px_rgba(0,0,0,0.7)] hover:-translate-y-1 transition-all duration-300"
+              <Card
+                key={i}
+                style={{ backgroundImage: "none" }}
+                className="group text-center p-5 sm:p-6 rounded-xl border border-white/[0.12] bg-gradient-to-b from-white/[0.08] via-white/[0.03] to-white/[0.01] bg-[#0c0c0e]/50 backdrop-blur-xl hover:from-white/[0.12] hover:via-white/[0.05] hover:to-white/[0.02] hover:border-white/25 shadow-[inset_0_1px_0px_0_rgba(255,255,255,0.30)] hover:shadow-[inset_0_1px_0px_0_rgba(255,255,255,0.45)] hover:-translate-y-0.5 transition-all duration-200"
               >
                 <CardContent className="p-0 flex flex-col items-center">
-                  <div className="flex size-8 items-center justify-center rounded-full bg-gradient-to-b from-white/[0.18] to-white/[0.04] border border-white/20 text-white font-mono text-xs font-bold mb-3.5 shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.40)] group-hover:scale-110 group-hover:border-white/30 transition-all duration-200">
+                  <div
+                    className="flex size-7.5 items-center justify-center rounded-md bg-white/[0.07] border border-white/[0.14] text-white font-mono text-xs font-bold mb-3 group-hover:border-white/30 group-hover:bg-white/[0.12] transition-all duration-150"
+                    style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.25)" }}
+                  >
                     {item.step}
                   </div>
-                  <h3 className="font-semibold text-sm sm:text-base text-white mb-1.5 tracking-tight">{item.title}</h3>
-                  <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed font-normal">{item.desc}</p>
+                  <h3 className="font-semibold text-sm text-white mb-1.5 tracking-tight">{item.title}</h3>
+                  <p className="text-xs text-zinc-400 leading-relaxed">{item.desc}</p>
                 </CardContent>
               </Card>
             ))}
