@@ -5,7 +5,6 @@ import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import Navbar from "@/components/Navbar";
-import DevWorkbench from "@/components/DevWorkbench";
 import { 
   Search, 
   CheckCircle, 
@@ -404,13 +403,6 @@ export default function LandingPage() {
               </span>
             </div>
           </div>
-
-          {/* OVERDRIVE COMPONENT: Interactive Live Developer Workbench & DNS Playground */}
-          <DevWorkbench
-            subdomain={searchQuery}
-            isAvailable={availability === 'available'}
-            onClaim={(preset) => handleClaimClick(preset)}
-          />
 
           {/* Supported Stacks & Deployments Ticker / Pill Strip */}
           <div className="w-full max-w-4xl mx-auto mt-10 pt-6 border-t border-white/[0.06]">
