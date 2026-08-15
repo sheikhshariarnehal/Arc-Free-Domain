@@ -26,7 +26,12 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ShaderBackground } from "@/components/ui/dq";
+
+// Dynamic import for WebGL Canvas component: zero SSR footprint and faster initial First Contentful Paint (FCP)
+const ShaderBackground = dynamic(
+  () => import("@/components/ui/dq").then((mod) => mod.ShaderBackground),
+  { ssr: false }
+);
 
 export default function LandingPage() {
   const router = useRouter();
@@ -139,16 +144,16 @@ export default function LandingPage() {
 
   return (
     <div className="flex-1 flex flex-col min-h-screen bg-background text-foreground selection:bg-primary/20 selection:text-primary overflow-x-hidden relative">
-      {/* Full-bleed Silk Shader Background */}
+      {/* Full-bleed Silk Shader Background with Responsive Fade */}
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-[660px] sm:h-[840px] z-0 overflow-hidden"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[640px] sm:h-[820px] md:h-[900px] z-0 overflow-hidden"
         style={{
           contain: "paint layout",
+          WebkitMaskImage: "linear-gradient(to bottom, black 0%, black 50%, transparent 100%)",
+          maskImage: "linear-gradient(to bottom, black 0%, black 50%, transparent 100%)",
         }}
       >
-        <ShaderBackground className="h-full w-full" />
-        {/* Soft bottom blend to seamlessly bridge hero into features */}
-        <div className="absolute inset-x-0 bottom-0 h-40 sm:h-56 bg-gradient-to-t from-background via-background/80 to-transparent pointer-events-none" />
+        <ShaderBackground className="h-full w-full opacity-90 sm:opacity-95" />
       </div>
 
       <Navbar transparent />
