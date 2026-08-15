@@ -33,49 +33,57 @@ uniform vec4 u_cursor;
 #define u_intensity u_shape.y
 #define u_rotate u_transform.y
 
-// Analytical wave height function: continuous, organic sinusoidal harmonics
-float getWaveHeight(vec2 p, float t) {
-  vec2 q = p * 1.30;
+// High-fidelity 3D multi-layered liquid silk ribbon field
+float getSilkHeight(vec2 p, float t) {
+  vec2 q = p * 1.55;
   
-  float amp = 0.45;
-  q.x += amp * sin(1.3 * q.y + t * 0.40 + 0.6);
-  q.y += amp * cos(1.1 * q.x + t * 0.35 + 1.1);
+  // Layer 1: Primary sweeping liquid folds
+  q.x += 0.52 * sin(1.2 * q.y + t * 0.38 + 0.7);
+  q.y += 0.52 * cos(1.1 * q.x + t * 0.32 + 1.2);
   
-  q.x += (amp * 0.65) * sin(2.1 * q.y + t * 0.50 + 1.9);
-  q.y += (amp * 0.65) * cos(1.8 * q.x + t * 0.42 + 0.8);
+  // Layer 2: Secondary silky undulations
+  q.x += 0.34 * sin(2.3 * q.y - t * 0.44 + 2.1);
+  q.y += 0.34 * cos(1.9 * q.x + t * 0.39 + 0.9);
   
-  q.x += (amp * 0.32) * sin(3.1 * q.y + t * 0.60 + 3.1);
-  q.y += (amp * 0.32) * cos(2.6 * q.x + t * 0.52 + 2.3);
+  // Layer 3: Fine liquid satin ripples
+  q.x += 0.18 * sin(3.6 * q.y + t * 0.52 + 3.4);
+  q.y += 0.18 * cos(3.1 * q.x - t * 0.46 + 2.4);
   
-  return 0.5 + 0.5 * sin(q.x * 1.05 + q.y * 1.25);
+  // Layer 4: Micro specular ribbon ridges
+  q.x += 0.09 * sin(5.2 * q.y - t * 0.60 + 1.5);
+  q.y += 0.09 * cos(4.7 * q.x + t * 0.55 + 3.8);
+  
+  float val = 0.5 + 0.5 * sin(q.x * 1.2 + q.y * 1.4);
+  return val;
 }
 
-// True 3D Shading Engine: Surface Normals, Diffuse Curvature, Specular Glint & Fresnel
+// True 3D Shading Engine: Surface Normals, Diffuse Curvature, Specular Glints & Fresnel Sheen
 vec3 shade(vec2 p, float t) {
-  float eps = 0.0035;
-  float h = getWaveHeight(p, t);
-  float hx = getWaveHeight(p + vec2(eps, 0.0), t);
-  float hy = getWaveHeight(p + vec2(0.0, eps), t);
+  float eps = 0.003;
+  float h = getSilkHeight(p, t);
+  float hx = getSilkHeight(p + vec2(eps, 0.0), t);
+  float hy = getSilkHeight(p + vec2(0.0, eps), t);
   
-  // Real 3D surface normal derived from continuous slope (zero creases)
-  vec3 normal = normalize(vec3((h - hx) / eps * 0.16, (h - hy) / eps * 0.16, 1.0));
+  // 3D surface normal derived from continuous slope
+  vec3 normal = normalize(vec3((h - hx) / eps * 0.22, (h - hy) / eps * 0.22, 1.0));
   
-  // 3D Directional Key Light from top-left (reveals glossy ribbon ridges)
-  vec3 lightDir = normalize(vec3(0.55, 0.70, 0.80));
+  // 3D Directional Key Light from top-left
+  vec3 lightDir = normalize(vec3(0.60, 0.75, 0.85));
   vec3 viewDir = vec3(0.0, 0.0, 1.0);
   vec3 halfVec = normalize(lightDir + viewDir);
   
   // 3D Diffuse curvature
   float diff = max(0.0, dot(normal, lightDir));
   
-  // High-gloss specular highlight (liquid chrome reflection on wave crests)
-  float spec = pow(max(0.0, dot(normal, halfVec)), 26.0);
+  // Dual-lobe high-gloss specular highlight (soft satin glow + pinpoint chrome glint)
+  float spec1 = pow(max(0.0, dot(normal, halfVec)), 18.0);
+  float spec2 = pow(max(0.0, dot(normal, halfVec)), 48.0);
   
-  // 3D Fresnel rim light (gives silk ribbon 3D dimensional depth)
-  float fresnel = pow(1.0 - max(0.0, dot(normal, viewDir)), 2.8);
+  // 3D Fresnel rim light (creates dimensional silk ribbon contours)
+  float fresnel = pow(1.0 - max(0.0, dot(normal, viewDir)), 2.6);
   
   // Base body color mapped smoothly from height
-  float val = smoothstep(0.06, 0.94, h);
+  float val = smoothstep(0.04, 0.96, h);
   float n = max(u_colorCount - 1.0, 1.0);
   float f = clamp(val, 0.0, 1.0) * n;
   
@@ -87,12 +95,14 @@ vec3 shade(vec2 p, float t) {
     }
   }
   
-  // Combine 3D diffuse body with specular gleam
-  vec3 col = baseCol * (0.60 + 0.55 * diff);
+  // Combine 3D diffuse body with ambient
+  vec3 col = baseCol * (0.55 + 0.65 * diff);
   
-  // Glossy liquid chrome specular crest + silk fold rim light
-  vec3 specularCol = vec3(0.65, 0.72, 0.88);
-  col += specularCol * (spec * 1.15 + fresnel * 0.35);
+  // Glossy liquid chrome specular crest + silk fold rim light + chrome glint
+  vec3 glossColor = vec3(0.55, 0.65, 0.85);
+  vec3 glintColor = vec3(0.85, 0.92, 1.00);
+  col += glossColor * (spec1 * 0.85 + fresnel * 0.35);
+  col += glintColor * (spec2 * 0.75);
   
   return col;
 }
@@ -105,8 +115,8 @@ void main() {
   vec2 p = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / minDim;
   
   if (u_resolution.x < u_resolution.y) {
-    p *= 0.80;
-    p.y -= 0.12;
+    p *= 0.82;
+    p.y -= 0.10;
   }
   
   p *= u_scale;
@@ -118,14 +128,14 @@ void main() {
   
   vec3 col = shade(p, u_time);
   
-  // Perfectly smooth radial vignette fading directly into theme background (#09090b)
-  vec2 radialUv = (uv - 0.5) * vec2(1.0, u_resolution.y / max(u_resolution.x, 1.0) * 0.85);
+  // Smooth subtle perimeter fade to blend seamlessly into background without eating into content
+  vec2 radialUv = (uv - 0.5) * vec2(1.0, u_resolution.y / max(u_resolution.x, 1.0) * 0.75);
   float dist = length(radialUv);
-  float radialFade = smoothstep(0.20, 0.70, dist);
+  float radialFade = smoothstep(0.48, 0.92, dist);
   col = mix(col, u_colors[0], radialFade);
   
   // Smooth vertical bottom blend to merge into next section seamlessly
-  float bottomFade = smoothstep(0.0, 0.25, uv.y);
+  float bottomFade = smoothstep(0.0, 0.22, uv.y);
   col = mix(u_colors[0], col, bottomFade);
   
   gl_FragColor = vec4(clamp(col, 0.0, 1.0), 1.0);
@@ -135,18 +145,18 @@ void main() {
 // Smooth luminous 3D obsidian black palette (perfectly calibrated with #09090b)
 const UNIFORMS = {
   colors: [
-    [0.0353, 0.0353, 0.0431], // #09090b exact site background base
-    [0.0627, 0.0667, 0.0863], // Deep obsidian charcoal
-    [0.1098, 0.1255, 0.1725], // Rich dark slate body
-    [0.2157, 0.2510, 0.3451], // Liquid silk 3D midtone
-    [0.4000, 0.4588, 0.6078], // Glossy specular ridge
-    [0.6500, 0.7200, 0.9000], // Soft luminous silver crest peak
-    [0.6500, 0.7200, 0.9000],
-    [0.6500, 0.7200, 0.9000],
+    [0.0353, 0.0353, 0.0431], // #09090b site background base void
+    [0.0588, 0.0667, 0.0902], // Deep midnight shadow
+    [0.1098, 0.1294, 0.1843], // 3D dark slate body
+    [0.2118, 0.2549, 0.3647], // Rich liquid silk midtone
+    [0.3804, 0.4471, 0.6196], // Specular gloss ribbon ridge
+    [0.6275, 0.7059, 0.9020], // Soft luminous silver crest peak
+    [0.6275, 0.7059, 0.9020],
+    [0.6275, 0.7059, 0.9020],
   ] as [number, number, number][],
   colorCount: 6,
-  scale: 0.620,
-  intensity: 0.320,
+  scale: 0.580,
+  intensity: 0.350,
   paramA: 0.500,
   warp: 0.000,
   detail: 1.000,
@@ -154,20 +164,20 @@ const UNIFORMS = {
   brightness: 0.000,
   saturation: 0.250,
   hue: 0.0000,
-  vignette: 0.300,
+  vignette: 0.200,
   blur: 0.0000,
   grain: 0.000,
-  seed: 707.0,
-  rotate: 2.300,
-  offsetX: 0.040,
-  offsetY: 0.450,
+  seed: 520.0,
+  rotate: 0.850,
+  offsetX: 0.000,
+  offsetY: 0.050,
   drift: 0.000,
   cursorEnabled: false,
   cursorEffect: 2.0,
   cursorStrength: 0.650,
   cursorRadius: 0.460,
   oklab: 1.0,
-  timeOffset: 3.500,
+  timeOffset: 2.400,
   timeScale: 0.180,
 }
 
