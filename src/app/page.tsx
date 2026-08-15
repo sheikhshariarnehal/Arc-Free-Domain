@@ -457,7 +457,7 @@ export default function LandingPage() {
               >
                 <CardContent className="p-0 flex flex-col gap-3">
                   <div
-                    className="size-8 rounded-[4px] bg-white/[0.07] border border-white/[0.08] flex items-center justify-center text-zinc-300 group-hover:bg-white/[0.12] group-hover:border-white/[0.18] group-hover:text-white transition-all duration-150"
+                    className="size-8 rounded-[4px] bg-white/[0.07] flex items-center justify-center text-zinc-300 group-hover:bg-white/[0.12] group-hover:text-white transition-all duration-150"
                   >
                     <item.icon className="size-4 text-zinc-300 group-hover:text-white transition-colors" strokeWidth={1.5} />
                   </div>
@@ -489,7 +489,7 @@ export default function LandingPage() {
               >
                 <CardContent className="p-0 flex flex-col items-center">
                   <div
-                    className="flex size-7.5 items-center justify-center rounded-[4px] bg-white/[0.07] border border-white/[0.08] text-white font-mono text-xs font-bold mb-3 group-hover:bg-white/[0.12] group-hover:border-white/[0.18] transition-all duration-150"
+                    className="flex size-7.5 items-center justify-center rounded-[4px] bg-white/[0.07] text-white font-mono text-xs font-bold mb-3 group-hover:bg-white/[0.12] transition-all duration-150"
                   >
                     {item.step}
                   </div>
