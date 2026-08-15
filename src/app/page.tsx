@@ -162,15 +162,21 @@ export default function LandingPage() {
         {/* Hero Section */}
         <section className="relative mx-auto flex w-full min-w-0 max-w-5xl flex-1 flex-col items-center justify-center px-4 pt-24 pb-12 text-center sm:px-6 sm:pt-28 sm:pb-16 md:min-h-screen md:py-28 lg:px-8">
           {/* Headline */}
-          <h1 className="mb-4 w-full max-w-3xl text-[clamp(2.25rem,7.5vw,4.25rem)] font-extrabold leading-[1.1] tracking-[-0.04em] text-white sm:mb-5 text-balance">
-            <span>
-              Free <span className="text-[#0084ff] font-mono">.</span><span className="inline-block bg-[#021c3d] text-[#0084ff] font-mono px-1.5 py-0.5 rounded-none align-baseline leading-none">arc.bd</span> domains
+          <h1 className="mb-4 w-full max-w-3xl text-[clamp(1.85rem,6.2vw,3.75rem)] font-extrabold leading-[1.15] tracking-[-0.035em] text-white sm:mb-5">
+            <span className="inline-block sm:inline whitespace-nowrap">
+              Free{" "}
+              <span className="inline-flex items-center px-2 py-0.5 rounded-md font-mono font-bold text-blue-400 bg-blue-500/10 border border-blue-500/20 text-[0.88em] tracking-tight align-baseline shadow-xs">
+                .arc.bd
+              </span>{" "}
+              domains
             </span>
-            <span className="block mt-1 sm:mt-2">for developers.</span>
+            <span className="block mt-1 sm:mt-1.5 text-slate-100">
+              for developers.
+            </span>
           </h1>
 
           {/* Subheadline */}
-          <p className="mb-8 w-full max-w-xl px-2 text-sm sm:text-base font-normal leading-relaxed text-slate-300 sm:px-0">
+          <p className="mb-7 w-full max-w-xl px-2 text-sm sm:text-base font-normal leading-relaxed text-slate-300 sm:mb-8 sm:px-0">
             <span>Claim your free custom address for your website, portfolio, or web app.</span>
           </p>
 
@@ -209,8 +215,7 @@ export default function LandingPage() {
                 <Button
                   type="submit"
                   disabled={loading}
-                  variant="default"
-                  className="w-full h-11 text-xs font-semibold rounded-full bg-foreground text-background hover:bg-foreground/90 active:scale-[0.99] transition-transform duration-150"
+                  className="w-full h-11 text-xs font-semibold rounded-full bg-blue-600 hover:bg-blue-500 text-white shadow-md shadow-blue-600/25 active:scale-[0.99] transition-all duration-150"
                 >
                   {loading ? <Loader2 className="size-3.5 animate-spin mr-1.5" /> : <Search className="size-3.5 mr-1.5" />}
                   {loading ? "Checking..." : "Check availability"}
@@ -219,7 +224,7 @@ export default function LandingPage() {
 
               {/* Desktop Input Container */}
               <div className="hidden sm:flex relative items-center skeuo-input rounded-full p-1.5 pl-4 transition-all duration-200 group overflow-hidden">
-                <Search className="size-4 text-slate-400 shrink-0 mr-2.5 transition-colors duration-200 group-focus-within:text-primary" />
+                <Search className="size-4 text-slate-400 shrink-0 mr-2.5 transition-colors duration-200 group-focus-within:text-blue-400" />
                 <input
                   type="text"
                   placeholder="your-project"
@@ -245,7 +250,7 @@ export default function LandingPage() {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="h-10 px-5 text-xs font-semibold shrink-0 rounded-full bg-foreground text-background hover:bg-foreground/90 active:scale-[0.98] transition-transform duration-150"
+                  className="h-10 px-5 text-xs font-semibold shrink-0 rounded-full bg-blue-600 hover:bg-blue-500 text-white shadow-sm shadow-blue-600/20 active:scale-[0.98] transition-all duration-150"
                 >
                   {loading ? <Loader2 className="size-3.5 animate-spin mr-1" /> : <Search className="size-3.5 mr-1" />}
                   {loading ? "Checking..." : "Check availability"}

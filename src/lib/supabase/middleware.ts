@@ -153,21 +153,32 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Redirect unauthenticated users trying to access protected routes
-  const protectedPaths = ["/dashboard", "/admin"];
-  const isProtected = protectedPaths.some((path) =>
-    request.nextUrl.pathname.startsWith(path)
-  );
+  const currentPath = request.nextUrl.pathname;
 
-  if (isProtected && !user) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/login";
-    url.searchParams.set("redirect", request.nextUrl.pathname);
-    return NextResponse.redirect(url);
+  // /admin/login is always publicly accessible (the login page itself)
+  const isAdminLoginPage = currentPath === "/admin/login";
+
+  // Redirect unauthenticated users to the appropriate login page
+  if (!isAdminLoginPage) {
+    if (currentPath.startsWith("/admin") && !user) {
+      // Admin routes → dedicated admin login
+      const url = request.nextUrl.clone();
+      url.pathname = "/admin/login";
+      url.searchParams.set("redirect", currentPath);
+      return NextResponse.redirect(url);
+    }
+
+    if (currentPath.startsWith("/dashboard") && !user) {
+      // Dashboard routes → regular user login
+      const url = request.nextUrl.clone();
+      url.pathname = "/login";
+      url.searchParams.set("redirect", currentPath);
+      return NextResponse.redirect(url);
+    }
   }
 
-  // Redirect admin paths if user is not admin
-  if (request.nextUrl.pathname.startsWith("/admin") && user) {
+  // Enforce admin role for /admin/* (except /admin/login)
+  if (!isAdminLoginPage && currentPath.startsWith("/admin") && user) {
     const { data: profile } = await supabase
       .from("profiles")
       .select("role")
@@ -175,6 +186,7 @@ export async function updateSession(request: NextRequest) {
       .single();
 
     if (profile?.role !== "admin") {
+      // Not an admin — send to their dashboard, not the admin login
       const url = request.nextUrl.clone();
       url.pathname = "/dashboard";
       return NextResponse.redirect(url);

@@ -43,6 +43,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     });
   }, []);
 
+  // Admin login page must render standalone — no sidebar shell
+  // (All hooks are declared above to satisfy the Rules of Hooks)
+  if (pathname === "/admin/login") {
+    return <>{children}</>;
+  }
+
   const handleSignOut = async () => {
     const supabase = createClient();
     await supabase.auth.signOut();
