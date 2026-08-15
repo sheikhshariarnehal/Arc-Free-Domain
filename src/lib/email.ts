@@ -10,7 +10,14 @@ interface SendEmailParams {
   text: string;
 }
 
-const DEFAULT_FROM = process.env.EMAIL_FROM || process.env.SMTP_FROM || "ARC.BD <noreply@arc.bd>";
+function getFromAddress(): string {
+  const rawFrom = (process.env.EMAIL_FROM || process.env.SMTP_FROM || "").trim().replace(/^["']|["']$/g, "");
+  if (rawFrom && rawFrom.includes("@")) {
+    return rawFrom;
+  }
+  return "ARC.BD <noreply@arc.bd>";
+}
+
 const REPLY_TO = "support@arc.bd";
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://arc.bd";
 
@@ -31,15 +38,16 @@ export function isEmailServiceConfigured(): boolean {
  * 3. Otherwise logs formatted email to server console (Dev simulation).
  */
 export async function sendEmail({ to, subject, html, text }: SendEmailParams): Promise<{ success: boolean; id?: string; error?: string }> {
-  const resendApiKey = process.env.RESEND_API_KEY;
+  const resendApiKey = (process.env.RESEND_API_KEY || "").trim().replace(/^["']|["']$/g, "");
   const smtpHost = process.env.SMTP_HOST;
+  const fromAddress = getFromAddress();
 
   // 1. Resend SDK API
   if (resendApiKey) {
     try {
       const resend = new Resend(resendApiKey);
       const { data, error } = await resend.emails.send({
-        from: DEFAULT_FROM,
+        from: fromAddress,
         to: [to],
         replyTo: REPLY_TO,
         subject,
