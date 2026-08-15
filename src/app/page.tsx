@@ -255,7 +255,7 @@ export default function LandingPage() {
               {/* Mobile Input Container */}
               <div className="flex flex-col gap-2.5 sm:hidden w-full">
                 <div className="relative flex items-center skeuo-input rounded-full px-4.5 py-3 transition-all duration-200 group w-full overflow-hidden">
-                  <Search className="size-4 text-zinc-400 shrink-0 mr-2.5 group-focus-within:text-zinc-200 transition-colors duration-200" strokeWidth={1.5} />
+                  <Search className="size-4 text-zinc-400 shrink-0 mr-2.5 group-focus-within:text-blue-400 transition-colors duration-200" strokeWidth={1.5} />
                   <input
                     ref={mobileInputRef}
                     type="text"
@@ -283,9 +283,8 @@ export default function LandingPage() {
                 </div>
                 <Button
                   type="submit"
-                  variant="ghost"
                   disabled={loading}
-                  className="w-full h-11 text-xs font-semibold rounded-full bg-white/[0.08] hover:bg-white/[0.14] border border-white/[0.1] text-zinc-200 hover:text-white active:scale-[0.99] transition-all duration-150 cursor-pointer"
+                  className="w-full h-11 text-xs font-semibold rounded-full bg-blue-600 hover:bg-blue-500 text-white shadow-md shadow-blue-600/25 active:scale-[0.99] transition-all duration-150 cursor-pointer"
                 >
                   {loading ? <Loader2 className="size-3.5 animate-spin mr-1.5" /> : <Search className="size-3.5 mr-1.5" strokeWidth={2} />}
                   {loading ? "Checking..." : "Check availability"}
@@ -294,7 +293,7 @@ export default function LandingPage() {
 
               {/* Desktop Input Container with Keyboard Shortcut Pill */}
               <div className="hidden sm:flex relative items-center skeuo-input rounded-full p-1.5 pl-4 transition-all duration-200 group overflow-hidden">
-                <Search className="size-4 text-zinc-400 shrink-0 mr-2.5 transition-colors duration-200 group-focus-within:text-zinc-200" strokeWidth={1.5} />
+                <Search className="size-4 text-zinc-400 shrink-0 mr-2.5 transition-colors duration-200 group-focus-within:text-blue-400" strokeWidth={1.5} />
                 <input
                   ref={inputRef}
                   type="text"
@@ -327,9 +326,8 @@ export default function LandingPage() {
                 <span className="text-xs text-zinc-400 font-mono font-semibold mr-3 shrink-0 select-none">.arc.bd</span>
                 <Button
                   type="submit"
-                  variant="ghost"
                   disabled={loading}
-                  className="h-10 px-5 text-xs font-semibold shrink-0 rounded-full bg-white/[0.08] hover:bg-white/[0.14] border border-white/[0.1] text-zinc-200 hover:text-white active:scale-[0.98] transition-all duration-150 cursor-pointer"
+                  className="h-10 px-5 text-xs font-semibold shrink-0 rounded-full bg-blue-600 hover:bg-blue-500 text-white shadow-sm shadow-blue-600/20 active:scale-[0.98] transition-all duration-150 cursor-pointer"
                 >
                   {loading ? <Loader2 className="size-3.5 animate-spin mr-1" /> : <Search className="size-3.5 mr-1" strokeWidth={2} />}
                   {loading ? "Checking..." : "Check availability"}
@@ -405,7 +403,9 @@ export default function LandingPage() {
           </div>
 
           {/* Supported Stacks & Deployments Ticker / Pill Strip */}
-          <div className="w-full max-w-4xl mx-auto mt-14 sm:mt-16 pt-8 border-t border-white/[0.05]">
+          <div className="w-full max-w-4xl mx-auto mt-14 sm:mt-16 flex flex-col items-center">
+            {/* Soft Faded Divider that blends into darkness */}
+            <div className="w-full max-w-xl h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent mb-6 sm:mb-8" />
             <div className="text-[10px] font-mono text-zinc-600 tracking-[0.14em] uppercase mb-4 text-center select-none">
               Works with your stack
             </div>
