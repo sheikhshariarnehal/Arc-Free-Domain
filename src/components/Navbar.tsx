@@ -128,19 +128,19 @@ export default function Navbar({ transparent = false }: { transparent?: boolean 
             <Image src="/ARC.webp" alt="ARC.BD Logo" width={22} height={22} className="size-4.5 object-contain" />
           </div>
           <span className="font-bold text-xs sm:text-[13px] tracking-tight text-white">
-            ARC<span className="text-blue-400 font-mono">.BD</span>
+            ARC<span className="text-zinc-400 font-mono">.BD</span>
           </span>
         </Link>
 
         {/* Desktop Navigation Links */}
         <nav className="hidden md:flex items-center gap-6 lg:gap-8 text-xs sm:text-[13px] font-medium tracking-tight">
-          <Link href="/" className="text-slate-300 hover:text-white transition-colors duration-200">
+          <Link href="/" className="text-zinc-200 hover:text-white transition-colors duration-200">
             Home
           </Link>
-          <Link href="/docs" className="text-slate-400 hover:text-white transition-colors duration-200">
+          <Link href="/docs" className="text-zinc-400 hover:text-white transition-colors duration-200">
             Docs
           </Link>
-          <Link href="/report" className="text-slate-400 hover:text-white transition-colors duration-200">
+          <Link href="/report" className="text-zinc-400 hover:text-white transition-colors duration-200">
             Report Abuse
           </Link>
         </nav>
@@ -263,30 +263,30 @@ export default function Navbar({ transparent = false }: { transparent?: boolean 
             <Link
               href="/"
               onClick={() => setIsOpen(false)}
-              className="flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-slate-200 hover:text-white hover:bg-white/10 transition-all"
+              className="flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-zinc-200 hover:text-white hover:bg-white/10 transition-all"
             >
               <span className="flex items-center gap-3">
-                <Globe2 className="size-4 text-blue-400 shrink-0" />
+                <Globe2 className="size-4 text-zinc-400 shrink-0" />
                 Home
               </span>
             </Link>
             <Link
               href="/docs"
               onClick={() => setIsOpen(false)}
-              className="flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-slate-200 hover:text-white hover:bg-white/10 transition-all"
+              className="flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-zinc-200 hover:text-white hover:bg-white/10 transition-all"
             >
               <span className="flex items-center gap-3">
-                <BookOpen className="size-4 text-blue-400 shrink-0" />
+                <BookOpen className="size-4 text-zinc-400 shrink-0" />
                 Documentation
               </span>
             </Link>
             <Link
               href="/report"
               onClick={() => setIsOpen(false)}
-              className="flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-slate-200 hover:text-white hover:bg-white/10 transition-all"
+              className="flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-zinc-200 hover:text-white hover:bg-white/10 transition-all"
             >
               <span className="flex items-center gap-3">
-                <Shield className="size-4 text-amber-400 shrink-0" />
+                <Shield className="size-4 text-zinc-400 shrink-0" />
                 Report Abuse
               </span>
             </Link>
@@ -303,14 +303,14 @@ export default function Navbar({ transparent = false }: { transparent?: boolean 
                   {isAdmin ? (
                     <Badge variant="destructive" className="text-xs font-mono shrink-0">Admin</Badge>
                   ) : (
-                    <Badge variant="outline" className="text-xs text-primary border-primary/20 bg-primary/10 font-mono shrink-0">Developer</Badge>
+                    <Badge variant="outline" className="text-xs text-zinc-300 border-white/20 bg-white/10 font-mono shrink-0">Developer</Badge>
                   )}
                 </div>
                 <Button
                   asChild
                   variant="default"
                   size="sm"
-                  className="w-full justify-center rounded-full h-9 font-semibold text-xs shadow-md shadow-blue-500/20"
+                  className="w-full justify-center rounded-full h-9 font-semibold text-xs bg-white text-zinc-950 hover:bg-zinc-200"
                 >
                   <Link href="/dashboard" onClick={() => setIsOpen(false)}>
                     <LayoutDashboard className="size-3.5 mr-2" />
@@ -332,7 +332,7 @@ export default function Navbar({ transparent = false }: { transparent?: boolean 
                 asChild
                 variant="default"
                 size="sm"
-                className="w-full justify-center rounded-full h-9.5 font-semibold text-xs shadow-lg shadow-blue-500/25"
+                className="w-full justify-center rounded-full h-9.5 font-semibold text-xs bg-white text-zinc-950 hover:bg-zinc-200"
               >
                 <Link href="/login" onClick={() => setIsOpen(false)}>
                   Sign In

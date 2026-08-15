@@ -240,7 +240,7 @@ export default function LandingPage() {
           </h1>
 
           {/* Subheadline */}
-          <p className="mb-7 w-full max-w-xl px-2 text-sm sm:text-base font-normal leading-relaxed text-slate-300 sm:mb-8 sm:px-0">
+          <p className="mb-7 w-full max-w-xl px-2 text-sm sm:text-base font-normal leading-relaxed text-zinc-400 sm:mb-8 sm:px-0">
             <span>Claim your free custom address for your website, portfolio, or web app. Connect instantly with Cloudflare DNS.</span>
           </p>
 
@@ -250,7 +250,7 @@ export default function LandingPage() {
               {/* Mobile Input Container */}
               <div className="flex flex-col gap-2.5 sm:hidden w-full">
                 <div className="relative flex items-center skeuo-input rounded-full px-4.5 py-3 transition-all duration-200 group w-full overflow-hidden">
-                  <Search className="size-4 text-slate-400 shrink-0 mr-2.5 group-focus-within:text-primary transition-colors duration-200" strokeWidth={1.75} />
+                  <Search className="size-4 text-zinc-400 shrink-0 mr-2.5 group-focus-within:text-blue-400 transition-colors duration-200" strokeWidth={1.5} />
                   <input
                     ref={mobileInputRef}
                     type="text"
@@ -260,19 +260,19 @@ export default function LandingPage() {
                     onChange={(e) => {
                       setSearchQuery(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''));
                     }}
-                    className="w-full min-w-0 bg-transparent text-sm text-white placeholder:text-slate-400 focus:outline-none font-mono font-medium pr-2"
+                    className="w-full min-w-0 bg-transparent text-sm text-white placeholder:text-zinc-500 focus:outline-none font-mono font-medium pr-2"
                   />
                   {searchQuery && (
                     <button 
                       type="button" 
                       onClick={clearSearch} 
                       aria-label="Clear subdomain search" 
-                      className="p-1 text-slate-400 hover:text-white transition-all duration-150 mr-1 shrink-0 active:scale-90 cursor-pointer"
+                      className="p-1 text-zinc-400 hover:text-white transition-all duration-150 mr-1 shrink-0 active:scale-90 cursor-pointer"
                     >
                       <X className="size-3.5" strokeWidth={2} />
                     </button>
                   )}
-                  <span className="text-xs text-slate-300 font-mono font-semibold mr-1.5 shrink-0 select-none">
+                  <span className="text-xs text-zinc-400 font-mono font-semibold mr-1.5 shrink-0 select-none">
                     .arc.bd
                   </span>
                 </div>
@@ -288,7 +288,7 @@ export default function LandingPage() {
 
               {/* Desktop Input Container with Keyboard Shortcut Pill */}
               <div className="hidden sm:flex relative items-center skeuo-input rounded-full p-1.5 pl-4 transition-all duration-200 group overflow-hidden">
-                <Search className="size-4 text-slate-400 shrink-0 mr-2.5 transition-colors duration-200 group-focus-within:text-blue-400" strokeWidth={1.75} />
+                <Search className="size-4 text-zinc-400 shrink-0 mr-2.5 transition-colors duration-200 group-focus-within:text-blue-400" strokeWidth={1.5} />
                 <input
                   ref={inputRef}
                   type="text"
@@ -298,12 +298,12 @@ export default function LandingPage() {
                   onChange={(e) => {
                     setSearchQuery(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''));
                   }}
-                  className="w-full min-w-0 bg-transparent text-sm text-white placeholder:text-slate-400 focus:outline-none font-mono font-medium"
+                  className="w-full min-w-0 bg-transparent text-sm text-white placeholder:text-zinc-500 focus:outline-none font-mono font-medium"
                 />
                 
                 {/* Keyboard Shortcut Hint Pill */}
                 {!searchQuery && (
-                  <kbd className="hidden md:inline-flex items-center px-1.5 py-0.5 rounded bg-white/10 text-[10px] font-mono text-slate-400 border border-white/10 mr-2 select-none pointer-events-none">
+                  <kbd className="hidden md:inline-flex items-center px-1.5 py-0.5 rounded bg-white/[0.06] text-[10px] font-mono text-zinc-400 border border-white/10 mr-2 select-none pointer-events-none">
                     /
                   </kbd>
                 )}
@@ -313,12 +313,12 @@ export default function LandingPage() {
                     type="button" 
                     onClick={clearSearch} 
                     aria-label="Clear subdomain search" 
-                    className="p-1 text-slate-400 hover:text-white transition-all duration-150 mr-1 shrink-0 active:scale-90 cursor-pointer"
+                    className="p-1 text-zinc-400 hover:text-white transition-all duration-150 mr-1 shrink-0 active:scale-90 cursor-pointer"
                   >
                     <X className="size-3.5" strokeWidth={2} />
                   </button>
                 )}
-                <span className="text-xs text-slate-300 font-mono font-semibold mr-3 shrink-0 select-none">.arc.bd</span>
+                <span className="text-xs text-zinc-400 font-mono font-semibold mr-3 shrink-0 select-none">.arc.bd</span>
                 <Button
                   type="submit"
                   disabled={loading}
@@ -355,12 +355,12 @@ export default function LandingPage() {
                 )}
 
                 {availability === 'taken' && (
-                  <div className="flex flex-col gap-2.5 p-3 px-4 rounded-2xl w-full border border-rose-500/20 bg-rose-500/10 backdrop-blur-md text-left">
-                    <div className="flex items-center gap-2 text-xs sm:text-sm text-rose-300 font-mono">
+                  <div className="flex flex-col gap-2.5 p-3.5 px-4 rounded-2xl w-full border border-white/15 bg-[#09090b]/95 backdrop-blur-md text-left shadow-xl">
+                    <div className="flex items-center gap-2 text-xs sm:text-sm text-zinc-200 font-mono">
                       {isReserved ? (
-                        <ShieldAlert className="size-4 shrink-0 text-amber-400" strokeWidth={1.75} />
+                        <ShieldAlert className="size-4 shrink-0 text-zinc-400" strokeWidth={1.5} />
                       ) : (
-                        <XCircle className="size-4 shrink-0 text-rose-400" strokeWidth={1.75} />
+                        <XCircle className="size-4 shrink-0 text-zinc-400" strokeWidth={1.5} />
                       )}
                       <span>
                         <strong className="font-semibold text-white">{searchQuery}</strong>.arc.bd is {isReserved ? "a reserved system name" : "already taken"}
@@ -368,9 +368,9 @@ export default function LandingPage() {
                     </div>
 
                     {!isReserved && (
-                      <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-rose-500/20 text-xs font-mono text-slate-300">
-                        <span className="flex items-center gap-1 text-slate-400 text-[11px] font-medium shrink-0 mr-1">
-                          <Lightbulb className="size-3 text-amber-400" strokeWidth={1.75} /> Alternatives:
+                      <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-white/[0.08] text-xs font-mono text-zinc-300">
+                        <span className="flex items-center gap-1 text-zinc-400 text-[11px] font-medium shrink-0 mr-1">
+                          <Lightbulb className="size-3 text-zinc-300" strokeWidth={1.5} /> Alternatives:
                         </span>
                         <div className="flex flex-wrap gap-1.5">
                           {getAlternatives(searchQuery).map((alt, idx) => (
@@ -378,7 +378,7 @@ export default function LandingPage() {
                               key={alt}
                               onClick={() => handleSuggestionClick(alt)}
                               style={{ animationDelay: `${idx * 40}ms` }}
-                              className="animate-chip-in px-2.5 py-0.5 rounded-full bg-white/10 hover:bg-primary/20 hover:scale-105 active:scale-95 text-slate-200 hover:text-primary border border-white/5 transition-all duration-150 cursor-pointer text-[11px] font-mono"
+                              className="animate-chip-in px-2.5 py-0.5 rounded-full bg-white/[0.06] hover:bg-white/15 hover:scale-105 active:scale-95 text-zinc-300 hover:text-white border border-white/10 transition-all duration-150 cursor-pointer text-[11px] font-mono"
                             >
                               {alt}.arc.bd
                             </button>
@@ -392,15 +392,15 @@ export default function LandingPage() {
             )}
 
             {/* Platform Feature Badges */}
-            <div className="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[11px] font-medium text-slate-400 sm:mt-6 sm:gap-x-5 sm:text-xs select-none">
-              <span className="flex items-center gap-1.5 text-slate-400">
-                <Globe className="size-3.5 text-slate-400 shrink-0" strokeWidth={1.5} /> Free Forever
+            <div className="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[11px] font-medium text-zinc-400 sm:mt-6 sm:gap-x-5 sm:text-xs select-none">
+              <span className="flex items-center gap-1.5 text-zinc-400">
+                <Globe className="size-3.5 text-zinc-400 shrink-0" strokeWidth={1.5} /> Free Forever
               </span>
-              <span className="flex items-center gap-1.5 text-slate-400">
-                <Zap className="size-3.5 text-slate-400 shrink-0" strokeWidth={1.5} /> Instant Anycast DNS
+              <span className="flex items-center gap-1.5 text-zinc-400">
+                <Zap className="size-3.5 text-zinc-400 shrink-0" strokeWidth={1.5} /> Instant Anycast DNS
               </span>
-              <span className="flex items-center gap-1.5 text-slate-400">
-                <Lock className="size-3.5 text-slate-400 shrink-0" strokeWidth={1.5} /> Automatic Edge SSL
+              <span className="flex items-center gap-1.5 text-zinc-400">
+                <Lock className="size-3.5 text-zinc-400 shrink-0" strokeWidth={1.5} /> Automatic Edge SSL
               </span>
             </div>
           </div>
@@ -414,7 +414,7 @@ export default function LandingPage() {
 
           {/* Supported Stacks & Deployments Ticker / Pill Strip */}
           <div className="w-full max-w-4xl mx-auto mt-10 pt-6 border-t border-white/[0.06]">
-            <div className="text-[11px] font-mono font-medium text-slate-400 tracking-wider uppercase mb-3 text-center">
+            <div className="text-[11px] font-mono font-medium text-zinc-400 tracking-wider uppercase mb-3 text-center">
               Works seamlessly with your entire tech stack
             </div>
             <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5">
@@ -423,9 +423,9 @@ export default function LandingPage() {
                 return (
                   <div
                     key={item.name}
-                    className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.07] text-xs font-mono text-slate-300 hover:border-white/20 hover:text-white transition-colors select-none"
+                    className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.07] text-xs font-mono text-zinc-300 hover:border-white/20 hover:text-white transition-colors select-none"
                   >
-                    <Icon size={12} className="shrink-0 text-slate-400" strokeWidth={1.5} />
+                    <Icon size={12} className="shrink-0 text-zinc-400" strokeWidth={1.5} />
                     <span>{item.name}</span>
                   </div>
                 );
@@ -500,7 +500,7 @@ export default function LandingPage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-white/10 bg-background text-xs text-slate-300">
+      <footer className="border-t border-white/[0.08] bg-black text-xs text-zinc-400">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
           <div className="flex items-center gap-2">
             <div
@@ -510,10 +510,10 @@ export default function LandingPage() {
               <Image src="/ARC.webp" alt="ARC.BD Logo" width={20} height={20} className="size-4 object-contain" />
             </div>
             <span className="font-semibold text-white">ARC.BD</span>
-            <span className="text-slate-300">&copy; {new Date().getFullYear()}</span>
+            <span className="text-zinc-500">&copy; {new Date().getFullYear()}</span>
           </div>
 
-          <div className="flex items-center space-x-6 text-xs text-slate-300 font-medium">
+          <div className="flex items-center space-x-6 text-xs text-zinc-400 font-medium">
             <Link href="/docs" className="hover:text-white transition-colors">Docs</Link>
             <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
             <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>

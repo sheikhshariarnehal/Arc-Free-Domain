@@ -10,6 +10,8 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: "skeuo-button-primary",
+        stealth: "bg-white text-zinc-950 hover:bg-zinc-200 font-semibold shadow-none border-none",
+        white: "bg-white text-zinc-950 hover:bg-zinc-200 font-semibold shadow-none border-none",
         emerald: "skeuo-button-emerald",
         dark: "skeuo-button",
         destructive: "skeuo-button-destructive",
