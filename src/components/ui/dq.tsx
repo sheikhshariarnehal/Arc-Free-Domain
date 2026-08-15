@@ -33,59 +33,62 @@ uniform vec4 u_cursor;
 #define u_intensity u_shape.y
 #define u_rotate u_transform.y
 
-// High-fidelity 3D multi-layered liquid silk ribbon field
+// Sculpted 3D liquid silk ribbon folds with sharp crest definition
 float getSilkHeight(vec2 p, float t) {
   vec2 q = p * 1.55;
   
-  // Layer 1: Primary sweeping liquid folds
-  q.x += 0.52 * sin(1.2 * q.y + t * 0.38 + 0.7);
-  q.y += 0.52 * cos(1.1 * q.x + t * 0.32 + 1.2);
+  // Layer 1: Sweeping primary ribbon folds
+  q.x += 0.55 * sin(1.3 * q.y + t * 0.38 + 0.6);
+  q.y += 0.55 * cos(1.1 * q.x + t * 0.32 + 1.2);
   
-  // Layer 2: Secondary silky undulations
-  q.x += 0.34 * sin(2.3 * q.y - t * 0.44 + 2.1);
-  q.y += 0.34 * cos(1.9 * q.x + t * 0.39 + 0.9);
+  // Layer 2: Secondary undulation
+  q.x += 0.35 * sin(2.2 * q.y - t * 0.44 + 2.1);
+  q.y += 0.35 * cos(1.8 * q.x + t * 0.38 + 0.9);
   
-  // Layer 3: Fine liquid satin ripples
-  q.x += 0.18 * sin(3.6 * q.y + t * 0.52 + 3.4);
-  q.y += 0.18 * cos(3.1 * q.x - t * 0.46 + 2.4);
+  // Layer 3: High-relief satin crease
+  q.x += 0.16 * sin(3.6 * q.y + t * 0.52 + 3.4);
+  q.y += 0.16 * cos(3.0 * q.x - t * 0.46 + 2.4);
   
-  // Layer 4: Micro specular ribbon ridges
-  q.x += 0.09 * sin(5.2 * q.y - t * 0.60 + 1.5);
-  q.y += 0.09 * cos(4.7 * q.x + t * 0.55 + 3.8);
+  // Distinct folded ribbon profile
+  float r1 = sin(q.x * 1.35 + q.y * 1.6);
+  float r2 = cos(q.x * 2.1 - q.y * 1.25 + t * 0.3);
   
-  float val = 0.5 + 0.5 * sin(q.x * 1.2 + q.y * 1.4);
-  return val;
+  // Fold inversion & sharpening: creates sharp, physical 3D crest ridges
+  float h = 0.5 + 0.5 * (r1 * 0.65 + r2 * 0.35);
+  h = 1.0 - abs(h * 2.0 - 1.0);
+  h = pow(h, 1.8);
+  return h;
 }
 
-// True 3D Shading Engine: Surface Normals, Diffuse Curvature, Specular Glints & Fresnel Sheen
+// True 3D Shading Engine: High-Relief Normals, Deep Shadow Valleys, Crisp Specular & Fresnel Sheen
 vec3 shade(vec2 p, float t) {
-  float eps = 0.003;
+  float eps = 0.0022;
   float h = getSilkHeight(p, t);
   float hx = getSilkHeight(p + vec2(eps, 0.0), t);
   float hy = getSilkHeight(p + vec2(0.0, eps), t);
   
-  // 3D surface normal derived from continuous slope
-  vec3 normal = normalize(vec3((h - hx) / eps * 0.22, (h - hy) / eps * 0.22, 1.0));
+  // High-relief 3D surface normal derived from slope
+  vec3 normal = normalize(vec3((h - hx) / eps * 0.42, (h - hy) / eps * 0.42, 1.0));
   
   // 3D Directional Key Light from top-left
-  vec3 lightDir = normalize(vec3(0.60, 0.75, 0.85));
+  vec3 lightDir = normalize(vec3(0.65, 0.80, 0.85));
   vec3 viewDir = vec3(0.0, 0.0, 1.0);
   vec3 halfVec = normalize(lightDir + viewDir);
   
-  // 3D Diffuse curvature
+  // High-contrast 3D diffuse shading with deep shadowed troughs
   float diff = max(0.0, dot(normal, lightDir));
+  diff = pow(diff, 1.5);
   
-  // Dual-lobe high-gloss specular highlight (soft satin glow + pinpoint chrome glint)
-  float spec1 = pow(max(0.0, dot(normal, halfVec)), 18.0);
-  float spec2 = pow(max(0.0, dot(normal, halfVec)), 48.0);
+  // Dual-lobe high-gloss specular highlight (satin gloss + razor sharp chrome glint)
+  float specGloss = pow(max(0.0, dot(normal, halfVec)), 28.0);
+  float specGlint = pow(max(0.0, dot(normal, halfVec)), 72.0);
   
-  // 3D Fresnel rim light (creates dimensional silk ribbon contours)
-  float fresnel = pow(1.0 - max(0.0, dot(normal, viewDir)), 2.6);
+  // 3D Fresnel rim light (sculpts the curved boundaries of silk ribbons)
+  float fresnel = pow(1.0 - max(0.0, dot(normal, viewDir)), 3.0);
   
-  // Base body color mapped smoothly from height
-  float val = smoothstep(0.04, 0.96, h);
+  // Base body color mapped from height
   float n = max(u_colorCount - 1.0, 1.0);
-  float f = clamp(val, 0.0, 1.0) * n;
+  float f = clamp(h, 0.0, 1.0) * n;
   
   vec3 baseCol = u_colors[0];
   for (int i = 0; i < 7; i++) {
@@ -95,14 +98,15 @@ vec3 shade(vec2 p, float t) {
     }
   }
   
-  // Combine 3D diffuse body with ambient
-  vec3 col = baseCol * (0.55 + 0.65 * diff);
+  // High-contrast base: pitch dark in valleys, illuminated along crests
+  vec3 col = baseCol * (0.35 + 0.85 * diff);
   
-  // Glossy liquid chrome specular crest + silk fold rim light + chrome glint
-  vec3 glossColor = vec3(0.55, 0.65, 0.85);
-  vec3 glintColor = vec3(0.85, 0.92, 1.00);
-  col += glossColor * (spec1 * 0.85 + fresnel * 0.35);
-  col += glintColor * (spec2 * 0.75);
+  // Crisp metallic liquid chrome specular & rim highlights
+  vec3 glintColor = vec3(0.92, 0.96, 1.00); // Razor sharp specular crest peak
+  vec3 rimColor   = vec3(0.45, 0.52, 0.68); // Dimensional fold edge
+  
+  col += rimColor * (fresnel * 0.40 + specGloss * 0.40);
+  col += glintColor * (specGlint * 1.40);
   
   return col;
 }
@@ -128,7 +132,7 @@ void main() {
   
   vec3 col = shade(p, u_time);
   
-  // Smooth subtle perimeter fade to blend seamlessly into background without eating into content
+  // Smooth subtle perimeter fade to blend seamlessly into background
   vec2 radialUv = (uv - 0.5) * vec2(1.0, u_resolution.y / max(u_resolution.x, 1.0) * 0.75);
   float dist = length(radialUv);
   float radialFade = smoothstep(0.48, 0.92, dist);
@@ -142,17 +146,17 @@ void main() {
 }
 `
 
-// Smooth luminous 3D obsidian black palette (perfectly calibrated with #09090b)
+// Sharp high-contrast 3D obsidian/liquid steel palette
 const UNIFORMS = {
   colors: [
-    [0.0353, 0.0353, 0.0431], // #09090b site background base void
-    [0.0588, 0.0667, 0.0902], // Deep midnight shadow
-    [0.1098, 0.1294, 0.1843], // 3D dark slate body
-    [0.2118, 0.2549, 0.3647], // Rich liquid silk midtone
-    [0.3804, 0.4471, 0.6196], // Specular gloss ribbon ridge
-    [0.6275, 0.7059, 0.9020], // Soft luminous silver crest peak
-    [0.6275, 0.7059, 0.9020],
-    [0.6275, 0.7059, 0.9020],
+    [0.015, 0.015, 0.018], // Pitch black obsidian base void (#040405)
+    [0.035, 0.038, 0.048], // Dark graphite shadow trough
+    [0.075, 0.088, 0.118], // 3D dark slate body
+    [0.160, 0.190, 0.255], // Dimensional liquid steel fold
+    [0.320, 0.380, 0.510], // Luminous chrome specular ridge
+    [0.650, 0.740, 0.950], // Crisp high-relief specular crest
+    [0.650, 0.740, 0.950],
+    [0.650, 0.740, 0.950],
   ] as [number, number, number][],
   colorCount: 6,
   scale: 0.580,
@@ -178,7 +182,7 @@ const UNIFORMS = {
   cursorRadius: 0.460,
   oklab: 1.0,
   timeOffset: 2.400,
-  timeScale: 0.180,
+  timeScale: 0.160,
 }
 
 const pendingContextReleases = new WeakMap<HTMLCanvasElement, number>()
