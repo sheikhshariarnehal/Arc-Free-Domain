@@ -148,8 +148,16 @@ vec3 shade(vec2 uv, vec2 p, float t) {
 void main() {
   vec2 uv = gl_FragCoord.xy / u_resolution.xy;
   vec2 screenUv = uv;
-  vec2 p = (gl_FragCoord.xy - 0.5 * u_resolution.xy)
-    / min(u_resolution.x, u_resolution.y);
+  
+  // Aspect-normalized responsive coordinates for mobile & desktop
+  float minDim = min(u_resolution.x, u_resolution.y);
+  vec2 p = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / minDim;
+  
+  // Mobile portrait adjustment: adapt scale and vertical framing so waves wrap around mobile hero
+  if (u_resolution.x < u_resolution.y) {
+    p *= 0.85;
+    p.y -= 0.14;
+  }
   float cursorMask = 0.0;
 
   // Cursor modes 1–3 are local distortions. Push shifts the same screen-space
@@ -227,9 +235,10 @@ void main() {
     float vd = length(screenUv - 0.5) * 1.41421356;
     col *= 1.0 - u_vignette * smoothstep(0.35, 1.0, vd);
   }
-  // Smooth natural perimeter falloff: dissolves gracefully to pitch black at all edges
+  // Smooth natural perimeter falloff: dissolves gracefully to pitch black at outer boundaries
   float edgeDist = min(min(screenUv.x, 1.0 - screenUv.x), min(screenUv.y, 1.0 - screenUv.y));
-  float edgeFalloff = smoothstep(0.0, 0.16, edgeDist);
+  float edgeThreshold = u_resolution.x < u_resolution.y ? 0.06 : 0.14;
+  float edgeFalloff = smoothstep(0.0, edgeThreshold, edgeDist);
   col *= edgeFalloff;
 
   if (u_cursorPresence > 0.001 && u_cursorEffect > 3.5)
@@ -397,12 +406,13 @@ export function ShaderBackground({ className }: { className?: string }) {
 
     const resizeCanvas = () => {
       bounds = canvas.getBoundingClientRect()
-      const dpr = Math.min(window.devicePixelRatio || 1, 0.80)
+      if (bounds.width === 0 || bounds.height === 0) return
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.25)
       const rawWidth = Math.max(1, Math.round(bounds.width * dpr))
       const rawHeight = Math.max(1, Math.round(bounds.height * dpr))
       const pixelScale = Math.min(
         1,
-        Math.sqrt(280_000 / Math.max(1, rawWidth * rawHeight)),
+        Math.sqrt(420_000 / Math.max(1, rawWidth * rawHeight)),
       )
       const width = Math.max(1, Math.round(rawWidth * pixelScale))
       const height = Math.max(1, Math.round(rawHeight * pixelScale))
@@ -579,7 +589,7 @@ export function ShaderBackground({ className }: { className?: string }) {
   return (
     <canvas
       ref={canvasRef}
-      className={`${className || ""} transition-opacity duration-500 ease-out ${isReady ? "opacity-80" : "opacity-0"}`}
+      className={`${className || ""} transition-opacity duration-300 ease-out ${isReady ? "opacity-100" : "opacity-0"}`}
       style={{
         display: "block",
         width: "100%",
