@@ -453,15 +453,13 @@ export default function LandingPage() {
             ].map((item, i) => (
               <Card
                 key={i}
-                style={{ backgroundImage: "none" }}
-                className="group p-5 sm:p-6 rounded-lg flex flex-col gap-3 border border-white/[0.12] bg-gradient-to-b from-white/[0.08] via-white/[0.03] to-white/[0.01] bg-[#0c0c0e]/50 backdrop-blur-xl hover:from-white/[0.12] hover:via-white/[0.05] hover:to-white/[0.02] hover:border-white/25 shadow-[inset_0_1px_0px_0_rgba(255,255,255,0.30)] hover:shadow-[inset_0_1px_0px_0_rgba(255,255,255,0.45)] hover:-translate-y-0.5 transition-all duration-200"
+                className="group p-5 sm:p-6 rounded-lg flex flex-col gap-3 border border-white/[0.12] bg-[#111115] hover:bg-[#16161b] hover:border-white/[0.22] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.16)] hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.28)] hover:-translate-y-0.5 transition-all duration-200"
               >
                 <CardContent className="p-0 flex flex-col gap-3">
                   <div
-                    className="size-8 rounded-[4px] bg-white/[0.06] border border-white/[0.14] flex items-center justify-center text-zinc-200 group-hover:border-white/30 group-hover:bg-white/[0.12] group-hover:text-white transition-all duration-150"
-                    style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.25)" }}
+                    className="size-8 rounded-[4px] bg-white/[0.07] border border-white/[0.08] flex items-center justify-center text-zinc-300 group-hover:bg-white/[0.12] group-hover:border-white/[0.18] group-hover:text-white transition-all duration-150"
                   >
-                    <item.icon className="size-4 text-zinc-200 group-hover:text-white transition-colors" strokeWidth={1.5} />
+                    <item.icon className="size-4 text-zinc-300 group-hover:text-white transition-colors" strokeWidth={1.5} />
                   </div>
                   <h3 className="font-semibold text-sm text-white tracking-tight">{item.title}</h3>
                   <p className="text-xs text-zinc-400 leading-relaxed">{item.desc}</p>
@@ -487,13 +485,11 @@ export default function LandingPage() {
             ].map((item, i) => (
               <Card
                 key={i}
-                style={{ backgroundImage: "none" }}
-                className="group text-center p-5 sm:p-6 rounded-lg border border-white/[0.12] bg-gradient-to-b from-white/[0.08] via-white/[0.03] to-white/[0.01] bg-[#0c0c0e]/50 backdrop-blur-xl hover:from-white/[0.12] hover:via-white/[0.05] hover:to-white/[0.02] hover:border-white/25 shadow-[inset_0_1px_0px_0_rgba(255,255,255,0.30)] hover:shadow-[inset_0_1px_0px_0_rgba(255,255,255,0.45)] hover:-translate-y-0.5 transition-all duration-200"
+                className="group text-center p-5 sm:p-6 rounded-lg border border-white/[0.12] bg-[#111115] hover:bg-[#16161b] hover:border-white/[0.22] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.16)] hover:shadow-[inset_0_1px_0_0_rgba(255,255,255,0.28)] hover:-translate-y-0.5 transition-all duration-200"
               >
                 <CardContent className="p-0 flex flex-col items-center">
                   <div
-                    className="flex size-7.5 items-center justify-center rounded-[4px] bg-white/[0.06] border border-white/[0.14] text-white font-mono text-xs font-bold mb-3 group-hover:border-white/30 group-hover:bg-white/[0.12] transition-all duration-150"
-                    style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.25)" }}
+                    className="flex size-7.5 items-center justify-center rounded-[4px] bg-white/[0.07] border border-white/[0.08] text-white font-mono text-xs font-bold mb-3 group-hover:bg-white/[0.12] group-hover:border-white/[0.18] transition-all duration-150"
                   >
                     {item.step}
                   </div>
