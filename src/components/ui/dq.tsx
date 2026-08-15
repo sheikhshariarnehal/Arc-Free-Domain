@@ -33,37 +33,67 @@ uniform vec4 u_cursor;
 #define u_intensity u_shape.y
 #define u_rotate u_transform.y
 
-// Pure analytical wave field: zero grid noise, zero banding, zero angular creases
+// Analytical wave height function: continuous, organic sinusoidal harmonics
+float getWaveHeight(vec2 p, float t) {
+  vec2 q = p * 1.30;
+  
+  float amp = 0.45;
+  q.x += amp * sin(1.3 * q.y + t * 0.40 + 0.6);
+  q.y += amp * cos(1.1 * q.x + t * 0.35 + 1.1);
+  
+  q.x += (amp * 0.65) * sin(2.1 * q.y + t * 0.50 + 1.9);
+  q.y += (amp * 0.65) * cos(1.8 * q.x + t * 0.42 + 0.8);
+  
+  q.x += (amp * 0.32) * sin(3.1 * q.y + t * 0.60 + 3.1);
+  q.y += (amp * 0.32) * cos(2.6 * q.x + t * 0.52 + 2.3);
+  
+  return 0.5 + 0.5 * sin(q.x * 1.05 + q.y * 1.25);
+}
+
+// True 3D Shading Engine: Surface Normals, Diffuse Curvature, Specular Glint & Fresnel
 vec3 shade(vec2 p, float t) {
-  vec2 q = p * 1.35;
+  float eps = 0.0035;
+  float h = getWaveHeight(p, t);
+  float hx = getWaveHeight(p + vec2(eps, 0.0), t);
+  float hy = getWaveHeight(p + vec2(0.0, eps), t);
   
-  // Smooth continuous harmonic interference
-  float amp = 0.38;
-  q.x += amp * sin(1.4 * q.y + t * 0.45 + 0.8);
-  q.y += amp * cos(1.2 * q.x + t * 0.38 + 1.2);
+  // Real 3D surface normal derived from continuous slope (zero creases)
+  vec3 normal = normalize(vec3((h - hx) / eps * 0.16, (h - hy) / eps * 0.16, 1.0));
   
-  q.x += (amp * 0.55) * sin(2.2 * q.y + t * 0.55 + 2.1);
-  q.y += (amp * 0.55) * cos(1.9 * q.x + t * 0.48 + 0.9);
+  // 3D Directional Key Light from top-left (reveals glossy ribbon ridges)
+  vec3 lightDir = normalize(vec3(0.55, 0.70, 0.80));
+  vec3 viewDir = vec3(0.0, 0.0, 1.0);
+  vec3 halfVec = normalize(lightDir + viewDir);
   
-  q.x += (amp * 0.28) * sin(3.4 * q.y + t * 0.65 + 3.4);
-  q.y += (amp * 0.28) * cos(2.9 * q.x + t * 0.58 + 2.5);
+  // 3D Diffuse curvature
+  float diff = max(0.0, dot(normal, lightDir));
   
-  float val = 0.5 + 0.5 * sin(q.x * 1.1 + q.y * 1.3);
+  // High-gloss specular highlight (liquid chrome reflection on wave crests)
+  float spec = pow(max(0.0, dot(normal, halfVec)), 26.0);
   
-  // Smooth cubic S-curve (infinitely smooth transition, zero harsh lines)
-  val = smoothstep(0.08, 0.96, val);
+  // 3D Fresnel rim light (gives silk ribbon 3D dimensional depth)
+  float fresnel = pow(1.0 - max(0.0, dot(normal, viewDir)), 2.8);
   
-  // Interpolate across the dark obsidian color stops with smooth Hermite splines
+  // Base body color mapped smoothly from height
+  float val = smoothstep(0.06, 0.94, h);
   float n = max(u_colorCount - 1.0, 1.0);
   float f = clamp(val, 0.0, 1.0) * n;
   
-  vec3 col = u_colors[0];
+  vec3 baseCol = u_colors[0];
   for (int i = 0; i < 7; i++) {
     if (float(i) < n) {
       float w = smoothstep(0.0, 1.0, clamp(f - float(i), 0.0, 1.0));
-      col = mix(col, u_colors[i + 1], w);
+      baseCol = mix(baseCol, u_colors[i + 1], w);
     }
   }
+  
+  // Combine 3D diffuse body with specular gleam
+  vec3 col = baseCol * (0.60 + 0.55 * diff);
+  
+  // Glossy liquid chrome specular crest + silk fold rim light
+  vec3 specularCol = vec3(0.65, 0.72, 0.88);
+  col += specularCol * (spec * 1.15 + fresnel * 0.35);
+  
   return col;
 }
 
@@ -106,29 +136,29 @@ void main() {
 const UNIFORMS = {
   colors: [
     [0.0353, 0.0353, 0.0431], // #09090b exact site background base
-    [0.0549, 0.0588, 0.0784], // Deep midnight slate
-    [0.0941, 0.1098, 0.1490], // Rich dark graphite
-    [0.1804, 0.2118, 0.2902], // 3D liquid silk body
-    [0.3333, 0.3843, 0.5098], // Specular sheen
-    [0.5098, 0.5686, 0.7255], // Soft luminous silver crest peak
-    [0.5098, 0.5686, 0.7255],
-    [0.5098, 0.5686, 0.7255],
+    [0.0627, 0.0667, 0.0863], // Deep obsidian charcoal
+    [0.1098, 0.1255, 0.1725], // Rich dark slate body
+    [0.2157, 0.2510, 0.3451], // Liquid silk 3D midtone
+    [0.4000, 0.4588, 0.6078], // Glossy specular ridge
+    [0.6500, 0.7200, 0.9000], // Soft luminous silver crest peak
+    [0.6500, 0.7200, 0.9000],
+    [0.6500, 0.7200, 0.9000],
   ] as [number, number, number][],
   colorCount: 6,
-  scale: 0.650,
-  intensity: 0.280,
+  scale: 0.620,
+  intensity: 0.320,
   paramA: 0.500,
   warp: 0.000,
   detail: 1.000,
   contrast: 1.000,
   brightness: 0.000,
-  saturation: 0.200,
+  saturation: 0.250,
   hue: 0.0000,
   vignette: 0.300,
   blur: 0.0000,
   grain: 0.000,
   seed: 707.0,
-  rotate: 2.350,
+  rotate: 2.300,
   offsetX: 0.040,
   offsetY: 0.450,
   drift: 0.000,
