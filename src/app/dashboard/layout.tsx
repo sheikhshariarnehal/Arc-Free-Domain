@@ -444,28 +444,34 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </div>
           </nav>
 
-          {/* NextAdmin "Upgrade to Pro" Bottom Card Style */}
+          {/* NextAdmin Distilled "Developer Tier" Bottom Card */}
           {sidebarOpen && (
             <div className="p-3 shrink-0">
-              <div className="rounded-2xl bg-[#12141c] border border-[#1e2330] p-4 text-center flex flex-col gap-2.5 shadow-md">
-                <div className="space-y-1">
-                  <p className="text-sm font-semibold text-white tracking-tight">Free Developer Tier</p>
-                  <p className="text-xs text-zinc-400 leading-snug">
-                    Claim up to 5 free .arc.bd subdomains with Anycast DNS.
-                  </p>
+              <div className="rounded-xl bg-[#12141c] border border-[#1e2330] p-3.5 flex flex-col gap-3 shadow-xs">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="size-7 rounded-lg bg-[#5750F1]/15 border border-[#5750F1]/25 flex items-center justify-center text-[#7b75f5]">
+                      <Sparkles className="size-3.5" />
+                    </div>
+                    <span className="text-xs font-semibold text-white tracking-tight">Free Tier</span>
+                  </div>
+                  <span className="text-[11px] font-mono text-zinc-400 font-medium">
+                    {subdomainCount}/5 used
+                  </span>
                 </div>
-                <div className="w-full bg-[#1c202d] h-1.5 rounded-full overflow-hidden border border-[#262c3e]">
+
+                {/* Sleek subtle progress bar */}
+                <div className="w-full bg-[#1c202d] h-1 rounded-full overflow-hidden">
                   <div
-                    className={`h-full rounded-full transition-all duration-300 ${
-                      subdomainCount >= 5 ? "bg-amber-400" : "bg-[#5750F1]"
-                    }`}
+                    className="h-full rounded-full bg-[#5750F1] transition-all duration-300"
                     style={{ width: `${Math.min(100, (subdomainCount / 5) * 100)}%` }}
                   />
                 </div>
+
                 <Button
                   asChild
                   size="sm"
-                  className="w-full h-9 rounded-lg bg-[#5750F1] hover:bg-[#4842e4] text-white font-medium text-xs transition-all shadow-md active:scale-98"
+                  className="w-full h-8.5 rounded-lg bg-[#5750F1] hover:bg-[#4842e4] text-white font-medium text-xs transition-all shadow-sm active:scale-98"
                 >
                   <Link href="/dashboard/domains?action=claim">
                     <Plus className="size-3.5 mr-1" /> Claim Subdomain
