@@ -1,34 +1,43 @@
 import * as React from "react"
-
 import { cn } from "@/lib/utils"
 
-const Card = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, children, style, ...props }, ref) => (
-  <div
-    ref={ref}
-    style={{
-      backgroundImage: "linear-gradient(135deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.02) 100%)",
-      boxShadow: "inset 0 1px 1px 0 rgba(255, 255, 255, 0.25), inset 0 0 0 1px rgba(255, 255, 255, 0.06), 0 8px 32px 0 rgba(0, 0, 0, 0.36)",
-      ...style,
-    }}
-    className={cn(
-      "relative rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-xl backdrop-saturate-150 text-card-foreground transition-all duration-300 group overflow-hidden hover:border-white/[0.24] hover:bg-white/[0.06]",
-      className
-    )}
-    {...props}
-  >
-    {/* Specular Glossy Top Light Flare Layer */}
-    <span
-      className="absolute inset-0 pointer-events-none rounded-[inherit]"
+export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
+  glossy?: boolean;
+}
+
+const Card = React.forwardRef<HTMLDivElement, CardProps>(
+  ({ className, children, style, glossy = true, ...props }, ref) => (
+    <div
+      ref={ref}
       style={{
-        background: "radial-gradient(ellipse 80% 50% at 50% 0%, rgba(255, 255, 255, 0.12), transparent 70%)",
+        backgroundImage: glossy
+          ? "linear-gradient(135deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.02) 100%)"
+          : undefined,
+        boxShadow: glossy
+          ? "inset 0 1px 1px 0 rgba(255, 255, 255, 0.25), inset 0 0 0 1px rgba(255, 255, 255, 0.06), 0 8px 32px 0 rgba(0, 0, 0, 0.36)"
+          : undefined,
+        ...style,
       }}
-    />
-    <div className="relative z-10 flex flex-col h-full">{children}</div>
-  </div>
-))
+      className={cn(
+        "relative rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-xl backdrop-saturate-150 text-card-foreground transition-all duration-300 group overflow-hidden hover:border-white/[0.24] hover:bg-white/[0.06]",
+        className
+      )}
+      {...props}
+    >
+      {/* Specular Glossy Top Light Flare Layer */}
+      {glossy && (
+        <span
+          className="absolute inset-0 pointer-events-none rounded-[inherit]"
+          style={{
+            background:
+              "radial-gradient(ellipse 80% 50% at 50% 0%, rgba(255, 255, 255, 0.12), transparent 70%)",
+          }}
+        />
+      )}
+      <div className="relative z-10 flex flex-col h-full">{children}</div>
+    </div>
+  )
+)
 Card.displayName = "Card"
 
 const CardHeader = React.forwardRef<
@@ -90,4 +99,11 @@ const CardFooter = React.forwardRef<
 ))
 CardFooter.displayName = "CardFooter"
 
-export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }
+export {
+  Card,
+  CardHeader,
+  CardFooter,
+  CardTitle,
+  CardDescription,
+  CardContent,
+}

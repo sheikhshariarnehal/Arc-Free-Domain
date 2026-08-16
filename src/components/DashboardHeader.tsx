@@ -13,6 +13,8 @@ import {
   LogOut,
   FileText,
   ChevronRight,
+  ChevronDown,
+  Moon,
   Sparkles,
   CheckCircle2,
   ArrowUpRight,
@@ -52,6 +54,7 @@ interface DashboardHeaderProps {
   userName?: string;
   avatarUrl?: string;
   isAdmin?: boolean;
+  sidebarOpen?: boolean;
   onToggleSidebar?: () => void;
   onOpenMobileNav?: () => void;
 }
@@ -61,6 +64,7 @@ export function DashboardHeader({
   userName = "User",
   avatarUrl,
   isAdmin = false,
+  sidebarOpen = true,
   onToggleSidebar,
   onOpenMobileNav,
 }: DashboardHeaderProps) {
@@ -160,11 +164,11 @@ export function DashboardHeader({
 
   return (
     <>
-      <header className="sticky top-0 z-40 w-full border-b border-border/70 bg-background/80 backdrop-blur-md transition-all">
-        <div className="flex h-14 items-center justify-between gap-2 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
-          {/* Left Section: Sidebar Toggle & Breadcrumbs */}
-          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-            {/* Unified Sidebar Toggle */}
+      <header className="sticky top-0 z-40 w-full border-b border-[#1e2330] bg-[#0c0e14] backdrop-blur-xl transition-all shrink-0">
+        <div className="flex h-16 items-center justify-between gap-3 px-4 sm:px-6 w-full">
+          {/* Left Section: Mobile Sidebar Toggle + NextAdmin Search Input */}
+          <div className="flex items-center gap-3 min-w-0 flex-1">
+            {/* Mobile / Collapsed Sidebar Toggle */}
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
@@ -177,188 +181,196 @@ export function DashboardHeader({
                   }}
                   variant="ghost"
                   size="icon"
-                  className="size-8.5 text-muted-foreground hover:text-foreground hover:bg-secondary shrink-0 focus-visible:ring-1 focus-visible:ring-ring rounded-lg"
+                  className="size-9.5 rounded-xl border border-[#222838] bg-[#141721] text-zinc-400 hover:text-white hover:bg-[#191d2a] shrink-0 focus-visible:ring-1 focus-visible:ring-ring transition-all md:hidden"
                   aria-label="Toggle navigation menu"
                 >
-                  <PanelLeft className="size-4" />
+                  <PanelLeft className="size-4.5" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent side="bottom" className="text-xs hidden md:block">
+              <TooltipContent side="bottom" className="text-xs font-medium">
                 Toggle Sidebar
               </TooltipContent>
             </Tooltip>
 
-            <div className="h-4 w-px bg-border/60 hidden md:block" />
-
-            {/* Breadcrumb Trail */}
-            <nav aria-label="Breadcrumb navigation" className="flex items-center gap-1.5 min-w-0">
-              {breadcrumbs.map((crumb, idx) => {
-                const isLast = idx === breadcrumbs.length - 1;
-                return (
-                  <div key={crumb.href} className={`flex items-center gap-1.5 min-w-0 ${!isLast ? "hidden sm:flex" : ""}`}>
-                    {idx > 0 && <ChevronRight className="size-3.5 text-muted-foreground/60 shrink-0 hidden sm:inline-block" />}
-                    {isLast ? (
-                      <span className="text-sm font-semibold text-foreground truncate">
-                        {crumb.label}
-                      </span>
-                    ) : (
-                      <Link
-                        href={crumb.href}
-                        className="text-xs sm:text-sm font-medium text-muted-foreground hover:text-foreground transition-colors truncate"
-                      >
-                        {crumb.label}
-                      </Link>
-                    )}
-                  </div>
-                );
-              })}
-            </nav>
-          </div>
-
-          {/* Right Section: Search, Notifications, Profile */}
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-            {/* Search Trigger */}
+            {/* NextAdmin Wide Search Input Box */}
             <button
               onClick={() => setSearchOpen(true)}
-              className="flex h-8.5 items-center gap-2 rounded-lg border border-white/[0.08] bg-white/[0.03] px-2.5 sm:px-3 text-xs text-zinc-400 hover:bg-white/[0.08] hover:text-white transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring group cursor-pointer"
+              className="flex h-10 w-full max-w-xs sm:max-w-sm md:max-w-md items-center justify-between gap-2 rounded-xl bg-[#141721] border border-[#222838] px-3.5 text-xs sm:text-sm text-zinc-400 hover:text-zinc-200 hover:border-[#2d344a] hover:bg-[#191d2a] transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring group cursor-pointer shadow-xs"
               aria-label="Search pages and documentation"
             >
-              <Search className="size-3.5 shrink-0 text-zinc-400 group-hover:text-zinc-200 transition-colors" />
-              <span className="hidden sm:inline-block">Search...</span>
-              <kbd className="pointer-events-none hidden sm:inline-flex h-4.5 select-none items-center gap-0.5 rounded-[4px] border border-white/10 bg-white/[0.06] px-1.5 font-mono text-[10px] font-medium text-zinc-400">
-                {isMac ? <span>⌘K</span> : <span>Ctrl K</span>}
+              <div className="flex items-center gap-2.5 truncate">
+                <Search className="size-4 shrink-0 text-zinc-400 group-hover:text-zinc-200 transition-colors" />
+                <span className="truncate text-zinc-400 group-hover:text-zinc-200">Search pages...</span>
+              </div>
+              <kbd className="pointer-events-none hidden sm:inline-flex h-5 select-none items-center gap-0.5 rounded-md border border-white/10 bg-white/[0.04] px-1.5 font-mono text-[10px] font-medium text-zinc-300">
+                {isMac ? <span>⌘ K</span> : <span>Ctrl K</span>}
               </kbd>
             </button>
-
-              {/* System Status Popover */}
-              <DropdownMenu>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="relative size-8.5 text-zinc-400 hover:text-white hover:bg-white/[0.06] rounded-lg transition-colors"
-                        aria-label="System status notifications"
-                      >
-                        <Bell className="size-4" />
-                        <span className="absolute top-1.5 right-1.5 size-2 rounded-full bg-emerald-500 ring-2 ring-background" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                  </TooltipTrigger>
-                  <TooltipContent side="bottom" className="text-xs">
-                    System Health
-                  </TooltipContent>
-                </Tooltip>
-
-                <DropdownMenuContent align="end" className="w-72 p-0 shadow-2xl border-border">
-                  <div className="flex items-center justify-between px-3.5 py-2.5 border-b border-border bg-muted/20">
-                    <div className="flex items-center gap-2">
-                      <Zap className="size-3.5 text-primary" />
-                      <span className="text-xs font-semibold text-foreground">Infrastructure</span>
-                    </div>
-                    <Badge variant="outline" className="text-xs bg-emerald-500/10 text-emerald-400 border-emerald-500/20 font-mono py-0 h-5">
-                      Operational
-                    </Badge>
-                  </div>
-                  <div className="p-3 space-y-2 text-xs">
-                    <div className="flex items-center justify-between text-muted-foreground">
-                      <span>Cloudflare Edge DNS</span>
-                      <span className="text-emerald-400 font-medium">Connected</span>
-                    </div>
-                    <div className="flex items-center justify-between text-muted-foreground">
-                      <span>SSL Provisioning</span>
-                      <span className="text-emerald-400 font-medium">Active</span>
-                    </div>
-                    <div className="flex items-center justify-between text-muted-foreground">
-                      <span>Database Sync</span>
-                      <span className="text-emerald-400 font-medium">Healthy</span>
-                    </div>
-                  </div>
-                  <div className="p-2 border-t border-border bg-muted/20 text-center">
-                    <Link
-                      href="/subdomain-status"
-                      className="text-xs text-primary hover:underline inline-flex items-center gap-1 font-medium"
-                    >
-                      Full Status Page <ArrowUpRight className="size-3" />
-                    </Link>
-                  </div>
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              {/* User Account Menu */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button
-                    className="flex items-center gap-2 p-0.5 rounded-full hover:ring-2 hover:ring-primary/40 focus:outline-none focus:ring-2 focus:ring-ring transition-all cursor-pointer"
-                    aria-label="User account options"
-                  >
-                    <Avatar className="size-7.5 ring-1 ring-white/15 shadow-2xs">
-                      {avatarUrl && <AvatarImage src={avatarUrl} alt={userName} className="object-cover" />}
-                      <AvatarFallback className="bg-primary/20 text-primary font-bold text-xs font-mono">
-                        {getInitials(userName)}
-                      </AvatarFallback>
-                    </Avatar>
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56 p-1.5 shadow-2xl border-border">
-                  <DropdownMenuLabel className="font-normal px-2 py-2">
-                    <div className="flex flex-col gap-0.5">
-                      <p className="text-xs font-semibold text-foreground truncate">{userName}</p>
-                      <p className="text-xs text-muted-foreground truncate">{userEmail}</p>
-                      <Badge variant="outline" className={`w-fit mt-1 text-xs font-mono ${isAdmin ? "bg-amber-500/10 text-amber-400 border-amber-500/30" : "text-muted-foreground"}`}>
-                        {isAdmin ? "Administrator" : "Free Plan (5 Slots)"}
-                      </Badge>
-                    </div>
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuGroup>
-                    <DropdownMenuItem asChild className="cursor-pointer">
-                      <Link href="/docs" className="flex items-center gap-2.5">
-                        <BookOpen className="size-4 text-muted-foreground" />
-                        <span>Documentation</span>
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild className="cursor-pointer">
-                      <Link href="/report" className="flex items-center gap-2.5">
-                        <Shield className="size-4 text-muted-foreground" />
-                        <span>Report Abuse</span>
-                      </Link>
-                    </DropdownMenuItem>
-                    {isAdmin && (
-                      <DropdownMenuItem asChild className="cursor-pointer">
-                        <Link href="/admin" className="flex items-center gap-2.5 text-amber-400 hover:text-amber-300 font-medium">
-                          <Shield className="size-4" />
-                          <span>Admin Panel</span>
-                        </Link>
-                      </DropdownMenuItem>
-                    )}
-                  </DropdownMenuGroup>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    onClick={handleSignOut}
-                    className="cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 flex items-center gap-2.5"
-                  >
-                    <LogOut className="size-4" />
-                    <span>Sign Out</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
           </div>
-        </header>
+
+          {/* Right Section: Theme Toggle, Notifications, Profile Pill */}
+          <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
+            {/* Dark / Light Mode Toggle Button */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  className="size-9.5 rounded-xl border border-[#222838] bg-[#141721] hover:bg-[#191d2a] hover:border-[#2d344a] text-zinc-400 hover:text-white flex items-center justify-center transition-all cursor-pointer shadow-xs"
+                  aria-label="Toggle theme mode"
+                >
+                  <Moon className="size-4" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="text-xs">
+                Theme
+              </TooltipContent>
+            </Tooltip>
+
+            {/* Notification Bell with Dropdown */}
+            <DropdownMenu>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      className="relative size-9.5 rounded-xl border border-[#222838] bg-[#141721] hover:bg-[#191d2a] hover:border-[#2d344a] text-zinc-400 hover:text-white flex items-center justify-center transition-all cursor-pointer shadow-xs"
+                      aria-label="System status notifications"
+                    >
+                      <Bell className="size-4" />
+                      <span className="absolute top-2 right-2 size-2 rounded-full bg-rose-500 ring-2 ring-[#0c0e14] shadow-[0_0_6px_rgba(244,63,94,0.8)]" />
+                    </button>
+                  </DropdownMenuTrigger>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="text-xs">
+                  Notifications
+                </TooltipContent>
+              </Tooltip>
+
+              <DropdownMenuContent align="end" className="w-72 p-0 border-[#1e2330] bg-[#12141c] shadow-2xl">
+                <div className="flex items-center justify-between px-3.5 py-2.5 border-b border-[#1e2330] bg-[#141721]">
+                  <div className="flex items-center gap-2">
+                    <Zap className="size-3.5 text-primary" />
+                    <span className="text-xs font-semibold text-white">Infrastructure</span>
+                  </div>
+                  <Badge variant="outline" className="text-xs bg-emerald-500/10 text-emerald-400 border-emerald-500/20 font-mono py-0 h-5">
+                    Operational
+                  </Badge>
+                </div>
+                <div className="p-3 space-y-2 text-xs">
+                  <div className="flex items-center justify-between text-zinc-400">
+                    <span>Cloudflare Edge DNS</span>
+                    <span className="text-emerald-400 font-medium">Connected</span>
+                  </div>
+                  <div className="flex items-center justify-between text-zinc-400">
+                    <span>SSL Provisioning</span>
+                    <span className="text-emerald-400 font-medium">Active</span>
+                  </div>
+                  <div className="flex items-center justify-between text-zinc-400">
+                    <span>Database Sync</span>
+                    <span className="text-emerald-400 font-medium">Healthy</span>
+                  </div>
+                </div>
+                <div className="p-2 border-t border-[#1e2330] bg-[#141721] text-center">
+                  <Link
+                    href="/subdomain-status"
+                    className="text-xs text-primary hover:text-primary/80 font-medium transition-colors"
+                  >
+                    View System Status Page →
+                  </Link>
+                </div>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* NextAdmin User Account Profile Pill */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  className="flex items-center gap-2.5 pl-1.5 pr-3 py-1.5 rounded-xl border border-[#222838] bg-[#141721] hover:bg-[#191d2a] hover:border-[#2d344a] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring transition-all cursor-pointer shadow-xs"
+                  aria-label="User account options"
+                >
+                  <Avatar className="size-7.5 ring-1 ring-white/15 shadow-2xs">
+                    {avatarUrl && <AvatarImage src={avatarUrl} alt={userName} className="object-cover" />}
+                    <AvatarFallback className="bg-primary/20 text-primary font-bold text-xs font-mono">
+                      {getInitials(userName)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="text-xs font-semibold text-white truncate max-w-[100px] sm:max-w-[140px] hidden sm:inline-block">
+                    {userName}
+                  </span>
+                  <ChevronDown className="size-3.5 text-zinc-400 shrink-0" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56 border-border shadow-2xl p-1.5">
+                <DropdownMenuLabel className="font-normal px-2 py-1.5">
+                  <div className="flex flex-col gap-0.5">
+                    <p className="text-xs font-semibold text-foreground truncate">{userName}</p>
+                    <p className="text-xs text-muted-foreground truncate">{userEmail}</p>
+                    {isAdmin ? (
+                      <Badge className="w-fit mt-1 text-xs bg-amber-500/10 text-amber-400 border-amber-500/30 font-mono">
+                        Administrator
+                      </Badge>
+                    ) : (
+                      <Badge variant="outline" className="w-fit mt-1 text-xs text-muted-foreground font-mono">
+                        Free Account (5 Slots)
+                      </Badge>
+                    )}
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuItem asChild className="cursor-pointer">
+                    <Link href="/dashboard" className="flex items-center gap-2">
+                      <Home className="size-4 text-muted-foreground" /> Overview
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild className="cursor-pointer">
+                    <Link href="/dashboard/domains" className="flex items-center gap-2">
+                      <Globe className="size-4 text-muted-foreground" /> My Subdomains
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild className="cursor-pointer">
+                    <Link href="/docs" className="flex items-center gap-2">
+                      <BookOpen className="size-4 text-muted-foreground" /> Documentation
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild className="cursor-pointer">
+                    <Link href="/report" className="flex items-center gap-2.5">
+                      <Shield className="size-4 text-muted-foreground" />
+                      <span>Report Abuse</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  {isAdmin && (
+                    <DropdownMenuItem asChild className="cursor-pointer">
+                      <Link href="/admin" className="flex items-center gap-2.5 text-amber-400 hover:text-amber-300 font-medium">
+                        <Shield className="size-4" />
+                        <span>Admin Panel</span>
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={handleSignOut}
+                  className="cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 flex items-center gap-2.5"
+                >
+                  <LogOut className="size-4" />
+                  <span>Sign Out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
+      </header>
 
       {/* Global Command / Search Palette Dialog */}
       <Dialog open={searchOpen} onOpenChange={setSearchOpen}>
-        <DialogContent className="max-w-xl p-0 overflow-hidden border-border bg-card shadow-2xl">
-          <DialogHeader className="p-0 border-b border-border">
+        <DialogContent className="max-w-xl p-0 overflow-hidden">
+          <DialogHeader className="p-0 border-b border-white/[0.08]">
             <div className="flex items-center px-4 h-12 gap-2.5">
               <Search className="size-4 text-muted-foreground shrink-0" />
-              <Input
+              <input
                 placeholder="Search subdomains, documentation, actions..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="border-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 px-0 text-sm bg-transparent placeholder:text-muted-foreground"
+                className="w-full border-0 outline-none focus:outline-none px-0 text-sm bg-transparent placeholder:text-muted-foreground text-foreground"
                 autoFocus
               />
               {searchQuery && (
@@ -370,7 +382,7 @@ export function DashboardHeader({
                   <X className="size-3.5" />
                 </button>
               )}
-              <kbd className="text-[10px] font-mono uppercase bg-muted text-muted-foreground border border-border px-1.5 py-0.5 rounded">
+              <kbd className="text-[10px] font-mono uppercase bg-white/[0.06] text-muted-foreground border border-white/[0.1] px-1.5 py-0.5 rounded shadow-[inset_0_1px_0_0_rgba(255,255,255,0.12)]">
                 ESC
               </kbd>
             </div>
@@ -387,10 +399,10 @@ export function DashboardHeader({
                   key={i}
                   href={item.href}
                   onClick={() => setSearchOpen(false)}
-                  className="flex items-center justify-between p-2.5 rounded-lg hover:bg-accent/60 transition-colors group cursor-pointer"
+                  className="flex items-center justify-between p-2.5 rounded-lg hover:bg-white/[0.06] border border-transparent hover:border-white/[0.08] transition-all group cursor-pointer"
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className="size-8 rounded-md bg-secondary flex items-center justify-center text-foreground shrink-0 group-hover:bg-primary/20 group-hover:text-primary transition-colors">
+                    <div className="size-8 rounded-lg bg-white/[0.06] border border-white/[0.08] flex items-center justify-center text-foreground shrink-0 group-hover:bg-primary/20 group-hover:text-primary group-hover:border-primary/30 transition-colors">
                       <item.icon className="size-4" />
                     </div>
                     <div className="min-w-0">
@@ -406,9 +418,9 @@ export function DashboardHeader({
             )}
           </div>
 
-          <div className="flex items-center justify-between px-4 py-2 border-t border-border bg-muted/20 text-[11px] text-muted-foreground">
+          <div className="flex items-center justify-between px-4 py-2 border-t border-white/[0.08] bg-white/[0.02] text-[11px] text-muted-foreground">
             <span>Tip: Press {isMac ? "⌘K" : "Ctrl+K"} anytime to open this search</span>
-            <span>ARC.BD Subdomain Platform</span>
+            <span className="font-mono">ARC.BD</span>
           </div>
         </DialogContent>
       </Dialog>

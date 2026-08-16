@@ -389,9 +389,9 @@ export default function DomainDetail() {
 
       {/* Security Status Banner for Pending Review */}
       {isPending && (
-        <Alert className="border-amber-500/40 bg-amber-500/10 text-amber-300 p-4 sm:p-5 shadow-sm rounded-xl">
+        <Alert variant="amber" className="p-4 sm:p-5">
           <div className="flex items-start gap-3.5">
-            <div className="size-9 rounded-lg bg-amber-500/20 flex items-center justify-center shrink-0 mt-0.5">
+            <div className="size-9 rounded-lg bg-amber-500/20 border border-amber-500/30 flex items-center justify-center shrink-0 mt-0.5 shadow-[inset_0_1px_0_0_rgba(251,191,36,0.3)]">
               <Lock className="size-4.5 text-amber-400" />
             </div>
             <div className="space-y-1 min-w-0">
@@ -399,13 +399,13 @@ export default function DomainDetail() {
                 <AlertTitle className="text-amber-300 font-semibold text-sm sm:text-base">
                   Domain Claim Pending Administrator Approval
                 </AlertTitle>
-                <Badge className="bg-amber-500/20 text-amber-400 border-amber-500/30 text-[10px] px-2 py-0.5">
+                <Badge variant="outline" className="bg-amber-500/20 text-amber-400 border-amber-500/30 text-[10px] px-2 py-0.5 font-mono">
                   <Clock className="size-3 mr-1 inline" /> Under Review
                 </Badge>
               </div>
-              <AlertDescription className="text-amber-200/90 text-xs sm:text-sm leading-relaxed">
+              <AlertDescription className="text-amber-200/80 text-xs sm:text-sm leading-relaxed">
                 Your claim for <strong>{subdomain?.full_domain}</strong> is queued for security verification. For anti-abuse safeguards, <strong>DNS record management is locked</strong> until approved.
-                <span className="block mt-1 text-amber-300/80 text-xs">
+                <span className="block mt-1 text-amber-300/70 text-xs">
                   Reviews are typically processed within 24 hours. Controls unlock automatically once approved.
                 </span>
               </AlertDescription>
@@ -416,9 +416,9 @@ export default function DomainDetail() {
 
       {/* Security Status Banner for Suspended */}
       {isSuspended && (
-        <Alert variant="destructive" className="p-4 sm:p-5 shadow-sm rounded-xl">
+        <Alert variant="destructive" className="p-4 sm:p-5">
           <div className="flex items-start gap-3.5">
-            <div className="size-9 rounded-lg bg-destructive/20 flex items-center justify-center shrink-0 mt-0.5">
+            <div className="size-9 rounded-lg bg-destructive/20 border border-destructive/30 flex items-center justify-center shrink-0 mt-0.5 shadow-[inset_0_1px_0_0_rgba(239,68,68,0.3)]">
               <ShieldAlert className="size-4.5 text-destructive" />
             </div>
             <div className="space-y-1">
@@ -433,7 +433,7 @@ export default function DomainDetail() {
 
       {/* Action Notifications */}
       {error && (
-        <Alert variant="destructive" className="rounded-xl">
+        <Alert variant="destructive">
           <AlertCircle className="size-4" />
           <AlertTitle>Action Failed</AlertTitle>
           <AlertDescription className="text-xs">{error}</AlertDescription>
@@ -441,9 +441,9 @@ export default function DomainDetail() {
       )}
 
       {successMsg && (
-        <Alert className="border-emerald-500/30 bg-emerald-500/10 text-emerald-400 rounded-xl">
+        <Alert variant="emerald">
           <CheckCircle2 className="size-4 text-emerald-400" />
-          <AlertTitle className="text-emerald-400 font-semibold">Success</AlertTitle>
+          <AlertTitle className="text-emerald-300 font-semibold">Success</AlertTitle>
           <AlertDescription className="text-xs">{successMsg}</AlertDescription>
         </Alert>
       )}
@@ -465,9 +465,9 @@ export default function DomainDetail() {
           <button
             onClick={() => applyPreset("CNAME", "cname.vercel-dns.com", "@")}
             disabled={isLocked}
-            className="flex items-center gap-3 p-3 rounded-lg border border-border/80 bg-card hover:bg-secondary/60 hover:border-border transition-all text-left group disabled:cursor-not-allowed cursor-pointer shadow-2xs"
+            className="flex items-center gap-3 p-3 rounded-xl glossy-capsule text-left group disabled:cursor-not-allowed cursor-pointer"
           >
-            <div className="size-8 rounded-md bg-primary/10 text-primary flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
+            <div className="size-8 rounded-lg bg-primary/10 border border-primary/20 text-primary flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors shadow-[inset_0_1px_0_0_rgba(255,255,255,0.15)]">
               <Server className="size-4" />
             </div>
             <div className="min-w-0">
@@ -480,9 +480,9 @@ export default function DomainDetail() {
           <button
             onClick={() => applyPreset("CNAME", "username.github.io", "@")}
             disabled={isLocked}
-            className="flex items-center gap-3 p-3 rounded-lg border border-border/80 bg-card hover:bg-secondary/60 hover:border-border transition-all text-left group disabled:cursor-not-allowed cursor-pointer shadow-2xs"
+            className="flex items-center gap-3 p-3 rounded-xl glossy-capsule text-left group disabled:cursor-not-allowed cursor-pointer"
           >
-            <div className="size-8 rounded-md bg-primary/10 text-primary flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
+            <div className="size-8 rounded-lg bg-primary/10 border border-primary/20 text-primary flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors shadow-[inset_0_1px_0_0_rgba(255,255,255,0.15)]">
               <GitBranch className="size-4" />
             </div>
             <div className="min-w-0">
@@ -495,9 +495,9 @@ export default function DomainDetail() {
           <button
             onClick={() => applyPreset("CNAME", "site.netlify.app", "@")}
             disabled={isLocked}
-            className="flex items-center gap-3 p-3 rounded-lg border border-border/80 bg-card hover:bg-secondary/60 hover:border-border transition-all text-left group disabled:cursor-not-allowed cursor-pointer shadow-2xs"
+            className="flex items-center gap-3 p-3 rounded-xl glossy-capsule text-left group disabled:cursor-not-allowed cursor-pointer"
           >
-            <div className="size-8 rounded-md bg-primary/10 text-primary flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
+            <div className="size-8 rounded-lg bg-primary/10 border border-primary/20 text-primary flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors shadow-[inset_0_1px_0_0_rgba(255,255,255,0.15)]">
               <Globe className="size-4" />
             </div>
             <div className="min-w-0">
@@ -510,9 +510,9 @@ export default function DomainDetail() {
           <button
             onClick={() => applyPreset("A", "185.199.108.153", "@")}
             disabled={isLocked}
-            className="flex items-center gap-3 p-3 rounded-lg border border-border/80 bg-card hover:bg-secondary/60 hover:border-border transition-all text-left group disabled:cursor-not-allowed cursor-pointer shadow-2xs"
+            className="flex items-center gap-3 p-3 rounded-xl glossy-capsule text-left group disabled:cursor-not-allowed cursor-pointer"
           >
-            <div className="size-8 rounded-md bg-primary/10 text-primary flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
+            <div className="size-8 rounded-lg bg-primary/10 border border-primary/20 text-primary flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors shadow-[inset_0_1px_0_0_rgba(255,255,255,0.15)]">
               <Layers className="size-4" />
             </div>
             <div className="min-w-0">
@@ -524,8 +524,8 @@ export default function DomainDetail() {
       </div>
 
       {/* DNS Records Card */}
-      <Card className="border-border/80 shadow-xs rounded-xl overflow-hidden bg-card">
-        <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-border/70 pb-3.5 p-4 sm:p-5 gap-3">
+      <Card className="rounded-xl overflow-hidden">
+        <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-border/60 pb-3.5 p-4 sm:p-5 gap-3">
           <div>
             <CardTitle className="text-base font-semibold flex items-center gap-2">
               DNS Records
@@ -544,7 +544,7 @@ export default function DomainDetail() {
           <Button 
             onClick={() => !isLocked && setShowAddForm(!showAddForm)} 
             disabled={isLocked}
-            className="h-8.5 px-3.5 text-xs font-semibold bg-foreground text-background hover:bg-foreground/90 rounded-md gap-1.5 shadow-xs transition-all w-full sm:w-auto"
+            className="h-8.5 px-3.5 text-xs font-semibold rounded-md gap-1.5 shadow-xs transition-all w-full sm:w-auto"
           >
             <Plus className="size-3.5" />
             <span>{showAddForm ? "Close Form" : "Add Record"}</span>
@@ -552,9 +552,9 @@ export default function DomainDetail() {
         </CardHeader>
 
         {showAddForm && !isLocked && (
-          <form onSubmit={handleAddDNS} className="p-4 bg-muted/20 border-b border-border space-y-3">
+          <form onSubmit={handleAddDNS} className="p-4 bg-white/[0.02] border-b border-white/[0.08] space-y-3">
             {formError && (
-              <div className="flex items-center gap-2 p-2.5 rounded-lg border border-destructive/30 bg-destructive/10 text-destructive text-xs">
+              <div className="flex items-center gap-2 p-2.5 rounded-xl glossy-banner glossy-banner-destructive text-destructive text-xs">
                 <AlertCircle className="size-4 shrink-0" />
                 <span className="font-medium">{formError}</span>
               </div>
@@ -602,14 +602,14 @@ export default function DomainDetail() {
               </div>
 
               <div className="sm:col-span-2">
-                <Button type="submit" disabled={addingRecord} className="h-9 w-full text-xs font-semibold bg-foreground text-background hover:bg-foreground/90">
+                <Button type="submit" disabled={addingRecord} className="h-9 w-full text-xs font-semibold">
                   {addingRecord ? <Loader2 className="size-4 mr-1.5 animate-spin" /> : <Save className="size-4 mr-1.5" />}
                   Save Record
                 </Button>
               </div>
             </div>
             <p className="text-xs text-muted-foreground">
-              Tip: Use <code className="text-foreground bg-muted px-1 py-0.5 rounded font-mono text-xs">@</code> for root domain, or a prefix like <code className="text-foreground bg-muted px-1 py-0.5 rounded font-mono text-xs">_vercel</code> for domain verification.
+              Tip: Use <code className="text-foreground bg-white/[0.06] border border-white/[0.1] px-1 py-0.5 rounded font-mono text-xs">@</code> for root domain, or a prefix like <code className="text-foreground bg-white/[0.06] border border-white/[0.1] px-1 py-0.5 rounded font-mono text-xs">_vercel</code> for domain verification.
             </p>
           </form>
         )}
@@ -617,7 +617,7 @@ export default function DomainDetail() {
         <CardContent className="p-0 overflow-x-auto">
           <Table className="min-w-full">
             <TableHeader>
-              <TableRow className="hover:bg-transparent border-border/70 bg-muted/20">
+              <TableRow className="hover:bg-transparent border-white/[0.08] bg-white/[0.02]">
                 <TableHead className="text-xs uppercase tracking-wider text-muted-foreground/70 font-semibold py-3 px-4 whitespace-nowrap">Type</TableHead>
                 <TableHead className="text-xs uppercase tracking-wider text-muted-foreground/70 font-semibold py-3 px-4 whitespace-nowrap">Host / Name</TableHead>
                 <TableHead className="text-xs uppercase tracking-wider text-muted-foreground/70 font-semibold py-3 px-4 whitespace-nowrap">Target Content</TableHead>
@@ -630,7 +630,7 @@ export default function DomainDetail() {
                 <TableRow>
                   <TableCell colSpan={5} className="h-32 text-center text-muted-foreground text-sm">
                     <div className="flex flex-col items-center justify-center gap-2 py-6">
-                      <div className="size-9 rounded-full bg-amber-500/10 flex items-center justify-center">
+                      <div className="size-9 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center">
                         <Lock className="size-4.5 text-amber-400" />
                       </div>
                       <p className="font-semibold text-foreground text-sm">DNS Management Locked (Pending Approval)</p>
@@ -642,24 +642,24 @@ export default function DomainDetail() {
                 </TableRow>
               ) : subdomain?.dns_records && subdomain.dns_records.length > 0 ? (
                 subdomain.dns_records.map((rec) => (
-                  <TableRow key={rec.id} className="border-border/60 hover:bg-muted/30 group">
+                  <TableRow key={rec.id} className="border-white/[0.06] hover:bg-white/[0.04] transition-colors group">
                     <TableCell className="font-semibold text-primary whitespace-nowrap py-3.5 px-4">
                       <Badge variant="outline" className="font-mono text-xs bg-primary/10 text-primary border-primary/20">
                         {rec.type}
                       </Badge>
                     </TableCell>
-                    <TableCell className="font-mono text-xs text-foreground font-medium whitespace-nowrap py-3.5 px-4">
-                      {rec.name || subdomain?.full_domain}
+                    <TableCell className="font-mono text-xs text-foreground py-3.5 px-4">
+                      {rec.name || "@"}
                     </TableCell>
-                    <TableCell className="font-mono text-xs text-muted-foreground max-w-xs truncate whitespace-nowrap py-3.5 px-4">
-                      <div className="flex items-center gap-2">
+                    <TableCell className="font-mono text-xs text-muted-foreground max-w-[280px] truncate py-3.5 px-4">
+                      <div className="flex items-center gap-1.5">
                         <span className="truncate">{rec.content}</span>
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <button
-                              onClick={() => handleCopyRecord(rec.content, rec.id)}
-                              className="opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground transition-opacity p-0.5 rounded"
-                              aria-label={`Copy ${rec.content}`}
+                              onClick={() => handleCopyRecord(rec.id, rec.content)}
+                              className="text-muted-foreground hover:text-foreground p-0.5 rounded transition-colors opacity-0 group-hover:opacity-100"
+                              aria-label="Copy record content"
                             >
                               {copiedRecordId === rec.id ? (
                                 <Check className="size-3 text-emerald-400" />
@@ -674,7 +674,9 @@ export default function DomainDetail() {
                         </Tooltip>
                       </div>
                     </TableCell>
-                    <TableCell className="text-xs text-muted-foreground whitespace-nowrap py-3.5 px-4">Auto (Edge)</TableCell>
+                    <TableCell className="text-xs text-muted-foreground font-mono py-3.5 px-4">
+                      Automatic (Auto)
+                    </TableCell>
                     <TableCell className="text-right py-3.5 px-4">
                       <Tooltip>
                         <TooltipTrigger asChild>
@@ -682,8 +684,8 @@ export default function DomainDetail() {
                             variant="ghost"
                             size="icon"
                             disabled={isLocked}
-                            className="size-7.5 text-muted-foreground hover:text-destructive hover:bg-destructive/10 whitespace-nowrap disabled:opacity-50"
                             onClick={() => setDeleteRecordTarget(rec)}
+                            className="size-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-full"
                             aria-label={`Delete ${rec.type} record`}
                           >
                             <Trash2 className="size-3.5" />
@@ -711,12 +713,12 @@ export default function DomainDetail() {
 
       {/* Danger Zone (Distilled) */}
       <div className="pt-2">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-xl border border-destructive/20 bg-destructive/5 gap-3">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-xl glossy-banner glossy-banner-destructive text-destructive gap-3">
           <div>
-            <p className="text-sm font-semibold text-destructive flex items-center gap-1.5">
+            <p className="text-sm font-semibold flex items-center gap-1.5">
               <ShieldAlert className="size-4" /> {isPending ? "Cancel Domain Claim" : "Delete Subdomain"}
             </p>
-            <p className="text-xs text-muted-foreground mt-0.5">
+            <p className="text-xs text-destructive/80 mt-0.5">
               {isPending ? (
                 <>Withdraw your pending claim for <strong className="text-foreground">{subdomain?.full_domain}</strong> and immediately free up 1 slot on your account.</>
               ) : (
@@ -728,7 +730,7 @@ export default function DomainDetail() {
             variant="destructive"
             size="sm"
             onClick={() => setDeleteSubdomainOpen(true)}
-            className="h-8.5 px-3.5 text-xs font-semibold rounded-md shrink-0 gap-1.5"
+            className="h-8.5 px-3.5 text-xs font-semibold rounded-lg shrink-0 gap-1.5 shadow-sm"
           >
             <Trash2 className="size-3.5" />
             <span>{isPending ? "Cancel Claim" : "Delete Subdomain"}</span>
@@ -738,7 +740,7 @@ export default function DomainDetail() {
 
       {/* Delete Record Alert Dialog */}
       <AlertDialog open={!!deleteRecordTarget} onOpenChange={() => setDeleteRecordTarget(null)}>
-        <AlertDialogContent className="border-border bg-card shadow-2xl">
+        <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle className="text-lg">
               Delete {deleteRecordTarget?.type} Record?
@@ -748,11 +750,11 @@ export default function DomainDetail() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Keep Record</AlertDialogCancel>
+            <AlertDialogCancel className="rounded-lg border-white/[0.12] bg-white/[0.03] hover:bg-white/[0.08]">Keep Record</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteDNS}
               disabled={deletingRecord}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90 font-semibold"
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90 font-semibold rounded-lg"
             >
               {deletingRecord && <Loader2 className="size-4 mr-2 animate-spin" />}
               Delete Record
@@ -763,7 +765,7 @@ export default function DomainDetail() {
 
       {/* Delete / Cancel Subdomain Alert Dialog */}
       <AlertDialog open={deleteSubdomainOpen} onOpenChange={setDeleteSubdomainOpen}>
-        <AlertDialogContent className="border-border bg-card shadow-2xl">
+        <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle className="text-lg">
               {isPending ? `Cancel Claim for ${subdomain?.full_domain}?` : `Delete ${subdomain?.full_domain}?`}
@@ -777,11 +779,11 @@ export default function DomainDetail() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>{isPending ? "Keep Claim" : "Keep Subdomain"}</AlertDialogCancel>
+            <AlertDialogCancel className="rounded-lg border-white/[0.12] bg-white/[0.03] hover:bg-white/[0.08]">{isPending ? "Keep Claim" : "Keep Subdomain"}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteSubdomain}
               disabled={deletingSubdomain}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90 font-semibold"
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90 font-semibold rounded-lg"
             >
               {deletingSubdomain && <Loader2 className="size-4 mr-2 animate-spin" />}
               {isPending ? "Cancel Claim" : "Delete Subdomain"}

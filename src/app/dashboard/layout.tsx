@@ -9,8 +9,12 @@ import {
   FileText,
   LogOut,
   Shield,
+  ShieldAlert,
   ChevronsUpDown,
   ChevronRight,
+  ChevronDown,
+  ChevronUp,
+  PanelLeftClose,
   X,
   ArrowLeft,
   ExternalLink,
@@ -18,6 +22,7 @@ import {
   Activity,
   Plus,
   Sparkles,
+  Zap,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -68,6 +73,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [isAdmin, setIsAdmin] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [dashboardOpen, setDashboardOpen] = useState(true);
   const [subdomainCount, setSubdomainCount] = useState<number>(0);
 
   const supabase = createClient();
@@ -115,311 +121,379 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <TooltipProvider delayDuration={150}>
-      <div className="min-h-screen flex bg-background text-foreground">
+      <div className="min-h-screen flex bg-[#06070a] text-foreground relative selection:bg-primary/20 selection:text-primary">
+        {/* Scoped Dashboard Atmospheric Background (Matches component tones, does NOT affect homepage) */}
+        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
+          {/* Top ambient radial illumination */}
+          <div
+            className="absolute -top-[120px] left-1/2 -translate-x-1/2 w-[1000px] h-[500px] rounded-full blur-[140px] opacity-15"
+            style={{
+              background: "radial-gradient(ellipse at center, rgba(87, 80, 241, 0.25) 0%, transparent 75%)",
+            }}
+          />
+        </div>
+
         {/* Mobile overlay backdrop */}
         {mobileNavOpen && (
           <div
-            className="fixed inset-0 z-40 bg-black/70 backdrop-blur-xs md:hidden animate-in fade-in duration-200"
+            className="fixed inset-0 z-40 bg-black/80 backdrop-blur-xs md:hidden animate-in fade-in duration-200"
             onClick={() => setMobileNavOpen(false)}
           />
         )}
 
-        {/* Sidebar Navigation */}
+        {/* Sidebar Navigation (Seamlessly integrated into canvas background) */}
         <aside
-          className={`fixed md:sticky top-0 left-0 z-50 flex flex-col h-screen bg-background/95 backdrop-blur-md border-r border-border/60 transition-all duration-300 ease-in-out shrink-0 select-none ${
+          className={`fixed md:sticky top-0 left-0 z-50 flex flex-col h-screen bg-[#06070a] border-none transition-all duration-300 ease-in-out shrink-0 select-none ${
             mobileNavOpen
               ? "translate-x-0 w-64 shadow-2xl"
               : "-translate-x-full md:translate-x-0"
-          } ${sidebarOpen ? "md:w-64" : "md:w-16"}`}
+          } ${sidebarOpen ? "md:w-64" : "md:w-18"}`}
         >
           {/* Brand Header */}
-          <div className="flex items-center justify-between px-3.5 border-b border-border/60 h-14 shrink-0">
-            <Link
-              href="/dashboard"
-              className="flex items-center gap-2.5 overflow-hidden group focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded-md p-1"
-            >
-              <div className="size-7 rounded-md bg-white/[0.06] flex items-center justify-center text-white shrink-0 group-hover:scale-105 transition-transform overflow-hidden">
-                <Image
-                  src="/ARC.webp"
-                  alt="ARC.BD Logo"
-                  width={24}
-                  height={24}
-                  className="size-5 object-contain"
-                />
-              </div>
-              {sidebarOpen && (
-                <div className="flex items-center gap-1.5 min-w-0">
+          {sidebarOpen ? (
+            <div className="flex items-center justify-between px-4 h-16 shrink-0">
+              <Link
+                href="/dashboard"
+                className="flex items-center gap-2.5 overflow-hidden group focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded-lg p-1"
+              >
+                <div className="size-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-white shrink-0 group-hover:scale-105 group-hover:border-primary/40 group-hover:bg-primary/15 transition-all overflow-hidden">
+                  <Image
+                    src="/ARC.webp"
+                    alt="ARC.BD Logo"
+                    width={24}
+                    height={24}
+                    className="size-5 object-contain"
+                  />
+                </div>
+                <div className="flex items-center gap-2 min-w-0">
                   <span className="text-sm font-bold tracking-tight text-white">ARC<span className="text-zinc-400 font-mono">.BD</span></span>
                   <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-4 bg-primary/10 text-primary border-primary/20 font-mono">
                     DEV
                   </Badge>
                 </div>
-              )}
-            </Link>
-            <button
-              onClick={() => setMobileNavOpen(false)}
-              className="md:hidden text-muted-foreground hover:text-foreground transition-colors p-1.5 rounded-md hover:bg-secondary"
-              aria-label="Close navigation menu"
-            >
-              <X className="size-4.5" />
-            </button>
-          </div>
+              </Link>
+
+              {/* Sidebar Collapse Button (Desktop) */}
+              <button
+                onClick={() => setSidebarOpen(false)}
+                className="hidden md:flex size-8 items-center justify-center rounded-lg border border-[#222838] bg-[#141721] text-zinc-400 hover:text-white hover:border-[#2d344a] hover:bg-[#191d2a] transition-all cursor-pointer shrink-0"
+                aria-label="Collapse sidebar"
+              >
+                <PanelLeftClose className="size-4" />
+              </button>
+
+              {/* Close button on Mobile */}
+              <button
+                onClick={() => setMobileNavOpen(false)}
+                className="md:hidden text-zinc-400 hover:text-white transition-colors p-1.5 rounded-lg hover:bg-white/[0.06]"
+                aria-label="Close navigation menu"
+              >
+                <X className="size-4.5" />
+              </button>
+            </div>
+          ) : (
+            /* Collapsed Brand Header */
+            <div className="flex items-center justify-center h-16 shrink-0 px-2">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={() => setSidebarOpen(true)}
+                    className="flex size-9 items-center justify-center rounded-xl border border-[#222838] bg-[#141721] text-zinc-400 hover:text-white hover:border-primary/50 hover:bg-[#191d2a] transition-all cursor-pointer shadow-xs"
+                    aria-label="Expand sidebar"
+                  >
+                    <PanelLeftClose className="size-4.5 rotate-180 text-primary" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="right" className="text-xs font-medium">
+                  Expand Sidebar
+                </TooltipContent>
+              </Tooltip>
+            </div>
+          )}
 
           {/* Navigation Links Area */}
-          <nav className="flex-1 px-2.5 py-3 space-y-1 overflow-y-auto overflow-x-hidden">
-            {/* Primary Dashboard Links */}
-            {mainNavItems.map((item) => {
-              const isActive =
-                pathname === item.href ||
-                (item.href !== "/dashboard" && pathname.startsWith(item.href));
-
-              if (!sidebarOpen) {
-                return (
-                  <Tooltip key={item.name}>
-                    <TooltipTrigger asChild>
-                      <Link
-                        href={item.href}
-                        onClick={() => setMobileNavOpen(false)}
-                        className={`flex items-center justify-center size-9 mx-auto rounded-lg transition-all ${
-                          isActive
-                            ? "bg-white/[0.08] text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)]"
-                            : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
-                        }`}
-                      >
-                        <item.icon className={`size-4 shrink-0 ${isActive ? "text-primary" : "text-zinc-400"}`} />
-                        <span className="sr-only">{item.name}</span>
-                      </Link>
-                    </TooltipTrigger>
-                    <TooltipContent side="right" className="text-xs font-medium">
-                      {item.name}
-                    </TooltipContent>
-                  </Tooltip>
-                );
-              }
-
-              return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  onClick={() => setMobileNavOpen(false)}
-                  className={`flex items-center justify-between gap-2.5 px-3 py-2 rounded-lg text-xs sm:text-[13px] font-medium transition-all group ${
-                    isActive
-                      ? "bg-white/[0.08] text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)]"
-                      : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
-                  }`}
-                >
-                  <div className="flex items-center gap-2.5 truncate">
-                    <item.icon className={`size-4 shrink-0 ${isActive ? "text-primary" : "text-zinc-400 group-hover:text-zinc-200"} transition-colors`} />
-                    <span className="truncate">{item.name}</span>
-                  </div>
-                </Link>
-              );
-            })}
-
-            {/* Documentation Links */}
-            {resourceNavItems.map((item) => {
-              const isActive = pathname === item.href || pathname.startsWith(item.href);
-
-              if (!sidebarOpen) {
-                return (
-                  <Tooltip key={item.name}>
-                    <TooltipTrigger asChild>
-                      <Link
-                        href={item.href}
-                        onClick={() => setMobileNavOpen(false)}
-                        className={`flex items-center justify-center size-9 mx-auto rounded-lg transition-all ${
-                          isActive
-                            ? "bg-white/[0.08] text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)]"
-                            : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
-                        }`}
-                      >
-                        <item.icon className={`size-4 shrink-0 ${isActive ? "text-primary" : "text-zinc-400"}`} />
-                        <span className="sr-only">{item.name}</span>
-                      </Link>
-                    </TooltipTrigger>
-                    <TooltipContent side="right" className="text-xs font-medium">
-                      {item.name}
-                    </TooltipContent>
-                  </Tooltip>
-                );
-              }
-
-              return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  onClick={() => setMobileNavOpen(false)}
-                  className={`flex items-center justify-between gap-2.5 px-3 py-2 rounded-lg text-xs sm:text-[13px] font-medium transition-all group ${
-                    isActive
-                      ? "bg-white/[0.08] text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)]"
-                      : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
-                  }`}
-                >
-                  <div className="flex items-center gap-2.5 truncate">
-                    <item.icon className={`size-4 shrink-0 ${isActive ? "text-primary" : "text-zinc-400 group-hover:text-zinc-200"} transition-colors`} />
-                    <span className="truncate">{item.name}</span>
-                  </div>
-                </Link>
-              );
-            })}
-
-            {/* Admin Panel (If Administrator) */}
-            {isAdmin && (
-              <>
-                <div className="pt-2 pb-1">
-                  <Separator className="bg-border/60" />
+          <nav className="flex-1 px-2.5 py-3 space-y-4 overflow-y-auto overflow-x-hidden scrollbar-thin">
+            {/* Section 1: MAIN MENU */}
+            <div>
+              {sidebarOpen && (
+                <div className="px-3 pb-2 text-[10px] font-bold tracking-[0.12em] text-zinc-400 uppercase select-none">
+                  MAIN MENU
                 </div>
+              )}
+
+              {/* Collapsible Dashboard Group (NextAdmin style) */}
+              <div className="space-y-1">
+                {sidebarOpen ? (
+                  <>
+                    <button
+                      onClick={() => setDashboardOpen((prev) => !prev)}
+                      className="w-full flex items-center justify-between gap-2.5 px-3 py-2 rounded-lg text-xs sm:text-[13px] font-medium text-zinc-300 hover:text-white hover:bg-white/[0.04] transition-colors cursor-pointer group"
+                    >
+                      <div className="flex items-center gap-2.5 truncate">
+                        <LayoutDashboard className="size-4 text-zinc-400 group-hover:text-white transition-colors shrink-0" />
+                        <span className="truncate">Dashboard</span>
+                      </div>
+                      {dashboardOpen ? (
+                        <ChevronUp className="size-3.5 text-zinc-400 group-hover:text-zinc-200 transition-transform" />
+                      ) : (
+                        <ChevronDown className="size-3.5 text-zinc-400 group-hover:text-zinc-200 transition-transform" />
+                      )}
+                    </button>
+
+                    {/* Submenu Items under Dashboard */}
+                    {dashboardOpen && (
+                      <div className="pl-3.5 space-y-1 mt-0.5 border-l border-white/[0.06] ml-4">
+                        {mainNavItems.map((item) => {
+                          const isActive =
+                            pathname === item.href ||
+                            (item.href !== "/dashboard" && pathname.startsWith(item.href));
+
+                          return (
+                            <Link
+                              key={item.name}
+                              href={item.href}
+                              onClick={() => setMobileNavOpen(false)}
+                              className={`flex items-center justify-between gap-2 px-3 py-1.5 rounded-lg text-xs sm:text-[13px] font-medium transition-all ${
+                                isActive
+                                  ? "bg-[#141721] text-white border border-[#222838] shadow-xs"
+                                  : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04] border border-transparent"
+                              }`}
+                            >
+                              <span className="truncate">{item.name}</span>
+                            </Link>
+                          );
+                        })}
+                        <Link
+                          href="/subdomain-status"
+                          onClick={() => setMobileNavOpen(false)}
+                          className={`flex items-center justify-between gap-2 px-3 py-1.5 rounded-lg text-xs sm:text-[13px] font-medium transition-all ${
+                            pathname === "/subdomain-status"
+                              ? "bg-[#141721] text-white border border-[#222838] shadow-xs"
+                              : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04] border border-transparent"
+                          }`}
+                        >
+                          <span className="truncate">System Status</span>
+                        </Link>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  /* Collapsed Sidebar: Icons only with tooltips */
+                  <div className="space-y-1.5 flex flex-col items-center">
+                    {/* Overview */}
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Link
+                          href="/dashboard"
+                          onClick={() => setMobileNavOpen(false)}
+                          className={`flex items-center justify-center size-9.5 rounded-xl transition-all ${
+                            pathname === "/dashboard"
+                              ? "bg-[#141721] text-white border border-[#222838] shadow-xs"
+                              : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
+                          }`}
+                        >
+                          <LayoutDashboard className={`size-4.5 shrink-0 ${pathname === "/dashboard" ? "text-primary" : "text-zinc-400"}`} />
+                          <span className="sr-only">Overview</span>
+                        </Link>
+                      </TooltipTrigger>
+                      <TooltipContent side="right" className="text-xs font-medium">
+                        Overview
+                      </TooltipContent>
+                    </Tooltip>
+
+                    {/* My Subdomains */}
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Link
+                          href="/dashboard/domains"
+                          onClick={() => setMobileNavOpen(false)}
+                          className={`flex items-center justify-center size-9.5 rounded-xl transition-all ${
+                            pathname.startsWith("/dashboard/domains")
+                              ? "bg-[#141721] text-white border border-[#222838] shadow-xs"
+                              : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
+                          }`}
+                        >
+                          <Globe className={`size-4.5 shrink-0 ${pathname.startsWith("/dashboard/domains") ? "text-primary" : "text-zinc-400"}`} />
+                          <span className="sr-only">My Subdomains</span>
+                        </Link>
+                      </TooltipTrigger>
+                      <TooltipContent side="right" className="text-xs font-medium">
+                        My Subdomains
+                      </TooltipContent>
+                    </Tooltip>
+
+                    {/* System Status */}
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Link
+                          href="/subdomain-status"
+                          onClick={() => setMobileNavOpen(false)}
+                          className={`flex items-center justify-center size-9.5 rounded-xl transition-all ${
+                            pathname === "/subdomain-status"
+                              ? "bg-[#141721] text-white border border-[#222838] shadow-xs"
+                              : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
+                          }`}
+                        >
+                          <Activity className={`size-4.5 shrink-0 ${pathname === "/subdomain-status" ? "text-primary" : "text-zinc-400"}`} />
+                          <span className="sr-only">System Status</span>
+                        </Link>
+                      </TooltipTrigger>
+                      <TooltipContent side="right" className="text-xs font-medium">
+                        System Status
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Section 2: OTHERS */}
+            <div className="pt-2">
+              {sidebarOpen && (
+                <div className="px-3 pb-2 text-[10px] font-bold tracking-[0.12em] text-zinc-400 uppercase select-none">
+                  OTHERS
+                </div>
+              )}
+              <div className="space-y-1.5 flex flex-col items-center">
+                {/* Documentation */}
                 {sidebarOpen ? (
                   <Link
-                    href="/admin"
+                    href="/docs"
                     onClick={() => setMobileNavOpen(false)}
-                    className="flex items-center justify-between gap-2.5 px-3 py-2 rounded-lg text-xs sm:text-[13px] font-medium text-amber-400 hover:bg-amber-500/15 transition-all group"
+                    className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs sm:text-[13px] font-medium text-zinc-400 hover:text-white hover:bg-white/[0.04] transition-colors"
                   >
-                    <div className="flex items-center gap-2.5 truncate">
-                      <Shield className="size-4 shrink-0 text-amber-400 group-hover:scale-105 transition-transform" />
-                      <span className="truncate">Admin Panel</span>
-                    </div>
+                    <BookOpen className="size-4 shrink-0 text-zinc-400" />
+                    <span className="truncate">Documentation</span>
                   </Link>
                 ) : (
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Link
-                        href="/admin"
+                        href="/docs"
                         onClick={() => setMobileNavOpen(false)}
-                        className="flex items-center justify-center size-9 mx-auto rounded-lg text-amber-400 hover:bg-amber-500/15 transition-colors"
+                        className="flex items-center justify-center size-9.5 rounded-xl text-zinc-400 hover:text-white hover:bg-white/[0.04] transition-colors"
                       >
-                        <Shield className="size-4 shrink-0" />
-                        <span className="sr-only">Admin Panel</span>
+                        <BookOpen className="size-4.5 shrink-0" />
+                        <span className="sr-only">Documentation</span>
                       </Link>
                     </TooltipTrigger>
                     <TooltipContent side="right" className="text-xs font-medium">
-                      Admin Panel
+                      Documentation
                     </TooltipContent>
                   </Tooltip>
                 )}
-              </>
-            )}
+
+                {/* Report Abuse */}
+                {sidebarOpen ? (
+                  <Link
+                    href="/report"
+                    onClick={() => setMobileNavOpen(false)}
+                    className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs sm:text-[13px] font-medium text-zinc-400 hover:text-white hover:bg-white/[0.04] transition-colors"
+                  >
+                    <ShieldAlert className="size-4 shrink-0 text-zinc-400" />
+                    <span className="truncate">Report Abuse</span>
+                  </Link>
+                ) : (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Link
+                        href="/report"
+                        onClick={() => setMobileNavOpen(false)}
+                        className="flex items-center justify-center size-9.5 rounded-xl text-zinc-400 hover:text-white hover:bg-white/[0.04] transition-colors"
+                      >
+                        <ShieldAlert className="size-4.5 shrink-0" />
+                        <span className="sr-only">Report Abuse</span>
+                      </Link>
+                    </TooltipTrigger>
+                    <TooltipContent side="right" className="text-xs font-medium">
+                      Report Abuse
+                    </TooltipContent>
+                  </Tooltip>
+                )}
+
+                {/* Admin Link if user is admin */}
+                {isAdmin && (
+                  sidebarOpen ? (
+                    <Link
+                      href="/admin"
+                      onClick={() => setMobileNavOpen(false)}
+                      className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs sm:text-[13px] font-medium text-amber-400/90 hover:text-amber-300 hover:bg-amber-500/10 transition-colors"
+                    >
+                      <Shield className="size-4 shrink-0 text-amber-400" />
+                      <span className="truncate">Admin Panel</span>
+                    </Link>
+                  ) : (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Link
+                          href="/admin"
+                          onClick={() => setMobileNavOpen(false)}
+                          className="flex items-center justify-center size-9.5 rounded-xl text-amber-400 hover:bg-amber-500/10 transition-colors"
+                        >
+                          <Shield className="size-4.5 shrink-0" />
+                          <span className="sr-only">Admin Panel</span>
+                        </Link>
+                      </TooltipTrigger>
+                      <TooltipContent side="right" className="text-xs font-medium">
+                        Admin Panel
+                      </TooltipContent>
+                    </Tooltip>
+                  )
+                )}
+              </div>
+            </div>
           </nav>
 
-          {/* Subdomain Quota Capsule */}
+          {/* NextAdmin "Upgrade to Pro" Bottom Card Style */}
           {sidebarOpen && (
-            <div className="mx-2.5 mb-2 p-2.5 rounded-lg bg-white/[0.03] border border-white/[0.08] flex flex-col gap-1.5">
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-zinc-400 font-medium">Domain Usage</span>
-                <span className={`font-mono text-[11px] font-semibold ${remainingSlots === 0 ? "text-amber-400" : "text-zinc-300"}`}>
-                  {subdomainCount} / 5
-                </span>
-              </div>
-              <div className="w-full bg-white/10 h-1 rounded-full overflow-hidden">
-                <div
-                  className={`h-full rounded-full transition-all duration-300 ${
-                    remainingSlots === 0 ? "bg-amber-400" : "bg-primary"
-                  }`}
-                  style={{ width: `${Math.min(100, (subdomainCount / 5) * 100)}%` }}
-                />
+            <div className="p-3 shrink-0">
+              <div className="rounded-2xl bg-[#12141c] border border-[#1e2330] p-4 text-center flex flex-col gap-2.5 shadow-md">
+                <div className="space-y-1">
+                  <p className="text-sm font-semibold text-white tracking-tight">Free Developer Tier</p>
+                  <p className="text-xs text-zinc-400 leading-snug">
+                    Claim up to 5 free .arc.bd subdomains with Anycast DNS.
+                  </p>
+                </div>
+                <div className="w-full bg-[#1c202d] h-1.5 rounded-full overflow-hidden border border-[#262c3e]">
+                  <div
+                    className={`h-full rounded-full transition-all duration-300 ${
+                      subdomainCount >= 5 ? "bg-amber-400" : "bg-[#5750F1]"
+                    }`}
+                    style={{ width: `${Math.min(100, (subdomainCount / 5) * 100)}%` }}
+                  />
+                </div>
+                <Button
+                  asChild
+                  size="sm"
+                  className="w-full h-9 rounded-lg bg-[#5750F1] hover:bg-[#4842e4] text-white font-medium text-xs transition-all shadow-md active:scale-98"
+                >
+                  <Link href="/dashboard/domains?action=claim">
+                    <Plus className="size-3.5 mr-1" /> Claim Subdomain
+                  </Link>
+                </Button>
               </div>
             </div>
           )}
-
-          {/* Bottom User Profile Trigger */}
-          <div className="p-2 shrink-0 border-t border-border/60">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button
-                  className={`flex w-full items-center gap-2.5 p-1.5 rounded-lg hover:bg-white/[0.06] active:bg-white/[0.10] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring transition-all cursor-pointer group ${
-                    !sidebarOpen ? "justify-center" : ""
-                  }`}
-                  aria-label="User profile and account settings"
-                >
-                  <Avatar className="size-7.5 shrink-0 ring-1 ring-white/15">
-                    {avatarUrl && <AvatarImage src={avatarUrl} alt={userName} className="object-cover" />}
-                    <AvatarFallback className="bg-primary/20 text-primary text-xs font-bold font-mono">
-                      {initials}
-                    </AvatarFallback>
-                  </Avatar>
-                  {sidebarOpen && (
-                    <>
-                      <div className="flex-1 min-w-0 text-left">
-                        <p className="text-xs font-medium text-white truncate">{userName}</p>
-                        <p className="text-[11px] text-zinc-400 truncate font-mono">{userEmail}</p>
-                      </div>
-                      <ChevronsUpDown className="size-3.5 text-zinc-400 group-hover:text-zinc-200 transition-colors shrink-0" />
-                    </>
-                  )}
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56 border-border shadow-2xl p-1.5">
-                <DropdownMenuLabel className="font-normal px-2 py-1.5">
-                  <div className="flex flex-col gap-0.5">
-                    <p className="text-xs font-semibold text-foreground truncate">{userName}</p>
-                    <p className="text-xs text-muted-foreground truncate">{userEmail}</p>
-                    {isAdmin ? (
-                      <Badge className="w-fit mt-1 text-xs bg-amber-500/10 text-amber-400 border-amber-500/30 font-mono">
-                        Administrator
-                      </Badge>
-                    ) : (
-                      <Badge variant="outline" className="w-fit mt-1 text-xs text-muted-foreground font-mono">
-                        Free Account (5 Slots)
-                      </Badge>
-                    )}
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  <DropdownMenuItem asChild className="cursor-pointer">
-                    <Link href="/dashboard" className="flex items-center gap-2">
-                      <LayoutDashboard className="size-4 text-muted-foreground" /> Overview
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild className="cursor-pointer">
-                    <Link href="/dashboard/domains" className="flex items-center gap-2">
-                      <Globe className="size-4 text-muted-foreground" /> My Subdomains
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild className="cursor-pointer">
-                    <Link href="/docs" className="flex items-center gap-2">
-                      <BookOpen className="size-4 text-muted-foreground" /> Documentation
-                    </Link>
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                {isAdmin && (
-                  <>
-                    <DropdownMenuItem asChild className="cursor-pointer">
-                      <Link href="/admin" className="flex items-center gap-2 text-amber-400">
-                        <Shield className="size-4" /> Admin Panel
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                  </>
-                )}
-                <DropdownMenuItem
-                  onClick={handleSignOut}
-                  className="cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10 flex items-center gap-2"
-                >
-                  <LogOut className="size-4" />
-                  Sign Out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
         </aside>
 
-        {/* Main Content Workspace */}
-        <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden bg-background">
-          <DashboardHeader
-            userEmail={userEmail}
-            userName={userName}
-            avatarUrl={avatarUrl}
-            isAdmin={isAdmin}
-            onToggleSidebar={() => setSidebarOpen((prev) => !prev)}
-            onOpenMobileNav={() => setMobileNavOpen(true)}
-          />
-          <main className="flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-            <div className="max-w-7xl mx-auto w-full">
-              {children}
-            </div>
-          </main>
+        {/* Main Content Workspace (NextAdmin Unified Shell Architecture) */}
+        <div className="min-w-0 flex-1 p-2 sm:p-3 lg:p-3.5 xl:p-4 h-screen overflow-hidden flex flex-col relative z-10 bg-transparent">
+          <div className="flex h-full flex-col overflow-hidden border border-[#1e2330] bg-[#0c0e14] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.6)]">
+            <DashboardHeader
+              userEmail={userEmail}
+              userName={userName}
+              avatarUrl={avatarUrl}
+              isAdmin={isAdmin}
+              sidebarOpen={sidebarOpen}
+              onToggleSidebar={() => setSidebarOpen((prev) => !prev)}
+              onOpenMobileNav={() => setMobileNavOpen(true)}
+            />
+            <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-7">
+              <div className="w-full space-y-6">
+                {children}
+              </div>
+            </main>
+          </div>
         </div>
       </div>
     </TooltipProvider>

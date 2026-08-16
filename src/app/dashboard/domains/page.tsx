@@ -24,6 +24,7 @@ import { formatDate } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -320,14 +321,14 @@ function DomainsListInner() {
 
       {/* Success banner after claiming */}
       {claimSuccessMsg && (
-        <div className="flex items-center justify-between p-3.5 rounded-lg border bg-amber-500/10 border-amber-500/30 text-amber-300 text-xs sm:text-sm shadow-sm animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="flex items-center justify-between p-3.5 rounded-xl glossy-banner glossy-banner-amber text-amber-300 text-xs sm:text-sm animate-in fade-in slide-in-from-top-2 duration-200">
           <div className="flex items-center gap-2.5">
-            <span className="size-2 rounded-full bg-amber-400 shrink-0" />
+            <span className="size-2 rounded-full bg-amber-400 shrink-0 shadow-[0_0_8px_rgba(251,191,36,0.8)]" />
             <p className="font-medium">{claimSuccessMsg}</p>
           </div>
           <button
             onClick={() => setClaimSuccessMsg(null)}
-            className="text-amber-400 hover:text-amber-200 p-1"
+            className="text-amber-400 hover:text-amber-200 p-1 rounded-md transition-colors"
             aria-label="Dismiss message"
           >
             <X className="size-3.5" />
@@ -337,16 +338,16 @@ function DomainsListInner() {
 
       {/* Auto-claim status banner (shown after OAuth redirect) */}
       {autoClaimMsg && (
-        <div className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-lg text-xs sm:text-sm font-medium border shadow-sm animate-in fade-in duration-200 ${
+        <div className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl glossy-banner text-xs sm:text-sm font-medium animate-in fade-in duration-200 ${
           autoClaiming
-            ? "bg-blue-500/10 border-blue-500/30 text-blue-400"
+            ? "glossy-banner-blue text-blue-300"
             : autoClaimMsg.startsWith("✓")
-            ? "bg-amber-500/10 border-amber-500/30 text-amber-300"
-            : "bg-destructive/10 border-destructive/30 text-destructive"
+            ? "glossy-banner-amber text-amber-300"
+            : "glossy-banner-destructive text-destructive"
         }`}>
           {autoClaiming && <Loader2 className="size-3.5 animate-spin shrink-0" />}
           <p className="flex-1">{autoClaimMsg}</p>
-          <button onClick={() => setAutoClaimMsg(null)} className="p-1" aria-label="Dismiss banner">
+          <button onClick={() => setAutoClaimMsg(null)} className="p-1 rounded-md hover:bg-white/[0.08] transition-colors" aria-label="Dismiss banner">
             <X className="size-3.5" />
           </button>
         </div>
@@ -356,24 +357,24 @@ function DomainsListInner() {
       <div className="flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-2">
         {/* Search Input with '/' hotkey */}
         <div className="relative flex-1">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 size-3.5 text-zinc-500" />
           <Input
             ref={searchInputRef}
             placeholder="Search subdomains..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-9 pr-10 h-9 w-full text-xs sm:text-sm bg-background/60 border border-border/60 shadow-none rounded-full focus-visible:ring-1 focus-visible:ring-ring transition-all placeholder:text-muted-foreground"
+            className="pl-9 pr-10 h-9 w-full text-xs sm:text-sm bg-white/[0.03] border-white/[0.08] hover:border-white/[0.14] focus-visible:border-white/25 rounded-full transition-all placeholder:text-zinc-500 text-white"
           />
           {search ? (
             <button
               onClick={() => setSearch("")}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-1 rounded-full transition-colors"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white p-1 rounded-full transition-colors"
               aria-label="Clear search"
             >
               <X className="size-3" />
             </button>
           ) : (
-            <kbd className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4.5 select-none items-center rounded-full border border-border/60 bg-muted px-1.5 font-mono text-[10px] text-muted-foreground hidden sm:inline-flex">
+            <kbd className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4.5 select-none items-center rounded-full border border-white/[0.1] bg-white/[0.04] px-1.5 font-mono text-[10px] text-zinc-400 hidden sm:inline-flex">
               /
             </kbd>
           )}
@@ -386,26 +387,24 @@ function DomainsListInner() {
             <DropdownMenu>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className={`size-9 shrink-0 rounded-full border-border/60 bg-card hover:bg-secondary transition-colors ${
-                        statusFilter !== "all" ? "border-primary text-primary" : "text-muted-foreground"
-                      }`}
-                      aria-label="Filter projects by status"
-                    >
-                      <SlidersHorizontal className="size-3.5" />
-                    </Button>
-                  </DropdownMenuTrigger>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className={`size-9 shrink-0 rounded-full border-white/[0.08] bg-white/[0.025] hover:bg-white/[0.06] hover:border-white/[0.14] transition-colors ${
+                      statusFilter !== "all" ? "border-primary/50 text-primary" : "text-zinc-400 hover:text-white"
+                    }`}
+                    aria-label="Filter projects by status"
+                  >
+                    <SlidersHorizontal className="size-3.5" />
+                  </Button>
                 </TooltipTrigger>
                 <TooltipContent side="top" className="text-xs">
                   Filter status ({statusFilter})
                 </TooltipContent>
               </Tooltip>
 
-              <DropdownMenuContent align="end" className="w-44 border-border shadow-xl">
-                <DropdownMenuLabel className="text-xs font-semibold text-muted-foreground">
+              <DropdownMenuContent align="end" className="w-44 border-white/[0.08] shadow-xl">
+                <DropdownMenuLabel className="text-xs font-semibold text-zinc-400">
                   Filter Status
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
@@ -430,15 +429,15 @@ function DomainsListInner() {
             </DropdownMenu>
 
             {/* Grid vs List View Mode Switcher */}
-            <div className="flex items-center rounded-full border border-border/60 bg-card p-0.5 shrink-0">
+            <div className="flex items-center rounded-full border border-white/[0.08] bg-white/[0.025] p-0.5 shrink-0">
               <Tooltip>
                 <TooltipTrigger asChild>
                   <button
                     onClick={() => setViewMode("grid")}
-                    className={`flex size-8 items-center justify-center rounded-full transition-colors cursor-pointer ${
+                    className={`flex size-8 items-center justify-center rounded-full transition-all cursor-pointer ${
                       viewMode === "grid"
-                        ? "bg-secondary text-foreground font-semibold"
-                        : "text-muted-foreground hover:text-foreground"
+                        ? "bg-white/[0.1] text-white font-semibold shadow-sm"
+                        : "text-zinc-400 hover:text-white"
                     }`}
                     aria-label="Switch to grid view"
                   >
@@ -454,10 +453,10 @@ function DomainsListInner() {
                 <TooltipTrigger asChild>
                   <button
                     onClick={() => setViewMode("list")}
-                    className={`flex size-8 items-center justify-center rounded-full transition-colors cursor-pointer ${
+                    className={`flex size-8 items-center justify-center rounded-full transition-all cursor-pointer ${
                       viewMode === "list"
-                        ? "bg-secondary text-foreground font-semibold"
-                        : "text-muted-foreground hover:text-foreground"
+                        ? "bg-white/[0.1] text-white font-semibold shadow-sm"
+                        : "text-zinc-400 hover:text-white"
                     }`}
                     aria-label="Switch to list view"
                   >
@@ -506,10 +505,10 @@ function DomainsListInner() {
 
       {/* Claim Subdomain Dialog */}
       <Dialog open={showClaimDialog} onOpenChange={setShowClaimDialog}>
-        <DialogContent className="sm:max-w-lg border-border bg-card shadow-2xl">
+        <DialogContent className="sm:max-w-lg">
           <DialogHeader>
             <div className="flex items-center gap-2.5">
-              <div className="size-8 rounded-lg bg-primary/20 text-primary flex items-center justify-center shrink-0">
+              <div className="size-8 rounded-lg bg-primary/20 text-primary flex items-center justify-center shrink-0 border border-primary/30 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2)]">
                 <Globe className="size-4" />
               </div>
               <div>
@@ -523,7 +522,7 @@ function DomainsListInner() {
 
           <form onSubmit={handleClaim} className="space-y-4 pt-2">
             {claimError && (
-              <div className="flex items-start gap-2 rounded-lg bg-destructive/10 border border-destructive/30 text-destructive text-xs p-3">
+              <div className="flex items-start gap-2 rounded-xl glossy-banner glossy-banner-destructive text-destructive text-xs p-3">
                 <AlertCircle className="size-4 shrink-0 mt-0.5" />
                 <p className="flex-1">{claimError}</p>
               </div>
@@ -533,7 +532,7 @@ function DomainsListInner() {
               <label className="text-xs font-semibold text-foreground">
                 Subdomain name
               </label>
-              <div className="flex items-center rounded-lg border border-input bg-background px-3 py-2 ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 transition-all">
+              <div className="flex items-center rounded-lg border border-white/[0.12] bg-white/[0.03] px-3 py-2 shadow-[inset_0_1px_2px_0_rgba(0,0,0,0.4)] focus-within:border-white/30 focus-within:ring-1 focus-within:ring-primary/40 transition-all">
                 <Input
                   required
                   placeholder="my-project"
@@ -541,7 +540,7 @@ function DomainsListInner() {
                   onChange={(e) =>
                     setClaimInput(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""))
                   }
-                  className="flex-1 border-0 bg-transparent focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 p-0 text-sm placeholder:text-muted-foreground font-mono"
+                  className="flex-1 border-0 bg-transparent shadow-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 p-0 text-sm placeholder:text-muted-foreground font-mono"
                   autoFocus
                 />
                 <span className="text-sm font-mono font-semibold text-muted-foreground shrink-0 pl-1 select-none">
@@ -552,7 +551,7 @@ function DomainsListInner() {
 
             {/* Live Domain Preview & Validation Rules */}
             {cleanInput && (
-              <div className="rounded-lg bg-secondary/60 border border-border p-3 space-y-1.5">
+              <div className="rounded-xl bg-white/[0.03] border border-white/[0.08] p-3 space-y-1.5 shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.06)]">
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-muted-foreground">Full Address:</span>
                   <span className="font-mono text-primary font-semibold">
@@ -583,14 +582,14 @@ function DomainsListInner() {
                 type="button"
                 variant="outline"
                 onClick={() => setShowClaimDialog(false)}
-                className="flex-1"
+                className="flex-1 rounded-lg border-white/[0.12] bg-white/[0.03] hover:bg-white/[0.08]"
               >
                 Cancel
               </Button>
               <Button
                 type="submit"
                 disabled={claiming || !isDomainFormatValid || remainingSlots === 0}
-                className="flex-1 font-semibold"
+                className="flex-1 font-semibold rounded-lg"
               >
                 {claiming && <Loader2 className="size-4 mr-2 animate-spin" />}
                 Submit Claim
@@ -602,7 +601,7 @@ function DomainsListInner() {
 
       {/* Delete / Cancel Confirmation Alert Dialog */}
       <AlertDialog open={!!deleteTarget} onOpenChange={() => setDeleteTarget(null)}>
-        <AlertDialogContent className="border-border bg-card shadow-2xl">
+        <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle className="text-lg">
               {deleteTarget?.status === "pending"
@@ -618,13 +617,13 @@ function DomainsListInner() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>
+            <AlertDialogCancel className="rounded-lg border-white/[0.12] bg-white/[0.03] hover:bg-white/[0.08]">
               {deleteTarget?.status === "pending" ? "Keep Claim" : "Keep Subdomain"}
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
               disabled={deleting}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90 font-semibold"
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90 font-semibold rounded-lg"
             >
               {deleting && <Loader2 className="size-4 mr-2 animate-spin" />}
               {deleteTarget?.status === "pending" ? "Cancel Claim" : "Delete Subdomain"}
@@ -694,9 +693,10 @@ function DomainsListInner() {
                 : "No DNS records";
 
             return (
-              <div
+              <Card
                 key={domain.id}
-                className="border border-border/60 bg-card hover:border-border transition-all group flex flex-col justify-between rounded-xl shadow-xs overflow-hidden"
+                glossy={false}
+                className="flex flex-col justify-between overflow-hidden bg-[#141721] border-[#222838] hover:border-[#2d344a] rounded-xl shadow-xs"
               >
                 <div className="p-4 sm:p-5 pb-3">
                   <div className="flex items-start justify-between gap-2">
@@ -736,18 +736,17 @@ function DomainsListInner() {
                     </p>
                   </div>
                 </div>
-
-                <div className="border-t border-border/50 flex items-center justify-between gap-2 py-2.5 px-4 sm:px-5 bg-muted/20">
-                  <span className="text-[11px] font-mono text-muted-foreground">
+                <div className="border-t border-[#1e2330] flex items-center justify-between gap-2 py-2.5 px-4 sm:px-5 bg-[#12141c]">
+                  <span className="text-[11px] font-mono text-zinc-400">
                     {formatDate(domain.created_at)}
                   </span>
                   <div className="flex items-center gap-1.5">
                     <Button
                       variant="outline"
                       size="sm"
-                      className={`h-8 text-xs gap-1.5 px-3.5 rounded-full bg-transparent hover:bg-secondary border-border/60 transition-all font-medium ${
+                      className={`h-8 text-xs gap-1.5 px-3 rounded-lg border border-[#222838] bg-[#191d2a] hover:bg-[#1f2434] transition-all font-medium ${
                         domain.status === "active"
-                          ? "text-foreground"
+                          ? "text-zinc-200 hover:text-white"
                           : "text-amber-300 border-amber-500/30 hover:bg-amber-500/10"
                       }`}
                       asChild
@@ -764,7 +763,7 @@ function DomainsListInner() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="size-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-full"
+                      className="size-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg"
                       onClick={() => setDeleteTarget(domain)}
                       aria-label={`Delete ${domain.full_domain}`}
                     >
@@ -772,13 +771,13 @@ function DomainsListInner() {
                     </Button>
                   </div>
                 </div>
-              </div>
+              </Card>
             );
           })}
         </div>
       ) : (
         /* List / Table View */
-        <div className="bg-card flex min-w-0 flex-col rounded-xl border border-border/60 shadow-xs overflow-hidden">
+        <Card glossy={false} className="flex min-w-0 flex-col overflow-hidden bg-[#141721] border-[#222838] rounded-xl shadow-xs">
           {/* Mobile View: Clean Card Rows */}
           <div className="divide-y divide-border/50 sm:hidden">
             {filtered.map((domain) => {
@@ -884,12 +883,12 @@ function DomainsListInner() {
           <div className="hidden sm:block">
             <Table>
               <TableHeader>
-                <TableRow className="hover:bg-transparent border-border/60 bg-muted/20">
-                  <TableHead className="text-xs uppercase tracking-wider text-muted-foreground/70 font-semibold py-3.5 px-5">Domain Name</TableHead>
-                  <TableHead className="text-xs uppercase tracking-wider text-muted-foreground/70 font-semibold py-3.5 px-5">Status</TableHead>
-                  <TableHead className="text-xs uppercase tracking-wider text-muted-foreground/70 font-semibold py-3.5 px-5">DNS Target</TableHead>
-                  <TableHead className="text-xs uppercase tracking-wider text-muted-foreground/70 font-semibold hidden md:table-cell py-3.5 px-5">Created</TableHead>
-                  <TableHead className="text-xs uppercase tracking-wider text-muted-foreground/70 font-semibold text-right py-3.5 px-5">Actions</TableHead>
+                <TableRow className="hover:bg-transparent border-b border-white/[0.08] bg-white/[0.02]">
+                  <TableHead className="text-xs uppercase tracking-wider text-zinc-400 font-semibold py-3.5 px-5">Domain Name</TableHead>
+                  <TableHead className="text-xs uppercase tracking-wider text-zinc-400 font-semibold py-3.5 px-5">Status</TableHead>
+                  <TableHead className="text-xs uppercase tracking-wider text-zinc-400 font-semibold py-3.5 px-5">DNS Target</TableHead>
+                  <TableHead className="text-xs uppercase tracking-wider text-zinc-400 font-semibold hidden md:table-cell py-3.5 px-5">Created</TableHead>
+                  <TableHead className="text-xs uppercase tracking-wider text-zinc-400 font-semibold text-right py-3.5 px-5">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -905,7 +904,7 @@ function DomainsListInner() {
                       : "No records";
 
                   return (
-                    <TableRow key={domain.id} className="border-border/50 hover:bg-muted/20 transition-colors group">
+                    <TableRow key={domain.id} className="border-b border-white/[0.04] hover:bg-white/[0.025] transition-colors group">
                       {/* Domain Name Cell */}
                       <TableCell className="font-medium text-foreground py-3.5 px-5">
                         <div className="flex items-center gap-3">
@@ -1027,7 +1026,7 @@ function DomainsListInner() {
               </TableBody>
             </Table>
           </div>
-        </div>
+        </Card>
       )}
     </div>
   );
