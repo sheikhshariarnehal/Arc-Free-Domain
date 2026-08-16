@@ -285,7 +285,100 @@ Floating overlays and dropdown menus adopt the identical glass formula with high
 
 ---
 
-### 3. Glass Navbar Pill Capsule
+### 3. Skeuomorphic & Glass Button (`Button`)
+The tactile, high-craft button component featuring smooth physical gradients, top specular rim lighting (`inset 0 1px 0 0 rgba(255, 255, 255, 0.35)`), active scale physics, and multi-variant support.
+
+#### Component Code (`src/components/ui/button.tsx`):
+```tsx
+import * as React from "react"
+import { Slot } from "@radix-ui/react-slot"
+import { cva, type VariantProps } from "class-variance-authority"
+import { cn } from "@/lib/utils"
+
+const buttonVariants = cva(
+  "relative inline-flex items-center justify-center font-semibold cursor-pointer select-none overflow-hidden transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/50 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.97] hover:-translate-y-0.5",
+  {
+    variants: {
+      variant: {
+        primary:
+          "bg-gradient-to-b from-blue-500 to-blue-600 text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.38),0_4px_12px_rgba(37,99,235,0.28)] hover:brightness-110 border-none",
+        emerald:
+          "bg-gradient-to-b from-emerald-500 to-emerald-600 text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.38),0_4px_12px_rgba(16,185,129,0.28)] hover:brightness-110 border-none",
+        dark:
+          "bg-gradient-to-b from-[#2e2e34] to-[#18181c] text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.25),0_4px_12px_rgba(0,0,0,0.35)] hover:brightness-115 border-none",
+        glass:
+          "bg-white/[0.08] backdrop-blur-xl text-white border border-white/[0.14] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.22),0_4px_12px_rgba(0,0,0,0.2)] hover:bg-white/[0.14] hover:border-white/[0.24]",
+        destructive:
+          "bg-gradient-to-b from-red-500 to-red-600 text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.38),0_4px_12px_rgba(239,68,68,0.28)] hover:brightness-110 border-none",
+        white:
+          "bg-white text-zinc-950 font-semibold hover:bg-zinc-100 shadow-[0_2px_8px_rgba(255,255,255,0.15)] border-none",
+        ghost:
+          "text-zinc-300 hover:text-white hover:bg-white/[0.08] active:scale-95 shadow-none border-none",
+      },
+      size: {
+        sm: "h-8 px-3.5 text-xs rounded-full gap-1.5",
+        default: "h-10 px-5 py-2 text-xs sm:text-sm rounded-full gap-2",
+        lg: "h-12 px-7 text-sm sm:text-base rounded-full gap-2.5",
+        icon: "size-9 p-0 rounded-full",
+      },
+      shape: {
+        pill: "rounded-full",
+        rounded: "rounded-xl",
+      }
+    },
+    defaultVariants: {
+      variant: "primary",
+      size: "default",
+      shape: "pill",
+    },
+  }
+)
+
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean
+}
+
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, shape, asChild = false, children, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button"
+    return (
+      <Comp
+        className={cn(buttonVariants({ variant, size, shape, className }))}
+        ref={ref}
+        {...props}
+      >
+        <span className="relative z-10 flex items-center justify-center gap-2">
+          {children}
+        </span>
+      </Comp>
+    )
+  }
+)
+Button.displayName = "Button"
+
+export { Button, buttonVariants }
+```
+
+#### Usage Example:
+```tsx
+import { Button } from "@/components/ui/button"
+import { Search } from "lucide-react"
+
+export function SearchButton() {
+  return (
+    <Button variant="primary" size="default">
+      <Search className="size-3.5" strokeWidth={2} />
+      <span>Check availability</span>
+    </Button>
+  )
+}
+```
+
+---
+
+### 4. Glass Navbar Pill Capsule
 ```tsx
 <div className="h-11 rounded-full bg-gradient-to-b from-white/[0.22] via-white/[0.08] to-white/[0.04] backdrop-blur-xl border border-white/[0.12] shadow-[inset_0_1px_1.5px_0_rgba(255,255,255,0.40),0_10px_30px_-8px_rgba(0,0,0,0.35)] px-4 flex items-center justify-between">
   {/* Nav links and brand */}
