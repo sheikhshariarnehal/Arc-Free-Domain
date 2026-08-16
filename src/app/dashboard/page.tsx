@@ -220,100 +220,97 @@ export default function DashboardOverview() {
         </div>
       )}
 
-      {/* Metric Cards Grid */}
+      {/* Metric Cards Grid (Distilled & Harmonized Hierarchy) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Metric 1: Subdomains Quota */}
-        <Card glossy={false} className="p-5 space-y-3.5 group bg-[#141721] border-[#222838] hover:border-[#2d344a] rounded-xl shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-zinc-400 group-hover:text-zinc-200 transition-colors">
-              Subdomains Used
+        <Card glossy={false} className="p-5 flex flex-col justify-between bg-[#141721] border-[#222838] hover:border-[#2d344a] rounded-xl shadow-xs transition-all">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-xs font-medium text-zinc-400">Subdomains Used</p>
+              <div className="flex items-baseline gap-1.5 mt-1.5">
+                <span className="text-3xl font-bold tracking-tight text-white font-mono">{usedSlots}</span>
+                <span className="text-sm font-medium text-zinc-500 font-mono">/ {MAX_SUBDOMAINS}</span>
+              </div>
+            </div>
+            <div className="size-10 rounded-xl bg-[#191d2a] border border-[#222838] flex items-center justify-center text-primary shrink-0 shadow-inner">
+              <Globe className="size-5" />
+            </div>
+          </div>
+          <div className="pt-3 mt-3 border-t border-[#1e2330] flex items-center justify-between text-xs">
+            <span className="text-zinc-400">Developer Quota</span>
+            <span className={`font-medium ${usedSlots >= MAX_SUBDOMAINS ? "text-amber-400" : "text-primary"}`}>
+              {Math.round(usagePercent)}% Used
             </span>
-            <div className="size-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.15)]">
-              <Globe className="size-4" />
-            </div>
-          </div>
-          <div>
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-3xl font-bold tracking-tight text-white font-mono">{usedSlots}</span>
-              <span className="text-sm font-medium text-zinc-500 font-mono">/ {MAX_SUBDOMAINS}</span>
-            </div>
-            <p className="text-xs text-zinc-400 mt-0.5">{MAX_SUBDOMAINS} free slots allocated</p>
-          </div>
-          <div className="w-full bg-[#1c202d] h-1.5 rounded-full overflow-hidden border border-[#262c3e]">
-            <div
-              className={`h-full rounded-full transition-all duration-300 ${
-                usedSlots === MAX_SUBDOMAINS ? "bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.6)]" : "bg-primary shadow-[0_0_8px_rgba(59,130,246,0.6)]"
-              }`}
-              style={{ width: `${usagePercent}%` }}
-            />
           </div>
         </Card>
 
         {/* Metric 2: Active Subdomains */}
-        <Card glossy={false} className="p-5 space-y-3.5 group bg-[#141721] border-[#222838] hover:border-[#2d344a] rounded-xl shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-zinc-400 group-hover:text-zinc-200 transition-colors">
-              Active Domains
-            </span>
-            <div className="size-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.15)]">
-              <Activity className="size-4" />
+        <Card glossy={false} className="p-5 flex flex-col justify-between bg-[#141721] border-[#222838] hover:border-[#2d344a] rounded-xl shadow-xs transition-all">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-xs font-medium text-zinc-400">Active Domains</p>
+              <div className="mt-1.5">
+                <span className="text-3xl font-bold tracking-tight text-white font-mono">{activeCount}</span>
+              </div>
+            </div>
+            <div className="size-10 rounded-xl bg-[#191d2a] border border-[#222838] flex items-center justify-center text-emerald-400 shrink-0 shadow-inner">
+              <Activity className="size-5" />
             </div>
           </div>
-          <div>
-            <span className="text-3xl font-bold tracking-tight text-white font-mono">{activeCount}</span>
-            <p className="text-xs text-zinc-400 mt-0.5">Live on Cloudflare Edge</p>
-          </div>
-          <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-medium">
-            <span className="size-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)]" />
-            <span>Operational</span>
+          <div className="pt-3 mt-3 border-t border-[#1e2330] flex items-center justify-between text-xs">
+            <span className="text-zinc-400">Cloudflare Edge</span>
+            <span className="flex items-center gap-1.5 text-emerald-400 font-medium">
+              <span className="size-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)]" />
+              Operational
+            </span>
           </div>
         </Card>
 
         {/* Metric 3: DNS Records */}
-        <Card glossy={false} className="p-5 space-y-3.5 group bg-[#141721] border-[#222838] hover:border-[#2d344a] rounded-xl shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-zinc-400 group-hover:text-zinc-200 transition-colors">
-              DNS Records
-            </span>
-            <div className="size-8 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 shrink-0 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.15)]">
-              <ChartColumn className="size-4" />
+        <Card glossy={false} className="p-5 flex flex-col justify-between bg-[#141721] border-[#222838] hover:border-[#2d344a] rounded-xl shadow-xs transition-all">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-xs font-medium text-zinc-400">DNS Records</p>
+              <div className="mt-1.5">
+                <span className="text-3xl font-bold tracking-tight text-white font-mono">
+                  {subdomains.reduce((acc, s) => acc + (s.dns_records?.length || 0), 0)}
+                </span>
+              </div>
+            </div>
+            <div className="size-10 rounded-xl bg-[#191d2a] border border-[#222838] flex items-center justify-center text-cyan-400 shrink-0 shadow-inner">
+              <ChartColumn className="size-5" />
             </div>
           </div>
-          <div>
-            <span className="text-3xl font-bold tracking-tight text-white font-mono">
-              {subdomains.reduce((acc, s) => acc + (s.dns_records?.length || 0), 0)}
+          <div className="pt-3 mt-3 border-t border-[#1e2330] flex items-center justify-between text-xs">
+            <span className="text-zinc-400">Routing Rules</span>
+            <span className="flex items-center gap-1 text-cyan-400 font-medium">
+              <Check className="size-3" />
+              Edge Synced
             </span>
-            <p className="text-xs text-zinc-400 mt-0.5">A &amp; CNAME routing rules</p>
-          </div>
-          <div className="flex items-center gap-1.5 text-xs text-zinc-400">
-            <Check className="size-3 text-cyan-400" />
-            <span>Instant Edge sync</span>
           </div>
         </Card>
 
-        {/* Metric 4: Free Slots Remaining */}
-        <Card glossy={false} className="p-5 space-y-3.5 group bg-[#141721] border-[#222838] hover:border-[#2d344a] rounded-xl shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-zinc-400 group-hover:text-zinc-200 transition-colors">
-              Available Slots
-            </span>
-            <div className="size-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 shrink-0 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.15)]">
-              <Clock className="size-4" />
+        {/* Metric 4: Free Slots Available */}
+        <Card glossy={false} className="p-5 flex flex-col justify-between bg-[#141721] border-[#222838] hover:border-[#2d344a] rounded-xl shadow-xs transition-all">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-xs font-medium text-zinc-400">Available Slots</p>
+              <div className="mt-1.5">
+                <span className="text-3xl font-bold tracking-tight text-white font-mono">{MAX_SUBDOMAINS - usedSlots}</span>
+              </div>
+            </div>
+            <div className="size-10 rounded-xl bg-[#191d2a] border border-[#222838] flex items-center justify-center text-amber-400 shrink-0 shadow-inner">
+              <Clock className="size-5" />
             </div>
           </div>
-          <div>
-            <span className="text-3xl font-bold tracking-tight text-white font-mono">{MAX_SUBDOMAINS - usedSlots}</span>
-            <p className="text-xs text-zinc-400 mt-0.5">
-              {usedSlots === MAX_SUBDOMAINS ? "Quota limit reached" : "Ready for deployment"}
-            </p>
-          </div>
-          <div className="flex items-center gap-1.5 text-xs text-zinc-400">
+          <div className="pt-3 mt-3 border-t border-[#1e2330] flex items-center justify-between text-xs">
+            <span className="text-zinc-400">Free Tier Slots</span>
             {usedSlots < MAX_SUBDOMAINS ? (
-              <Link href="/dashboard/domains?action=claim" className="text-primary hover:underline font-medium inline-flex items-center gap-1">
-                Claim another <ArrowUpRight className="size-3" />
+              <Link href="/dashboard/domains?action=claim" className="text-primary hover:underline font-medium inline-flex items-center gap-0.5">
+                Claim slot <ArrowUpRight className="size-3" />
               </Link>
             ) : (
-              <span className="text-amber-400/80 font-mono text-xs">Maximum 5 reached</span>
+              <span className="text-amber-400/90 font-medium">Max Reached</span>
             )}
           </div>
         </Card>
