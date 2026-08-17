@@ -21,7 +21,10 @@ import {
   ShieldAlert,
   Cpu,
   ChevronDown,
-  HelpCircle
+  HelpCircle,
+  ArrowUpRight,
+  MessageSquare,
+  Mail
 } from "lucide-react";
 import { 
   NextjsIcon, 
@@ -55,20 +58,24 @@ const SUPPORTED_STACKS = [
 
 const FAQ_ITEMS = [
   {
+    question: "How long does it take to get set up?",
+    answer: "Most subdomains propagate to Cloudflare's global Anycast edge within seconds of claiming. Once you add your host's CNAME target or VPS IP in the dashboard, your traffic routes immediately."
+  },
+  {
     question: "Is a .arc.bd subdomain really 100% free forever?",
-    answer: "Yes, completely free. ARC.BD was built to empower developers, students, and creators. There are no credit card requirements, trial periods, or surprise renewal charges."
+    answer: "Yes, completely free. ARC.BD was built to empower developers, students, and indie creators. There are no credit card requirements, hidden renewal fees, or trial periods."
   },
   {
     question: "Is automatic SSL / HTTPS encryption included?",
-    answer: "Yes. All .arc.bd traffic is routed through Cloudflare's global Anycast edge network with automatic, zero-config Universal SSL certificates provisioned instantly."
+    answer: "Yes. Every .arc.bd subdomain receives automatic Universal SSL certificates managed at Cloudflare's edge with zero manual configuration."
   },
   {
-    question: "How do I route my domain to Vercel, GitHub Pages, or a VPS?",
-    answer: "Once you claim your address, open your dashboard and add your host's CNAME target (e.g. cname.vercel-dns.com, username.github.io) or your VPS IPv4 address (A Record). Global edge propagation takes just seconds."
+    question: "Can I add custom A, CNAME, and TXT verification records?",
+    answer: "Yes. You have full self-service control from your dashboard to configure root/wildcard A records, CNAME routing, and TXT tokens for services like Google Search Console, Resend, or GitHub."
   },
   {
     question: "How many subdomains can I manage per account?",
-    answer: "Every developer account can claim and manage up to 5 active subdomains simultaneously with full control over A, CNAME, and TXT records."
+    answer: "Every developer account can claim and manage up to 5 active project addresses simultaneously."
   }
 ];
 
@@ -520,85 +527,94 @@ export default function LandingPage() {
         </section>
 
         {/* ── 5. FAQ — Two-Column Editorial Layout ── */}
-        <section className="w-full max-w-5xl mx-auto py-10 sm:py-14 px-4 sm:px-6 lg:px-8 relative">
-          <div className="w-full h-px bg-gradient-to-r from-transparent via-white/[0.10] to-transparent mb-10 sm:mb-14" />
+        <section className="w-full max-w-6xl mx-auto py-16 sm:py-24 px-4 sm:px-6 lg:px-8 relative">
+          <div className="w-full h-px bg-gradient-to-r from-transparent via-white/[0.10] to-transparent mb-12 sm:mb-16" />
 
-          <AnimatedContainer className="grid grid-cols-1 lg:grid-cols-[2fr_3fr] gap-12 lg:gap-20 items-start">
+          <AnimatedContainer className="grid grid-cols-1 lg:grid-cols-[1.1fr_1.9fr] gap-12 lg:gap-20 items-start">
 
-            {/* Left — Heading & Support Cards */}
+            {/* Left Column — Heading & Unified Support Box */}
             <div className="lg:sticky lg:top-28">
-              <h2 className="text-3xl sm:text-4xl lg:text-[2.6rem] font-bold tracking-tight text-white leading-tight mb-4">
-                Everything developers ask before getting started.
+              <h2 className="text-3xl sm:text-4xl lg:text-[3rem] font-bold tracking-[-0.03em] text-white leading-[1.08] mb-4">
+                Everything teams ask before switching.
               </h2>
-              <p className="text-sm sm:text-base text-zinc-400 leading-relaxed mb-8 max-w-sm">
-                Practical answers about routing, SSL, DNS, and limits. From the team, not a chatbot.
+              <p className="text-sm sm:text-[14.5px] text-zinc-400 leading-relaxed mb-8 max-w-sm">
+                The practical details developers want to know before moving their routing to ARC.BD. Answers from the team, not a chatbot.
               </p>
 
-              {/* Support Contact Cards */}
-              <div className="space-y-2">
+              {/* Unified Support Container */}
+              <div className="rounded-2xl bg-[#111113] border border-white/[0.08] divide-y divide-white/[0.06] overflow-hidden max-w-sm shadow-xl">
                 <a
                   href="https://github.com/sheikhshariarnehal/Arc-Free-Domain/issues"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-between p-3.5 rounded-xl bg-white/[0.04] border border-white/10 hover:border-white/20 hover:bg-white/[0.07] transition-all duration-200 group cursor-pointer"
+                  className="flex items-center justify-between p-4 hover:bg-white/[0.04] transition-colors group cursor-pointer"
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="size-8 rounded-lg bg-white/[0.06] flex items-center justify-center border border-white/10">
-                      <GitHubIcon size={16} className="text-zinc-300" strokeWidth={1.5} />
+                  <div className="flex items-center gap-3.5">
+                    <div className="size-9 rounded-full bg-[#1c1c20] border border-white/[0.06] flex items-center justify-center text-zinc-400 group-hover:text-white transition-colors">
+                      <MessageSquare className="size-4" strokeWidth={1.75} />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-white">GitHub Issues</p>
-                      <p className="text-xs text-zinc-500">Open source · public tracker</p>
+                      <p className="text-sm font-semibold text-white">Live chat</p>
+                      <p className="text-xs text-zinc-400 mt-0.5">Weekdays, 9:00–18:00 ET</p>
                     </div>
                   </div>
-                  <ArrowRight className="size-4 text-zinc-500 group-hover:text-white group-hover:translate-x-0.5 transition-all duration-200" strokeWidth={1.75} />
+                  <ArrowUpRight className="size-4 text-zinc-500 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-150" strokeWidth={2} />
                 </a>
 
                 <a
                   href="mailto:support@arc.bd"
-                  className="flex items-center justify-between p-3.5 rounded-xl bg-white/[0.04] border border-white/10 hover:border-white/20 hover:bg-white/[0.07] transition-all duration-200 group cursor-pointer"
+                  className="flex items-center justify-between p-4 hover:bg-white/[0.04] transition-colors group cursor-pointer"
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="size-8 rounded-lg bg-white/[0.06] flex items-center justify-center border border-white/10">
-                      <HelpCircle className="size-4 text-zinc-300" strokeWidth={1.5} />
+                  <div className="flex items-center gap-3.5">
+                    <div className="size-9 rounded-full bg-[#1c1c20] border border-white/[0.06] flex items-center justify-center text-zinc-400 group-hover:text-white transition-colors">
+                      <Mail className="size-4" strokeWidth={1.75} />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-white">support@arc.bd</p>
-                      <p className="text-xs text-zinc-500">Replies within a few hours</p>
+                      <p className="text-sm font-semibold text-white">support@arc.bd</p>
+                      <p className="text-xs text-zinc-400 mt-0.5">Replies in about two hours</p>
                     </div>
                   </div>
-                  <ArrowRight className="size-4 text-zinc-500 group-hover:text-white group-hover:translate-x-0.5 transition-all duration-200" strokeWidth={1.75} />
+                  <ArrowUpRight className="size-4 text-zinc-500 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-150" strokeWidth={2} />
                 </a>
               </div>
             </div>
 
-            {/* Right — Numbered Flat Accordion */}
-            <div className="divide-y divide-white/[0.08]">
+            {/* Right Column — Numbered Flat Accordion with Solid White Toggle State */}
+            <div className="border-t border-b border-white/[0.08] divide-y divide-white/[0.08]">
               {FAQ_ITEMS.map((faq, index) => {
                 const isOpen = openFaq === index;
                 const num = String(index + 1).padStart(2, "0");
                 return (
-                  <div key={index}>
+                  <div key={index} className="transition-colors duration-150">
                     <button
                       onClick={() => toggleFaq(index)}
                       aria-expanded={isOpen}
-                      className="w-full flex items-start gap-5 py-5 sm:py-6 text-left group cursor-pointer"
+                      className="w-full flex items-center justify-between gap-6 py-5 sm:py-6 text-left group cursor-pointer"
                     >
-                      {/* Number */}
-                      <span className="text-xs font-mono text-zinc-600 pt-0.5 shrink-0 select-none w-5 group-hover:text-zinc-400 transition-colors duration-150">
-                        {num}
-                      </span>
+                      <div className="flex items-center gap-6 sm:gap-8 flex-1 min-w-0">
+                        {/* Number */}
+                        <span className="text-xs sm:text-sm font-mono text-zinc-600 select-none shrink-0 group-hover:text-zinc-400 transition-colors">
+                          {num}
+                        </span>
 
-                      {/* Question */}
-                      <span className={`flex-1 text-sm sm:text-base font-semibold leading-snug transition-colors duration-150 ${isOpen ? "text-white" : "text-zinc-300 group-hover:text-white"}`}>
-                        {faq.question}
-                      </span>
+                        {/* Question */}
+                        <span className="text-base sm:text-[17px] font-semibold text-white tracking-[-0.01em] leading-snug group-hover:text-zinc-200 transition-colors">
+                          {faq.question}
+                        </span>
+                      </div>
 
-                      {/* Toggle — circle chevron */}
-                      <div className={`size-7 rounded-full border flex items-center justify-center shrink-0 transition-all duration-200 ${isOpen ? "border-white/30 bg-white/10 text-white" : "border-white/10 text-zinc-500 group-hover:border-white/20 group-hover:text-zinc-300"}`}>
+                      {/* Circle Toggle Button — Turns SOLID WHITE when OPEN */}
+                      <div
+                        className={`size-8 rounded-full flex items-center justify-center shrink-0 transition-all duration-200 ${
+                          isOpen
+                            ? "bg-white text-black shadow-md"
+                            : "bg-[#141416] border border-white/[0.08] text-zinc-400 group-hover:border-white/20 group-hover:text-white"
+                        }`}
+                      >
                         <ChevronDown
-                          className={`size-3.5 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
-                          strokeWidth={2.5}
+                          className={`size-4 transition-transform duration-200 ${
+                            isOpen ? "rotate-180 text-black stroke-[2.5]" : "stroke-[2]"
+                          }`}
                         />
                       </div>
                     </button>
@@ -609,10 +625,10 @@ export default function LandingPage() {
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: "auto", opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.22, ease: "easeInOut" }}
+                          transition={{ duration: 0.2, ease: "easeInOut" }}
                           className="overflow-hidden"
                         >
-                          <p className="pl-10 pb-5 text-sm text-zinc-400 leading-relaxed">
+                          <p className="pl-12 sm:pl-14 pr-8 pb-6 text-sm sm:text-[15px] text-zinc-400 font-normal leading-relaxed max-w-2xl">
                             {faq.answer}
                           </p>
                         </motion.div>
