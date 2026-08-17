@@ -63,24 +63,28 @@ export function Footer() {
   return (
     <footer className="w-full border-t border-white/[0.08] bg-black text-foreground relative z-10 px-4 sm:px-6 lg:px-8">
       {/* Brand & Mission Statement Header */}
-      <div className="relative mx-auto grid max-w-7xl items-center justify-center gap-6 p-8 sm:p-10 pb-0 md:flex">
-        <Link href="/" className="shrink-0 flex items-center justify-center">
-          <div
-            className="size-10 rounded-xl bg-white/10 flex items-center justify-center text-white overflow-hidden border border-white/15 shadow-sm"
-            style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.25)" }}
-          >
-            <Image src="/ARC.webp" alt="ARC.BD Logo" width={32} height={32} className="size-6 object-contain" />
-          </div>
-        </Link>
-        <p className="bg-transparent text-center text-xs leading-5 text-zinc-400 md:text-left max-w-4xl">
-          ARC.BD is a free, high-performance subdomain platform providing modern .arc.bd addresses with automated Cloudflare Anycast DNS routing and instant Universal SSL. Designed to empower developers, students, and indie creators across Bangladesh and worldwide to ship side projects, portfolios, and APIs with zero configuration overhead.
-        </p>
+      <div className="mx-auto max-w-5xl pt-10 sm:pt-14 pb-0">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 bg-white/[0.02] border border-white/[0.06] rounded-2xl p-5 sm:p-6">
+          <Link href="/" className="flex items-center gap-3 shrink-0 group">
+            <div
+              className="size-10 rounded-xl bg-white/10 flex items-center justify-center text-white overflow-hidden border border-white/15 shadow-sm shrink-0 group-hover:border-white/30 transition-colors"
+              style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.25)" }}
+            >
+              <Image src="/ARC.webp" alt="ARC.BD Logo" width={28} height={28} className="size-7 object-contain" />
+            </div>
+            <span className="text-base font-bold text-white tracking-tight">ARC.BD</span>
+          </Link>
+          <div className="h-8 w-px bg-white/10 hidden sm:block shrink-0" />
+          <p className="text-xs leading-relaxed text-zinc-400">
+            A free, high-performance subdomain platform providing modern <span className="text-zinc-200 font-mono font-medium">.arc.bd</span> addresses with automated Cloudflare Anycast DNS routing and instant Universal SSL. Designed to empower developers, students, and indie creators across Bangladesh and worldwide to ship side projects, portfolios, and APIs with zero configuration overhead.
+          </p>
+        </div>
       </div>
 
       {/* Categorized Navigation Columns */}
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 py-10">
+      <div className="mx-auto max-w-5xl py-8">
         <div className="border-b border-dotted border-white/15"> </div>
-        <div className="py-10">
+        <div className="py-8 sm:py-10">
           {navigation.categories.map((category) => (
             <div
               key={category.id}
@@ -157,7 +161,7 @@ export function Footer() {
       </div>
 
       {/* Bottom Copyright & Credit Bar */}
-      <div className="mx-auto pb-10 pt-4 flex flex-col justify-between text-center text-xs text-zinc-500 max-w-7xl">
+      <div className="mx-auto pb-10 pt-2 flex flex-col justify-between text-center text-xs text-zinc-500 max-w-5xl">
         <div className="flex flex-row items-center justify-center gap-1.5 text-zinc-400">
           <span>&copy; {new Date().getFullYear()}</span>
           <span className="font-semibold text-white">ARC.BD</span>
@@ -173,3 +177,4 @@ export function Footer() {
 }
 
 export default Footer;
+
