@@ -41,6 +41,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { ShaderHeroBg } from "@/components/ui/shader-hero";
 import { FeatureCard } from "@/components/ui/grid-feature-cards";
+import Footer from "@/components/Footer";
 import { motion, useReducedMotion, AnimatePresence } from "motion/react";
 
 const SUPPORTED_STACKS = [
@@ -534,7 +535,7 @@ export default function LandingPage() {
 
             {/* Left Column — Heading & Unified Support Box */}
             <div className="lg:sticky lg:top-28">
-              <h2 className="text-3xl sm:text-4xl lg:text-[3rem] font-bold tracking-[-0.03em] text-white leading-[1.08] mb-4 max-w-[280px]">
+              <h2 className="text-3xl sm:text-4xl lg:text-[3rem] font-bold tracking-[-0.03em] text-white leading-[1.08] mb-4">
                 Everything teams ask before switching.
               </h2>
               <p className="text-sm sm:text-[14.5px] text-zinc-400 leading-relaxed mb-8 max-w-sm">
@@ -645,28 +646,8 @@ export default function LandingPage() {
       </main>
 
       {/* ── Footer ── */}
-      <footer className="relative bg-black text-xs text-zinc-400">
-        <div className="w-full h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
-          <div className="flex items-center gap-2">
-            <div
-              className="size-5 rounded bg-white/12 flex items-center justify-center text-white overflow-hidden"
-              style={{ boxShadow: "inset 0 1px 0px 0 rgba(255, 255, 255, 0.25)" }}
-            >
-              <Image src="/ARC.webp" alt="ARC.BD Logo" width={20} height={20} className="size-4 object-contain" />
-            </div>
-            <span className="font-semibold text-white">ARC.BD</span>
-            <span className="text-zinc-500">&copy; {new Date().getFullYear()}</span>
-          </div>
-
-          <div className="flex items-center space-x-6 text-xs text-zinc-400 font-medium">
-            <Link href="/docs" className="hover:text-white transition-colors">Docs</Link>
-            <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
-            <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
-            <Link href="/report" className="hover:text-white transition-colors">Report Abuse</Link>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
+
