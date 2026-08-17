@@ -441,7 +441,8 @@ export default function LandingPage() {
         </section>
 
         {/* ── 2. Dedicated Supported Stack & Integrations Strip ── */}
-        <section className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 border-t border-white/[0.06] relative">
+        <section className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-0 pb-10 sm:pb-12 relative">
+          <div className="w-full h-px bg-gradient-to-r from-transparent via-white/[0.10] to-transparent mb-10 sm:mb-12" />
           <AnimatedContainer delay={0.15} className="flex flex-col items-center text-center">
             <h2 className="text-xs font-mono uppercase tracking-[0.16em] text-zinc-400 font-semibold mb-5 sm:mb-6">
               Works seamlessly with your preferred stack
@@ -464,7 +465,8 @@ export default function LandingPage() {
         </section>
 
         {/* ── 3. Feature Grid ── */}
-        <section className="w-full max-w-5xl mx-auto py-16 sm:py-20 px-4 sm:px-6 lg:px-8 border-t border-white/[0.06] relative">
+        <section className="w-full max-w-5xl mx-auto py-10 sm:py-14 px-4 sm:px-6 lg:px-8 relative">
+          <div className="w-full h-px bg-gradient-to-r from-transparent via-white/[0.10] to-transparent mb-10 sm:mb-14" />
           <AnimatedContainer className="mx-auto max-w-3xl text-center mb-10 sm:mb-14">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-white">
               Built for fast deployment
@@ -492,7 +494,8 @@ export default function LandingPage() {
         </section>
 
         {/* ── 4. How It Works ── */}
-        <section className="w-full max-w-5xl mx-auto py-16 sm:py-20 px-4 sm:px-6 lg:px-8 border-t border-white/[0.06] relative text-center">
+        <section className="w-full max-w-5xl mx-auto py-10 sm:py-14 px-4 sm:px-6 lg:px-8 relative text-center">
+          <div className="w-full h-px bg-gradient-to-r from-transparent via-white/[0.10] to-transparent mb-10 sm:mb-14" />
           <AnimatedContainer className="mx-auto max-w-3xl text-center mb-10 sm:mb-14">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-white mb-2">
               How it works
@@ -516,65 +519,118 @@ export default function LandingPage() {
           </AnimatedContainer>
         </section>
 
-        {/* ── 5. Frequently Asked Questions (Glass Accordion) ── */}
-        <section className="w-full max-w-3xl mx-auto py-16 sm:py-20 px-4 sm:px-6 lg:px-8 border-t border-white/[0.06] relative">
-          <AnimatedContainer className="text-center mb-10 sm:mb-12">
-            <div className="inline-flex items-center justify-center size-10 rounded-full bg-white/[0.06] border border-white/10 text-white mb-3">
-              <HelpCircle className="size-5 text-zinc-300" strokeWidth={1.75} />
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
-              Frequently Asked Questions
-            </h2>
-            <p className="text-sm text-zinc-400 mt-2">
-              Quick answers about routing, security, and usage limits.
-            </p>
-          </AnimatedContainer>
+        {/* ── 5. FAQ — Two-Column Editorial Layout ── */}
+        <section className="w-full max-w-5xl mx-auto py-10 sm:py-14 px-4 sm:px-6 lg:px-8 relative">
+          <div className="w-full h-px bg-gradient-to-r from-transparent via-white/[0.10] to-transparent mb-10 sm:mb-14" />
 
-          <AnimatedContainer delay={0.2} className="space-y-3">
-            {FAQ_ITEMS.map((faq, index) => {
-              const isOpen = openFaq === index;
-              return (
-                <div
-                  key={index}
-                  className="rounded-2xl border border-white/10 bg-[#101014]/60 backdrop-blur-xl overflow-hidden transition-colors duration-200"
+          <AnimatedContainer className="grid grid-cols-1 lg:grid-cols-[2fr_3fr] gap-12 lg:gap-20 items-start">
+
+            {/* Left — Heading & Support Cards */}
+            <div className="lg:sticky lg:top-28">
+              <h2 className="text-3xl sm:text-4xl lg:text-[2.6rem] font-bold tracking-tight text-white leading-tight mb-4">
+                Everything developers ask before getting started.
+              </h2>
+              <p className="text-sm sm:text-base text-zinc-400 leading-relaxed mb-8 max-w-sm">
+                Practical answers about routing, SSL, DNS, and limits. From the team, not a chatbot.
+              </p>
+
+              {/* Support Contact Cards */}
+              <div className="space-y-2">
+                <a
+                  href="https://github.com/sheikhshariarnehal/Arc-Free-Domain/issues"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-between p-3.5 rounded-xl bg-white/[0.04] border border-white/10 hover:border-white/20 hover:bg-white/[0.07] transition-all duration-200 group cursor-pointer"
                 >
-                  <button
-                    onClick={() => toggleFaq(index)}
-                    aria-expanded={isOpen}
-                    className="w-full flex items-center justify-between p-4 sm:p-5 text-left text-sm sm:text-base font-semibold text-zinc-200 hover:text-white transition-colors cursor-pointer"
-                  >
-                    <span>{faq.question}</span>
-                    <ChevronDown
-                      className={`size-4 text-zinc-400 shrink-0 ml-3 transition-transform duration-200 ${isOpen ? "rotate-180 text-white" : ""}`}
-                      strokeWidth={2}
-                    />
-                  </button>
-                  
-                  <AnimatePresence initial={false}>
-                    {isOpen && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.25, ease: "easeInOut" }}
-                        className="overflow-hidden"
-                      >
-                        <div className="px-4 pb-4 sm:px-5 sm:pb-5 pt-0 text-xs sm:text-sm text-zinc-400 font-normal leading-relaxed border-t border-white/[0.04]">
-                          {faq.answer}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              );
-            })}
+                  <div className="flex items-center gap-3">
+                    <div className="size-8 rounded-lg bg-white/[0.06] flex items-center justify-center border border-white/10">
+                      <GitHubIcon size={16} className="text-zinc-300" strokeWidth={1.5} />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-white">GitHub Issues</p>
+                      <p className="text-xs text-zinc-500">Open source · public tracker</p>
+                    </div>
+                  </div>
+                  <ArrowRight className="size-4 text-zinc-500 group-hover:text-white group-hover:translate-x-0.5 transition-all duration-200" strokeWidth={1.75} />
+                </a>
+
+                <a
+                  href="mailto:support@arc.bd"
+                  className="flex items-center justify-between p-3.5 rounded-xl bg-white/[0.04] border border-white/10 hover:border-white/20 hover:bg-white/[0.07] transition-all duration-200 group cursor-pointer"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="size-8 rounded-lg bg-white/[0.06] flex items-center justify-center border border-white/10">
+                      <HelpCircle className="size-4 text-zinc-300" strokeWidth={1.5} />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-white">support@arc.bd</p>
+                      <p className="text-xs text-zinc-500">Replies within a few hours</p>
+                    </div>
+                  </div>
+                  <ArrowRight className="size-4 text-zinc-500 group-hover:text-white group-hover:translate-x-0.5 transition-all duration-200" strokeWidth={1.75} />
+                </a>
+              </div>
+            </div>
+
+            {/* Right — Numbered Flat Accordion */}
+            <div className="divide-y divide-white/[0.08]">
+              {FAQ_ITEMS.map((faq, index) => {
+                const isOpen = openFaq === index;
+                const num = String(index + 1).padStart(2, "0");
+                return (
+                  <div key={index}>
+                    <button
+                      onClick={() => toggleFaq(index)}
+                      aria-expanded={isOpen}
+                      className="w-full flex items-start gap-5 py-5 sm:py-6 text-left group cursor-pointer"
+                    >
+                      {/* Number */}
+                      <span className="text-xs font-mono text-zinc-600 pt-0.5 shrink-0 select-none w-5 group-hover:text-zinc-400 transition-colors duration-150">
+                        {num}
+                      </span>
+
+                      {/* Question */}
+                      <span className={`flex-1 text-sm sm:text-base font-semibold leading-snug transition-colors duration-150 ${isOpen ? "text-white" : "text-zinc-300 group-hover:text-white"}`}>
+                        {faq.question}
+                      </span>
+
+                      {/* Toggle — circle chevron */}
+                      <div className={`size-7 rounded-full border flex items-center justify-center shrink-0 transition-all duration-200 ${isOpen ? "border-white/30 bg-white/10 text-white" : "border-white/10 text-zinc-500 group-hover:border-white/20 group-hover:text-zinc-300"}`}>
+                        <ChevronDown
+                          className={`size-3.5 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+                          strokeWidth={2.5}
+                        />
+                      </div>
+                    </button>
+
+                    <AnimatePresence initial={false}>
+                      {isOpen && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.22, ease: "easeInOut" }}
+                          className="overflow-hidden"
+                        >
+                          <p className="pl-10 pb-5 text-sm text-zinc-400 leading-relaxed">
+                            {faq.answer}
+                          </p>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                );
+              })}
+            </div>
+
           </AnimatedContainer>
         </section>
 
       </main>
 
       {/* ── Footer ── */}
-      <footer className="border-t border-white/[0.08] bg-black text-xs text-zinc-400">
+      <footer className="relative bg-black text-xs text-zinc-400">
+        <div className="w-full h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
           <div className="flex items-center gap-2">
             <div
