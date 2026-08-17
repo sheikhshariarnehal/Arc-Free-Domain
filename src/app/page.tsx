@@ -89,10 +89,10 @@ function AnimatedContainer({ className, delay = 0.1, children }: { delay?: numbe
 
   return (
     <motion.div
-      initial={{ filter: 'blur(4px)', translateY: -8, opacity: 0 }}
+      initial={{ filter: 'blur(4px)', translateY: 8, opacity: 0 }}
       whileInView={{ filter: 'blur(0px)', translateY: 0, opacity: 1 }}
-      viewport={{ once: true }}
-      transition={{ delay, duration: 0.7 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ delay, duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
       className={className}
     >
       {children}
@@ -388,7 +388,7 @@ export default function LandingPage() {
                         <Button
                           onClick={() => handleClaimClick()}
                           disabled={claiming}
-                          className="group h-8.5 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold px-4.5 text-xs shrink-0 transition-all duration-150 active:scale-[0.98] shadow-sm w-full sm:w-auto flex items-center justify-center gap-1 cursor-pointer"
+                          className="group h-8.5 rounded-full bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-semibold px-4.5 text-xs shrink-0 transition-all duration-150 active:scale-[0.98] shadow-sm w-full sm:w-auto flex items-center justify-center gap-1 cursor-pointer"
                         >
                           {claiming && <Loader2 className="size-3 mr-1 animate-spin" />}
                           <span>{claiming ? "Reserving..." : "Claim Subdomain"}</span>
@@ -439,9 +439,9 @@ export default function LandingPage() {
               {/* High-Contrast Value Proposition Caption */}
               <div className="mt-4 sm:mt-5 flex flex-wrap items-center justify-center gap-x-3 sm:gap-x-4 gap-y-1.5 text-xs font-mono text-zinc-400 select-none">
                 <span className="text-zinc-300">Free forever</span>
-                <span className="text-zinc-600 select-none">·</span>
+                <span className="text-zinc-500 select-none" aria-hidden="true">·</span>
                 <span className="text-zinc-300">Anycast DNS</span>
-                <span className="text-zinc-600 select-none">·</span>
+                <span className="text-zinc-500 select-none" aria-hidden="true">·</span>
                 <span className="text-zinc-300">Edge SSL included</span>
               </div>
             </div>
@@ -473,9 +473,9 @@ export default function LandingPage() {
         </section>
 
         {/* ── 3. Feature Grid ── */}
-        <section className="w-full max-w-5xl mx-auto py-10 sm:py-14 px-4 sm:px-6 lg:px-8 relative">
+        <section className="w-full max-w-5xl mx-auto py-8 sm:py-12 px-4 sm:px-6 lg:px-8 relative">
           <div className="w-full h-px bg-gradient-to-r from-transparent via-white/[0.10] to-transparent mb-10 sm:mb-14" />
-          <AnimatedContainer className="mx-auto max-w-3xl text-center mb-10 sm:mb-14">
+          <AnimatedContainer className="mx-auto max-w-3xl text-center mb-8 sm:mb-10">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-white">
               Built for fast deployment
             </h2>
@@ -502,9 +502,9 @@ export default function LandingPage() {
         </section>
 
         {/* ── 4. How It Works ── */}
-        <section className="w-full max-w-5xl mx-auto py-10 sm:py-14 px-4 sm:px-6 lg:px-8 relative text-center">
+        <section className="w-full max-w-5xl mx-auto py-8 sm:py-12 px-4 sm:px-6 lg:px-8 relative">
           <div className="w-full h-px bg-gradient-to-r from-transparent via-white/[0.10] to-transparent mb-10 sm:mb-14" />
-          <AnimatedContainer className="mx-auto max-w-3xl text-center mb-10 sm:mb-14">
+          <AnimatedContainer className="mx-auto max-w-3xl text-center mb-8 sm:mb-10">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-white mb-2">
               How it works
             </h2>
@@ -528,7 +528,7 @@ export default function LandingPage() {
         </section>
 
         {/* ── 5. FAQ — Two-Column Editorial Layout ── */}
-        <section className="w-full max-w-6xl mx-auto py-16 sm:py-24 px-4 sm:px-6 lg:px-8 relative">
+        <section className="w-full max-w-6xl mx-auto py-10 sm:py-14 px-4 sm:px-6 lg:px-8 relative">
           <div className="w-full h-px bg-gradient-to-r from-transparent via-white/[0.10] to-transparent mb-12 sm:mb-16" />
 
           <AnimatedContainer className="grid grid-cols-1 lg:grid-cols-[1.1fr_1.9fr] gap-12 lg:gap-20 items-start">
@@ -536,10 +536,10 @@ export default function LandingPage() {
             {/* Left Column — Heading & Unified Support Box */}
             <div className="lg:sticky lg:top-28">
               <h2 className="text-3xl sm:text-4xl lg:text-[3rem] font-bold tracking-[-0.03em] text-white leading-[1.08] mb-4">
-                Everything teams ask before switching.
+                Common questions answered.
               </h2>
               <p className="text-sm sm:text-[14.5px] text-zinc-400 leading-relaxed mb-8 max-w-sm">
-                The practical details developers want to know before moving their routing to ARC.BD. Answers from the team, not a chatbot.
+                What developers ask before pointing their first subdomain. Straight answers from the team.
               </p>
 
               {/* Unified Support Container */}
@@ -626,7 +626,7 @@ export default function LandingPage() {
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: "auto", opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.2, ease: "easeInOut" }}
+                          transition={{ duration: 0.22, ease: "easeOut" }}
                           className="overflow-hidden"
                         >
                           <p className="pl-12 sm:pl-14 pr-8 pb-6 text-sm sm:text-[15px] text-zinc-400 font-normal leading-relaxed max-w-2xl">
