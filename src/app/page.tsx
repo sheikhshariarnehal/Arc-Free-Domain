@@ -20,8 +20,8 @@ import {
   ArrowRight,
   ShieldAlert,
   Cpu,
-  Server,
-  Cloud
+  ChevronDown,
+  HelpCircle
 } from "lucide-react";
 import { 
   NextjsIcon, 
@@ -36,22 +36,40 @@ import {
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { ShaderHeroBg } from "@/components/ui/shader-hero";
 import { FeatureCard } from "@/components/ui/grid-feature-cards";
-import { motion, useReducedMotion } from "motion/react";
+import { motion, useReducedMotion, AnimatePresence } from "motion/react";
 
 const SUPPORTED_STACKS = [
-  { name: "Next.js", icon: NextjsIcon },
-  { name: "Astro", icon: AstroIcon },
-  { name: "Remix", icon: RemixIcon },
-  { name: "Vite", icon: ViteIcon },
-  { name: "Docker", icon: DockerIcon },
-  { name: "Node.js", icon: NodejsIcon },
-  { name: "GitHub Pages", icon: GitHubIcon },
-  { name: "Cloudflare", icon: CloudflareIcon },
-  { name: "FastAPI / Python", icon: Zap },
-  { name: "Go / Rust", icon: Cpu }
+  { name: "Next.js", icon: NextjsIcon, category: "Framework" },
+  { name: "Astro", icon: AstroIcon, category: "Static / SSR" },
+  { name: "Remix", icon: RemixIcon, category: "Fullstack" },
+  { name: "Vite", icon: ViteIcon, category: "SPA" },
+  { name: "Docker", icon: DockerIcon, category: "Containers" },
+  { name: "Node.js", icon: NodejsIcon, category: "Runtime" },
+  { name: "GitHub Pages", icon: GitHubIcon, category: "Hosting" },
+  { name: "Cloudflare", icon: CloudflareIcon, category: "Edge DNS" },
+  { name: "FastAPI", icon: Zap, category: "Python API" },
+  { name: "Go / Rust", icon: Cpu, category: "Microservices" }
+];
+
+const FAQ_ITEMS = [
+  {
+    question: "Is a .arc.bd subdomain really 100% free forever?",
+    answer: "Yes, completely free. ARC.BD was built to empower developers, students, and creators. There are no credit card requirements, trial periods, or surprise renewal charges."
+  },
+  {
+    question: "Is automatic SSL / HTTPS encryption included?",
+    answer: "Yes. All .arc.bd traffic is routed through Cloudflare's global Anycast edge network with automatic, zero-config Universal SSL certificates provisioned instantly."
+  },
+  {
+    question: "How do I route my domain to Vercel, GitHub Pages, or a VPS?",
+    answer: "Once you claim your address, open your dashboard and add your host's CNAME target (e.g. cname.vercel-dns.com, username.github.io) or your VPS IPv4 address (A Record). Global edge propagation takes just seconds."
+  },
+  {
+    question: "How many subdomains can I manage per account?",
+    answer: "Every developer account can claim and manage up to 5 active subdomains simultaneously with full control over A, CNAME, and TXT records."
+  }
 ];
 
 function AnimatedContainer({ className, delay = 0.1, children }: { delay?: number; className?: string; children: React.ReactNode }) {
@@ -66,7 +84,7 @@ function AnimatedContainer({ className, delay = 0.1, children }: { delay?: numbe
       initial={{ filter: 'blur(4px)', translateY: -8, opacity: 0 }}
       whileInView={{ filter: 'blur(0px)', translateY: 0, opacity: 1 }}
       viewport={{ once: true }}
-      transition={{ delay, duration: 0.8 }}
+      transition={{ delay, duration: 0.7 }}
       className={className}
     >
       {children}
@@ -82,11 +100,10 @@ export default function LandingPage() {
   const [isReserved, setIsReserved] = useState(false);
   const [loading, setLoading] = useState(false);
   const [claiming, setClaiming] = useState(false);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const mobileInputRef = useRef<HTMLInputElement>(null);
-
-  // Active fetch abort controller to prevent request racing and wasted network calls
   const abortControllerRef = useRef<AbortController | null>(null);
 
   // Global keyboard shortcut ('/' or 'Cmd/Ctrl + K') to quickly focus search
@@ -219,47 +236,53 @@ export default function LandingPage() {
     return [`${clean}-app`, `${clean}-dev`, `get-${clean}`];
   };
 
-  return (
-    <div className="flex-1 flex flex-col min-h-screen bg-background text-foreground selection:bg-primary/20 selection:text-primary overflow-x-hidden relative">
+  const toggleFaq = (index: number) => {
+    setOpenFaq(openFaq === index ? null : index);
+  };
 
-      {/* ── MeshGradient shader background ── */}
-      <ShaderHeroBg className="absolute top-0 inset-x-0 z-0 h-[900px] sm:h-[1060px]" />
+  return (
+    <div className="min-h-screen flex flex-col bg-background text-foreground selection:bg-primary/20 selection:text-primary overflow-x-hidden relative">
+
+      {/* ── Monochromatic MeshGradient shader background ── */}
+      <ShaderHeroBg className="absolute top-0 inset-x-0 z-0 h-[720px] sm:h-[840px] pointer-events-none" />
 
       <Navbar transparent />
 
-      <main className="relative z-10 flex-1 flex min-w-0 w-full flex-col items-center">
-        {/* Hero Section */}
-        <section className="relative mx-auto flex w-full min-w-0 max-w-5xl flex-1 flex-col items-center justify-center px-4 pt-20 pb-8 text-center sm:px-6 sm:pt-28 sm:pb-14 lg:px-8">
+      <main className="relative z-10 flex-1 flex flex-col items-center w-full min-w-0">
+
+        {/* ── 1. Hero Section ── */}
+        <section className="relative mx-auto flex w-full min-w-0 max-w-5xl flex-col items-center px-4 pt-28 pb-14 sm:pt-36 sm:pb-18 text-center sm:px-6 lg:px-8">
           <AnimatedContainer delay={0.1} className="w-full flex flex-col items-center">
+            
             {/* .arc.bd — Display-scale centrepiece badge */}
             <div
-              className="mb-4 sm:mb-6 inline-flex items-center justify-center font-mono font-bold tracking-[-0.04em] select-none"
+              className="mb-4 sm:mb-5 inline-flex items-center justify-center font-mono font-bold tracking-[-0.03em] select-none"
               style={{
-                fontSize: "clamp(2.4rem, 8.5vw, 6rem)",
+                fontSize: "clamp(2.4rem, 8vw, 5.5rem)",
                 lineHeight: 1,
-                color: "rgba(255,255,255,0.92)",
-                textShadow: "0 0 60px rgba(255,255,255,0.07), 0 2px 0 rgba(0,0,0,0.5)",
-                letterSpacing: "-0.04em",
+                color: "rgba(255,255,255,0.96)",
+                textShadow: "0 0 50px rgba(255,255,255,0.1), 0 2px 0 rgba(0,0,0,0.6)",
               }}
               aria-hidden="true"
             >
-              <span style={{ color: "rgba(255,255,255,0.35)" }}>/</span>
+              <span className="text-white/35 mr-0.5">/</span>
               <span>arc.bd</span>
             </div>
 
-            {/* Headline — single grammatical arc orbiting the badge */}
-            <h1 className="mb-2.5 sm:mb-4 w-full max-w-xl text-[clamp(1.1rem,2.8vw,1.5rem)] font-semibold leading-snug tracking-[-0.02em] text-zinc-300 px-1">
+            {/* Headline */}
+            <h1 className="mb-3 sm:mb-4 w-full max-w-2xl text-2xl sm:text-3xl md:text-4xl font-semibold leading-snug tracking-tight text-zinc-100 px-2">
               Free subdomains for developers, students &amp; side projects.
             </h1>
 
             {/* Subheadline */}
-            <p className="mb-6 sm:mb-8 w-full max-w-md px-2 text-xs sm:text-sm font-normal leading-relaxed text-zinc-500 sm:px-0">
-              Search a name, claim it in seconds, point it anywhere. Cloudflare DNS included.
+            <p className="mb-7 sm:mb-9 w-full max-w-lg px-2 text-sm sm:text-base font-normal leading-relaxed text-zinc-400">
+              Search a name, claim it in seconds, point it anywhere. Fast Anycast DNS &amp; SSL included.
             </p>
 
-            {/* Search Bar Container — full hero width */}
+            {/* Search Bar Container */}
             <div className="w-full min-w-0 max-w-2xl px-0">
               <form onSubmit={checkAvailability} className="w-full">
+                
                 {/* Mobile Input Container */}
                 <div className="flex flex-col gap-2.5 sm:hidden w-full">
                   <div className="relative flex items-center skeuo-input rounded-full px-4 py-2.5 transition-all duration-200 group w-full overflow-hidden">
@@ -292,14 +315,14 @@ export default function LandingPage() {
                   <Button
                     type="submit"
                     disabled={loading}
-                    className="w-full h-10.5 text-xs font-semibold rounded-full bg-blue-600 hover:bg-blue-500 text-white shadow-md shadow-blue-600/25 active:scale-[0.99] transition-all duration-150 cursor-pointer"
+                    className="w-full h-11 text-xs font-semibold rounded-full bg-blue-600 hover:bg-blue-500 text-white shadow-md shadow-blue-600/25 active:scale-[0.99] transition-all duration-150 cursor-pointer"
                   >
                     {loading ? <Loader2 className="size-3.5 animate-spin mr-1.5" /> : <Search className="size-3.5 mr-1.5" strokeWidth={2} />}
                     {loading ? "Checking..." : "Check availability"}
                   </Button>
                 </div>
 
-                {/* Desktop Input Container with Keyboard Shortcut Pill */}
+                {/* Desktop Input Container */}
                 <div className="hidden sm:flex relative items-center skeuo-input rounded-full p-1.5 pl-4 transition-all duration-200 group overflow-hidden">
                   <Search className="size-4 text-zinc-400 shrink-0 mr-2.5 transition-colors duration-200 group-focus-within:text-blue-400" strokeWidth={1.5} />
                   <input
@@ -316,7 +339,7 @@ export default function LandingPage() {
                   
                   {/* Keyboard Shortcut Hint Pill */}
                   {!searchQuery && (
-                    <kbd className="hidden md:inline-flex items-center px-1.5 py-0.5 rounded bg-white/[0.06] text-[10px] font-mono text-zinc-400 border border-white/10 mr-2 select-none pointer-events-none">
+                    <kbd className="hidden md:inline-flex items-center px-2 py-0.5 rounded bg-white/[0.08] text-xs font-mono text-zinc-400 border border-white/10 mr-2 select-none pointer-events-none">
                       /
                     </kbd>
                   )}
@@ -343,37 +366,37 @@ export default function LandingPage() {
                 </div>
               </form>
 
-              {/* Availability Result Card with Live Region */}
+              {/* Availability Result Card */}
               {availability !== 'idle' && (
-                <div role="status" aria-live="polite" className="w-full mt-2.5 animate-spring-up">
+                <div role="status" aria-live="polite" className="w-full mt-3 animate-spring-up">
                   {availability === 'available' && (
-                    <div className="flex flex-col sm:flex-row w-full items-center justify-between gap-3 rounded-2xl sm:rounded-full border border-emerald-500/20 bg-emerald-500/10 p-3 sm:py-1.5 sm:px-4 backdrop-blur-md">
-                      <div className="flex items-center gap-2 text-xs sm:text-sm text-emerald-300 font-mono text-left">
-                        <CheckCircle className="size-4 text-emerald-400 shrink-0 animate-spring-up" strokeWidth={1.75} />
+                    <div className="flex flex-col sm:flex-row w-full items-center justify-between gap-3 rounded-2xl sm:rounded-full border border-emerald-500/25 bg-emerald-500/10 p-3.5 sm:py-2 sm:px-5 backdrop-blur-md">
+                      <div className="flex items-center gap-2.5 text-xs sm:text-sm text-emerald-300 font-mono text-left">
+                        <CheckCircle className="size-4.5 text-emerald-400 shrink-0" strokeWidth={2} />
                         <span><strong className="font-semibold text-white">{searchQuery}</strong>.arc.bd is available</span>
                       </div>
-                      <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
-                        <span className="text-[11px] text-emerald-400/80 font-medium hidden sm:inline">100% Free Forever</span>
+                      <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
+                        <span className="text-xs text-emerald-400/90 font-medium hidden sm:inline">100% Free Forever</span>
                         <Button
                           onClick={() => handleClaimClick()}
                           disabled={claiming}
-                          className="group h-8 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold px-4 text-xs shrink-0 transition-all duration-150 active:scale-[0.98] shadow-sm w-full sm:w-auto flex items-center justify-center gap-1 cursor-pointer"
+                          className="group h-8.5 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold px-4.5 text-xs shrink-0 transition-all duration-150 active:scale-[0.98] shadow-sm w-full sm:w-auto flex items-center justify-center gap-1 cursor-pointer"
                         >
                           {claiming && <Loader2 className="size-3 mr-1 animate-spin" />}
                           <span>{claiming ? "Reserving..." : "Claim Subdomain"}</span>
-                          {!claiming && <ArrowRight className="size-3 group-hover:translate-x-0.5 transition-transform duration-150" strokeWidth={2} />}
+                          {!claiming && <ArrowRight className="size-3.5 group-hover:translate-x-0.5 transition-transform duration-150" strokeWidth={2} />}
                         </Button>
                       </div>
                     </div>
                   )}
 
                   {availability === 'taken' && (
-                    <div className="flex flex-col gap-2.5 p-3.5 px-4 rounded-2xl w-full border border-white/15 bg-[#09090b]/95 backdrop-blur-md text-left shadow-xl">
+                    <div className="flex flex-col gap-2.5 p-4 rounded-2xl w-full border border-white/15 bg-[#09090b]/95 backdrop-blur-md text-left shadow-xl">
                       <div className="flex items-center gap-2 text-xs sm:text-sm text-zinc-200 font-mono">
                         {isReserved ? (
-                          <ShieldAlert className="size-4 shrink-0 text-zinc-400" strokeWidth={1.5} />
+                          <ShieldAlert className="size-4 shrink-0 text-amber-400" strokeWidth={1.75} />
                         ) : (
-                          <XCircle className="size-4 shrink-0 text-zinc-400" strokeWidth={1.5} />
+                          <XCircle className="size-4 shrink-0 text-red-400" strokeWidth={1.75} />
                         )}
                         <span>
                           <strong className="font-semibold text-white">{searchQuery}</strong>.arc.bd is {isReserved ? "a reserved system name" : "already taken"}
@@ -381,17 +404,18 @@ export default function LandingPage() {
                       </div>
 
                       {!isReserved && (
-                        <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-white/[0.08] text-xs font-mono text-zinc-300">
-                          <span className="flex items-center gap-1 text-zinc-400 text-[11px] font-medium shrink-0 mr-1">
-                            <Lightbulb className="size-3 text-zinc-300" strokeWidth={1.5} /> Alternatives:
+                        <div className="flex flex-wrap items-center gap-1.5 pt-2.5 border-t border-white/[0.08] text-xs font-mono text-zinc-300">
+                          <span className="flex items-center gap-1 text-zinc-400 text-xs font-medium shrink-0 mr-1">
+                            <Lightbulb className="size-3.5 text-zinc-300" strokeWidth={1.5} /> Try these alternatives:
                           </span>
                           <div className="flex flex-wrap gap-1.5">
                             {getAlternatives(searchQuery).map((alt, idx) => (
                               <button
                                 key={alt}
                                 onClick={() => handleSuggestionClick(alt)}
+                                aria-label={`Search available alternative ${alt}.arc.bd`}
                                 style={{ animationDelay: `${idx * 40}ms` }}
-                                className="animate-chip-in px-2.5 py-0.5 rounded-full bg-white/[0.06] hover:bg-white/15 hover:scale-105 active:scale-95 text-zinc-300 hover:text-white border border-white/10 transition-all duration-150 cursor-pointer text-[11px] font-mono"
+                                className="animate-chip-in px-3 py-1 rounded-full bg-white/[0.08] hover:bg-white/20 hover:scale-105 active:scale-95 text-zinc-200 hover:text-white border border-white/12 transition-all duration-150 cursor-pointer text-xs font-mono"
                               >
                                 {alt}.arc.bd
                               </button>
@@ -404,34 +428,34 @@ export default function LandingPage() {
                 </div>
               )}
 
-              {/* Feature caption — responsive row with subtle separators */}
-              <div className="mt-3.5 sm:mt-4 flex flex-wrap items-center justify-center gap-x-2.5 sm:gap-x-3 gap-y-1 text-[10.5px] sm:text-[11px] font-mono text-zinc-500 select-none">
-                <span>Free forever</span>
-                <span className="text-zinc-700 select-none">·</span>
-                <span>Anycast DNS</span>
-                <span className="text-zinc-700 select-none">·</span>
-                <span>Edge SSL included</span>
+              {/* High-Contrast Value Proposition Caption */}
+              <div className="mt-4 sm:mt-5 flex flex-wrap items-center justify-center gap-x-3 sm:gap-x-4 gap-y-1.5 text-xs font-mono text-zinc-400 select-none">
+                <span className="text-zinc-300">Free forever</span>
+                <span className="text-zinc-600 select-none">·</span>
+                <span className="text-zinc-300">Anycast DNS</span>
+                <span className="text-zinc-600 select-none">·</span>
+                <span className="text-zinc-300">Edge SSL included</span>
               </div>
             </div>
           </AnimatedContainer>
+        </section>
 
-          {/* Supported Stacks & Deployments Ticker / Pill Strip */}
-          <AnimatedContainer delay={0.2} className="w-full max-w-4xl mx-auto mt-10 sm:mt-16 flex flex-col items-center">
-            {/* Soft Faded Divider that blends into darkness */}
-            <div className="w-full max-w-xs sm:max-w-xl h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent mb-5 sm:mb-8" />
-            <div className="text-[10px] font-mono text-zinc-600 tracking-[0.14em] uppercase mb-3.5 sm:mb-4 text-center select-none">
-              Works with your stack
-            </div>
-            <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2.5 px-2">
+        {/* ── 2. Dedicated Supported Stack & Integrations Strip ── */}
+        <section className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 border-t border-white/[0.06] relative">
+          <AnimatedContainer delay={0.15} className="flex flex-col items-center text-center">
+            <h2 className="text-xs font-mono uppercase tracking-[0.16em] text-zinc-400 font-semibold mb-5 sm:mb-6">
+              Works seamlessly with your preferred stack
+            </h2>
+            <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 max-w-4xl">
               {SUPPORTED_STACKS.map((item) => {
                 const Icon = item.icon;
                 return (
                   <div
                     key={item.name}
-                    className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full bg-white/[0.03] border border-white/[0.06] text-[11px] sm:text-xs font-mono text-zinc-500 hover:border-white/15 hover:text-zinc-200 transition-colors select-none"
+                    className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] hover:border-white/20 hover:bg-white/[0.08] text-xs font-mono text-zinc-300 hover:text-white transition-all duration-150 select-none shadow-xs"
                   >
-                    <Icon size={12} className="shrink-0 text-zinc-500" strokeWidth={1.5} />
-                    <span>{item.name}</span>
+                    <Icon size={14} className="shrink-0 text-zinc-400" strokeWidth={1.5} />
+                    <span className="font-medium">{item.name}</span>
                   </div>
                 );
               })}
@@ -439,25 +463,19 @@ export default function LandingPage() {
           </AnimatedContainer>
         </section>
 
-        {/* Feature Grid */}
-        <section
-          className="w-full max-w-5xl mx-auto py-12 md:py-20 px-4 sm:px-6 lg:px-8 border-none relative"
-          style={{ contentVisibility: "auto", containIntrinsicSize: "800px" }}
-        >
-          {/* Soft Faded Divider */}
-          <div className="w-full max-w-3xl mx-auto h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent mb-10 sm:mb-14" />
-          
-          <AnimatedContainer className="mx-auto max-w-3xl text-center mb-8 sm:mb-12">
+        {/* ── 3. Feature Grid ── */}
+        <section className="w-full max-w-5xl mx-auto py-16 sm:py-20 px-4 sm:px-6 lg:px-8 border-t border-white/[0.06] relative">
+          <AnimatedContainer className="mx-auto max-w-3xl text-center mb-10 sm:mb-14">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-white">
               Built for fast deployment
             </h2>
-            <p className="text-zinc-400 mt-2 text-xs sm:text-sm font-normal max-w-md mx-auto">
+            <p className="text-zinc-400 mt-2.5 text-sm sm:text-base font-normal max-w-md mx-auto">
               Automated DNS management with zero configuration overhead.
             </p>
           </AnimatedContainer>
 
           <AnimatedContainer
-            delay={0.3}
+            delay={0.2}
             className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 divide-x divide-y divide-dashed border border-dashed border-white/15 divide-white/15 bg-transparent"
           >
             {[
@@ -473,35 +491,89 @@ export default function LandingPage() {
           </AnimatedContainer>
         </section>
 
-        {/* How it works */}
-        <section
-          className="w-full max-w-5xl mx-auto py-12 md:py-20 px-4 sm:px-6 lg:px-8 border-none relative text-center"
-          style={{ contentVisibility: "auto", containIntrinsicSize: "500px" }}
-        >
-          {/* Soft Faded Divider */}
-          <div className="w-full max-w-3xl mx-auto h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent mb-10 sm:mb-14" />
-
-          <AnimatedContainer className="mx-auto max-w-3xl text-center mb-8 sm:mb-12">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-white mb-2">How it works</h2>
-            <p className="text-xs sm:text-sm text-zinc-400 font-normal max-w-md mx-auto">Get your domain live in three straightforward steps.</p>
+        {/* ── 4. How It Works ── */}
+        <section className="w-full max-w-5xl mx-auto py-16 sm:py-20 px-4 sm:px-6 lg:px-8 border-t border-white/[0.06] relative text-center">
+          <AnimatedContainer className="mx-auto max-w-3xl text-center mb-10 sm:mb-14">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-white mb-2">
+              How it works
+            </h2>
+            <p className="text-sm sm:text-base text-zinc-400 font-normal max-w-md mx-auto">
+              Get your custom address live in three straightforward steps.
+            </p>
           </AnimatedContainer>
 
           <AnimatedContainer
-            delay={0.3}
+            delay={0.2}
             className="grid grid-cols-1 sm:grid-cols-3 divide-x divide-y divide-dashed border border-dashed border-white/15 divide-white/15 text-left bg-transparent"
           >
             {[
               { step: "1", title: "Find a name", description: "Search for your preferred subdomain and verify availability in real time." },
               { step: "2", title: "Claim your address", description: "Sign in with GitHub or email to link the subdomain to your account." },
-              { step: "3", title: "Route your traffic", description: "Add your host's CNAME target or VPS IP address to start receiving requests." }
+              { step: "3", title: "Route your traffic", description: "Add your host's CNAME target or VPS IP address to start receiving live traffic." }
             ].map((item, i) => (
               <FeatureCard key={i} feature={item} />
             ))}
           </AnimatedContainer>
         </section>
+
+        {/* ── 5. Frequently Asked Questions (Glass Accordion) ── */}
+        <section className="w-full max-w-3xl mx-auto py-16 sm:py-20 px-4 sm:px-6 lg:px-8 border-t border-white/[0.06] relative">
+          <AnimatedContainer className="text-center mb-10 sm:mb-12">
+            <div className="inline-flex items-center justify-center size-10 rounded-full bg-white/[0.06] border border-white/10 text-white mb-3">
+              <HelpCircle className="size-5 text-zinc-300" strokeWidth={1.75} />
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-sm text-zinc-400 mt-2">
+              Quick answers about routing, security, and usage limits.
+            </p>
+          </AnimatedContainer>
+
+          <AnimatedContainer delay={0.2} className="space-y-3">
+            {FAQ_ITEMS.map((faq, index) => {
+              const isOpen = openFaq === index;
+              return (
+                <div
+                  key={index}
+                  className="rounded-2xl border border-white/10 bg-[#101014]/60 backdrop-blur-xl overflow-hidden transition-colors duration-200"
+                >
+                  <button
+                    onClick={() => toggleFaq(index)}
+                    aria-expanded={isOpen}
+                    className="w-full flex items-center justify-between p-4 sm:p-5 text-left text-sm sm:text-base font-semibold text-zinc-200 hover:text-white transition-colors cursor-pointer"
+                  >
+                    <span>{faq.question}</span>
+                    <ChevronDown
+                      className={`size-4 text-zinc-400 shrink-0 ml-3 transition-transform duration-200 ${isOpen ? "rotate-180 text-white" : ""}`}
+                      strokeWidth={2}
+                    />
+                  </button>
+                  
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.25, ease: "easeInOut" }}
+                        className="overflow-hidden"
+                      >
+                        <div className="px-4 pb-4 sm:px-5 sm:pb-5 pt-0 text-xs sm:text-sm text-zinc-400 font-normal leading-relaxed border-t border-white/[0.04]">
+                          {faq.answer}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
+          </AnimatedContainer>
+        </section>
+
       </main>
 
-      {/* Footer */}
+      {/* ── Footer ── */}
       <footer className="border-t border-white/[0.08] bg-black text-xs text-zinc-400">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
           <div className="flex items-center gap-2">
