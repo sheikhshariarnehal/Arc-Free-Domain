@@ -534,7 +534,7 @@ export default function LandingPage() {
 
             {/* Left Column — Heading & Unified Support Box */}
             <div className="lg:sticky lg:top-28">
-              <h2 className="text-3xl sm:text-4xl lg:text-[3rem] font-bold tracking-[-0.03em] text-white leading-[1.08] mb-4">
+              <h2 className="text-3xl sm:text-4xl lg:text-[3rem] font-bold tracking-[-0.03em] text-white leading-[1.08] mb-4 max-w-[280px]">
                 Everything teams ask before switching.
               </h2>
               <p className="text-sm sm:text-[14.5px] text-zinc-400 leading-relaxed mb-8 max-w-sm">
