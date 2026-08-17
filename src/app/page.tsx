@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import dynamic from "next/dynamic";
 import Navbar from "@/components/Navbar";
 import { 
   Search, 
@@ -38,12 +37,6 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-
-// Dynamic import for WebGL Canvas component: zero SSR footprint and faster initial First Contentful Paint (FCP)
-const ShaderBackground = dynamic(
-  () => import("@/components/ui/dq").then((mod) => mod.ShaderBackground),
-  { ssr: false }
-);
 
 const SUPPORTED_STACKS = [
   { name: "Next.js", icon: NextjsIcon },
@@ -205,18 +198,6 @@ export default function LandingPage() {
 
   return (
     <div className="flex-1 flex flex-col min-h-screen bg-background text-foreground selection:bg-primary/20 selection:text-primary overflow-x-hidden relative">
-      {/* Full-bleed Silk Shader Background with Responsive Fade */}
-      <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-[680px] sm:h-[860px] md:h-[940px] z-0 overflow-hidden"
-        style={{
-          contain: "paint layout",
-          WebkitMaskImage: "linear-gradient(to bottom, black 0%, black 55%, transparent 100%)",
-          maskImage: "linear-gradient(to bottom, black 0%, black 55%, transparent 100%)",
-        }}
-      >
-        <ShaderBackground className="h-full w-full opacity-90 sm:opacity-95" />
-      </div>
-
       <Navbar transparent />
 
       <main className="relative z-10 flex-1 flex min-w-0 w-full flex-col items-center">
