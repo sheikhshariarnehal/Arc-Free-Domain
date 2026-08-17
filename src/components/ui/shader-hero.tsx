@@ -86,7 +86,7 @@ export function ShaderHeroBg({ className }: { className?: string }) {
       className="absolute inset-0 w-full h-full"
       style={{
         background:
-          "radial-gradient(ellipse 90% 65% at 50% -10%, rgba(59, 130, 246, 0.25), rgba(9, 9, 11, 0.98))",
+          "radial-gradient(ellipse 90% 65% at 50% -10%, rgba(255, 255, 255, 0.08), rgba(9, 9, 11, 0.98))",
       }}
     />
   )
@@ -96,30 +96,31 @@ export function ShaderHeroBg({ className }: { className?: string }) {
       className={`pointer-events-none select-none overflow-hidden ${className ?? ""}`}
       aria-hidden="true"
     >
-      {/* Base Ambient Glow Beams */}
+      {/* Base Monochromatic Ambient Glow Beams */}
       <div className="absolute inset-0 w-full h-full opacity-60">
         <div
           className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[900px] h-[550px] rounded-full blur-[110px]"
           style={{
             background:
-              "radial-gradient(ellipse at center, rgba(59, 130, 246, 0.3) 0%, rgba(99, 102, 241, 0.2) 45%, rgba(30, 27, 75, 0.15) 70%, transparent 100%)",
+              "radial-gradient(ellipse at center, rgba(255, 255, 255, 0.10) 0%, rgba(161, 161, 170, 0.06) 45%, rgba(39, 39, 42, 0.03) 70%, transparent 100%)",
           }}
         />
       </div>
 
-      {/* WebGL Mesh Gradient Layer */}
+      {/* WebGL Mesh Gradient Layer - Monochromatic Gray & Black */}
       <WebGLErrorBoundary fallback={cssFallback}>
         {hasWebGL ? (
           <DynamicMeshGradient
             style={{ position: "absolute", inset: 0, width: "100%", height: "100%", opacity: 0.85 }}
             colors={[
-              "#000000", // void black base
+              "#000000", // pure void black base
               "#09090b", // dark obsidian
-              "#141724", // deep slate navy
-              "#252a3d", // 3D glossy wave
-              "#3b82f6", // electric blue specular crest
+              "#18181b", // zinc 900 charcoal
+              "#27272a", // zinc 800 dark slate gray
+              "#52525b", // zinc 600 specular gray highlight
             ]}
             speed={0.22}
+            frame={9500}
             distortion={0.75}
             swirl={0.14}
             grainOverlay={0.02}
