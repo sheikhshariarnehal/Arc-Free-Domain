@@ -1,134 +1,261 @@
 import type { Metadata } from "next";
-import Navbar from "@/components/Navbar";
-import { Triangle, GitBranch, Server, Zap, ArrowRight, ShieldCheck } from "lucide-react";
 import Link from "next/link";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import {
+  Triangle,
+  Zap,
+  GitBranch,
+  Server,
+  ArrowRight,
+  ShieldCheck,
+  Globe,
+  Lock,
+  Layers,
+  Sparkles,
+  Terminal,
+  Activity,
+  CheckCircle2,
+} from "lucide-react";
+import { DocsLayout } from "@/components/docs/DocsLayout";
+import { DocsCallout } from "@/components/docs/DocsCallout";
+import { DocsCodeBlock } from "@/components/docs/DocsCodeBlock";
+import { DocsPagination } from "@/components/docs/DocsPagination";
 
 export const metadata: Metadata = {
-  title: "Documentation & Deployment Guides",
+  title: "Documentation & Deployment Guides | ARC.BD",
   description:
-    "Step-by-step DNS configuration guides to connect your free .arc.bd subdomain to Vercel, Netlify, GitHub Pages, or any custom VPS.",
+    "Official developer documentation for ARC.BD free subdomains. Step-by-step DNS routing guides for Vercel, Netlify, GitHub Pages, and custom VPS.",
   alternates: {
     canonical: "/docs",
   },
-  openGraph: {
-    title: "Documentation & Deployment Guides | ARC.BD",
-    description:
-      "Step-by-step DNS configuration guides to connect your free .arc.bd subdomain to Vercel, Netlify, GitHub Pages, or any custom VPS.",
-    url: "https://arc.bd/docs",
-  },
 };
+
+const TOC_ITEMS = [
+  { id: "quickstart", label: "Quickstart Overview" },
+  { id: "guides", label: "Hosting Guides" },
+  { id: "dns-records", label: "DNS Record Types" },
+  { id: "cloudflare-ssl", label: "Cloudflare Edge & SSL" },
+  { id: "quotas", label: "Quotas & Fair Use" },
+];
 
 export default function DocsPage() {
   const guides = [
     {
-      name: "Vercel",
+      name: "Vercel & Next.js",
       href: "/docs/vercel",
       icon: Triangle,
       badge: "CNAME",
-      desc: "Route traffic to Next.js or React apps on Vercel with fast edge routing and automated SSL.",
+      desc: "Fast Anycast edge routing for Next.js, React, or Astro apps on Vercel with automatic TLS.",
     },
     {
       name: "Netlify",
       href: "/docs/netlify",
       icon: Zap,
       badge: "CNAME",
-      desc: "Deploy web apps to Netlify with automated TLS certificate provisioning and edge caching.",
+      desc: "Deploy static or serverless web apps on Netlify with automated SSL certificate provisioning.",
     },
     {
       name: "GitHub Pages",
       href: "/docs/github-pages",
       icon: GitBranch,
       badge: "CNAME",
-      desc: "Point your custom subdomain directly to any public or organization GitHub Pages repository.",
+      desc: "Route your custom subdomain directly to any public GitHub Pages repository via CNAME record.",
     },
     {
       name: "Custom Server / VPS",
       href: "/docs/vps",
       icon: Server,
       badge: "A Record",
-      desc: "Point an A record to your cloud VPS, virtual machine, or dedicated server IPv4 address.",
+      desc: "Point an A record directly to any cloud VPS (DigitalOcean, Hetzner, AWS, Linode) IPv4 address.",
     },
   ];
 
   return (
-    <div className="flex min-h-dvh min-w-0 flex-col bg-background text-foreground">
-      <Navbar />
+    <DocsLayout
+      category="Getting Started"
+      title="ARC.BD Documentation"
+      description="Learn how to claim, configure, and route your free .arc.bd subdomains to any hosting platform or cloud server."
+      toc={TOC_ITEMS}
+      next={{ title: "Vercel Setup Guide", href: "/docs/vercel", category: "Deployment Guides" }}
+    >
+      {/* ── 1. Quickstart Section ── */}
+      <section id="quickstart">
+        <h2>Quickstart Overview</h2>
+        <p>
+          ARC.BD gives developers, students, and indie creators free, high-performance <strong>.arc.bd</strong> subdomains backed by Cloudflare Anycast DNS and automated SSL encryption.
+        </p>
 
-      <main className="mx-auto w-full min-w-0 max-w-5xl flex-1 px-4 pt-20 pb-12 sm:px-6 sm:pt-24 sm:pb-16 lg:px-8 lg:pt-28">
-        {/* Page Header */}
-        <div className="mb-8 max-w-2xl">
-          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
-            Documentation
-          </h1>
-          <p className="mt-2 text-sm sm:text-base leading-relaxed text-muted-foreground">
-            Connect your subdomain to cloud hosting providers and servers.
-          </p>
+        <DocsCallout type="info" title="Zero Configuration Overhead">
+          Every subdomain is provisioned with automated Universal SSL at Cloudflare&apos;s global edge within seconds of claiming. No credit card or renewal fees required.
+        </DocsCallout>
+
+        <div className="my-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="rounded-xl border border-white/[0.08] bg-[#0d0e14] p-4 space-y-1.5 shadow-xs">
+            <div className="flex size-7 items-center justify-center rounded-lg bg-primary/10 text-primary font-mono text-xs font-bold border border-primary/20">
+              1
+            </div>
+            <h3 className="text-sm font-semibold text-white">Claim a Name</h3>
+            <p className="text-xs text-zinc-400 leading-relaxed">
+              Find an available name in the search bar and link it to your account.
+            </p>
+          </div>
+
+          <div className="rounded-xl border border-white/[0.08] bg-[#0d0e14] p-4 space-y-1.5 shadow-xs">
+            <div className="flex size-7 items-center justify-center rounded-lg bg-primary/10 text-primary font-mono text-xs font-bold border border-primary/20">
+              2
+            </div>
+            <h3 className="text-sm font-semibold text-white">Select Host Preset</h3>
+            <p className="text-xs text-zinc-400 leading-relaxed">
+              Use 1-click Quick Presets for Vercel, Netlify, GitHub Pages, or VPS.
+            </p>
+          </div>
+
+          <div className="rounded-xl border border-white/[0.08] bg-[#0d0e14] p-4 space-y-1.5 shadow-xs">
+            <div className="flex size-7 items-center justify-center rounded-lg bg-primary/10 text-primary font-mono text-xs font-bold border border-primary/20">
+              3
+            </div>
+            <h3 className="text-sm font-semibold text-white">Instant Edge Sync</h3>
+            <p className="text-xs text-zinc-400 leading-relaxed">
+              Records propagate across Cloudflare data centers globally in seconds.
+            </p>
+          </div>
         </div>
+      </section>
 
-        {/* 2x2 Balanced Guides Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+      {/* ── 2. Hosting Guides ── */}
+      <section id="guides">
+        <h2>Hosting &amp; Deployment Guides</h2>
+        <p>
+          Select your hosting provider below for a complete step-by-step setup guide:
+        </p>
+
+        <div className="my-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
           {guides.map((guide) => (
             <Link
               key={guide.href}
               href={guide.href}
-              className="group flex flex-col rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="group flex flex-col justify-between rounded-xl border border-white/[0.08] bg-[#0c0d12] p-5 hover:border-white/[0.22] hover:bg-white/[0.03] transition-all shadow-xs"
             >
-              <Card className="flex h-full flex-col justify-between rounded-xl border border-border/80 bg-card p-5 sm:p-6 transition-all duration-200 hover:border-primary/50 hover:bg-secondary/40 hover:shadow-md shadow-xs">
-                <div>
-                  <div className="flex items-center justify-between gap-3 mb-4">
-                    <div className="flex size-10 items-center justify-center rounded-lg bg-secondary/80 text-foreground border border-border/80 transition-colors group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary">
-                      <guide.icon className="size-4.5" aria-hidden="true" />
-                    </div>
-                    <Badge
-                      variant="secondary"
-                      className="font-mono text-[11px] font-medium text-foreground/80 border-border/80 bg-secondary/80 px-2.5 py-0.5 rounded-md"
-                    >
-                      {guide.badge}
-                    </Badge>
+              <div>
+                <div className="flex items-center justify-between gap-2 mb-3">
+                  <div className="flex size-9 items-center justify-center rounded-lg bg-white/[0.06] border border-white/[0.1] text-white group-hover:bg-primary group-hover:text-white transition-colors">
+                    <guide.icon className="size-4.5" />
                   </div>
-
-                  <h2 className="text-base sm:text-lg font-semibold tracking-tight text-foreground transition-colors group-hover:text-primary">
-                    {guide.name}
-                  </h2>
-                  <p className="mt-2 text-xs sm:text-sm leading-relaxed text-muted-foreground">
-                    {guide.desc}
-                  </p>
+                  <span className="font-mono text-[10px] font-semibold px-2 py-0.5 rounded bg-white/[0.06] border border-white/[0.08] text-zinc-300">
+                    {guide.badge}
+                  </span>
                 </div>
+                <h3 className="text-base font-semibold text-white group-hover:text-primary transition-colors">
+                  {guide.name}
+                </h3>
+                <p className="mt-1.5 text-xs text-zinc-400 leading-relaxed">
+                  {guide.desc}
+                </p>
+              </div>
 
-                <div className="mt-6 flex items-center text-xs sm:text-sm font-medium text-primary transition-colors group-hover:text-primary/90">
-                  <span>Read Setup Guide</span>
-                  <ArrowRight className="ml-1.5 size-3.5 sm:size-4 transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true" />
-                </div>
-              </Card>
+              <div className="mt-4 flex items-center gap-1.5 text-xs font-medium text-primary group-hover:text-primary/90">
+                <span>View Setup Guide</span>
+                <ArrowRight className="size-3.5 group-hover:translate-x-0.5 transition-transform" />
+              </div>
             </Link>
           ))}
         </div>
+      </section>
 
-        {/* Help & Support Strip */}
-        <div className="mt-6 sm:mt-8 p-4 sm:p-5 rounded-xl border border-border/80 bg-card flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xs">
-          <div className="flex items-center gap-3">
-            <div className="size-9 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 border border-primary/20">
-              <ShieldCheck className="size-4.5" />
-            </div>
-            <div>
-              <p className="text-xs sm:text-sm font-semibold text-foreground">Have a custom hosting setup?</p>
-              <p className="text-xs text-muted-foreground mt-0.5">ARC.BD supports standard A, CNAME, and TXT edge DNS records compatible with any server or host.</p>
-            </div>
-          </div>
-          <Link
-            href="/dashboard/domains"
-            className="text-xs font-semibold text-foreground hover:text-primary transition-colors shrink-0 underline underline-offset-4"
-          >
-            Manage Subdomains &rarr;
-          </Link>
+      {/* ── 3. DNS Records ── */}
+      <section id="dns-records">
+        <h2>Supported DNS Record Types</h2>
+        <p>
+          ARC.BD gives you granular control over standard DNS records directly from your developer dashboard:
+        </p>
+
+        <div className="my-6 overflow-hidden rounded-xl border border-white/[0.08] bg-[#0c0d12]">
+          <table className="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr className="border-b border-white/[0.08] bg-white/[0.02] text-zinc-400 font-semibold uppercase tracking-wider">
+                <th className="p-3.5 pl-4">Record Type</th>
+                <th className="p-3.5">Typical Purpose</th>
+                <th className="p-3.5">Example Target</th>
+                <th className="p-3.5 pr-4">Propagation</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-white/[0.06] text-zinc-300">
+              <tr>
+                <td className="p-3.5 pl-4 font-mono font-bold text-primary">CNAME</td>
+                <td className="p-3.5">Aliases to cloud platforms (Vercel, Netlify, GitHub)</td>
+                <td className="p-3.5 font-mono text-zinc-400">cname.vercel-dns.com</td>
+                <td className="p-3.5 pr-4 text-emerald-400 font-medium">Instant (&lt; 5s)</td>
+              </tr>
+              <tr>
+                <td className="p-3.5 pl-4 font-mono font-bold text-emerald-400">A</td>
+                <td className="p-3.5">Direct IPv4 mapping for custom VPS &amp; servers</td>
+                <td className="p-3.5 font-mono text-zinc-400">198.51.100.42</td>
+                <td className="p-3.5 pr-4 text-emerald-400 font-medium">Instant (&lt; 5s)</td>
+              </tr>
+              <tr>
+                <td className="p-3.5 pl-4 font-mono font-bold text-amber-400">TXT</td>
+                <td className="p-3.5">Site verification tokens (Google, Resend, GitHub)</td>
+                <td className="p-3.5 font-mono text-zinc-400">google-site-verification=...</td>
+                <td className="p-3.5 pr-4 text-emerald-400 font-medium">Instant (&lt; 5s)</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-      </main>
 
-      <footer className="border-t border-border/50 px-4 py-6 text-center text-xs leading-relaxed text-muted-foreground sm:px-6">
-        ARC.BD Knowledge Base &copy; {new Date().getFullYear()}
-      </footer>
-    </div>
+        <p className="mt-4">
+          You can test DNS resolution on your machine using <code>dig</code> or <code>nslookup</code>:
+        </p>
+
+        <DocsCodeBlock
+          language="bash"
+          tabs={[
+            {
+              label: "dig (Linux / macOS)",
+              code: "dig +short CNAME yourproject.arc.bd @1.1.1.1",
+              language: "bash",
+            },
+            {
+              label: "nslookup (Windows)",
+              code: "nslookup yourproject.arc.bd 1.1.1.1",
+              language: "cmd",
+            },
+            {
+              label: "curl (HTTP Test)",
+              code: "curl -I https://yourproject.arc.bd",
+              language: "bash",
+            },
+          ]}
+        />
+      </section>
+
+      {/* ── 4. Cloudflare Edge & SSL ── */}
+      <section id="cloudflare-ssl">
+        <h2>Cloudflare Edge &amp; Automated SSL</h2>
+        <p>
+          All <code>.arc.bd</code> domains operate on Cloudflare&apos;s global Anycast edge network with over 330 points of presence worldwide.
+        </p>
+
+        <DocsCallout type="tip" title="Automatic HTTPS Enforcement">
+          Universal SSL certificates are provisioned automatically. You do not need to generate certificates using Certbot or manage renewal cron jobs.
+        </DocsCallout>
+      </section>
+
+      {/* ── 5. Quotas & Fair Use ── */}
+      <section id="quotas">
+        <h2>Quotas &amp; Fair Use Policy</h2>
+        <p>
+          Every verified developer account can register and manage up to <strong>5 active subdomains</strong> simultaneously.
+        </p>
+        <ul>
+          <li>Free forever for open source, portfolios, APIs, side projects, and student learning.</li>
+          <li>Phishing, malware hosting, impersonation, or illegal content results in immediate permanent suspension.</li>
+          <li>Subdomains with no active DNS records for &gt; 180 days may be reclaimed for the community.</li>
+        </ul>
+      </section>
+
+      {/* Pagination Footer */}
+      <DocsPagination
+        next={{ title: "Vercel & Next.js Setup Guide", href: "/docs/vercel", category: "Deployment Guides" }}
+      />
+    </DocsLayout>
   );
 }
