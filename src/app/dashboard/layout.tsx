@@ -212,7 +212,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           )}
 
           {/* Navigation Links Area */}
-          <nav className="flex-1 px-2.5 py-3 space-y-4 overflow-y-auto overflow-x-hidden scrollbar-thin">
+          <nav data-lenis-prevent className="flex-1 px-2.5 py-3 space-y-4 overflow-y-auto overflow-x-hidden scrollbar-thin overscroll-contain">
             {/* Section 1: MAIN MENU */}
             <div>
               {sidebarOpen && (
@@ -494,7 +494,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               onToggleSidebar={() => setSidebarOpen((prev) => !prev)}
               onOpenMobileNav={() => setMobileNavOpen(true)}
             />
-            <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-7">
+            <main data-lenis-prevent className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-7 overscroll-contain">
               <div className="w-full space-y-6">
                 {children}
               </div>

@@ -1,10 +1,18 @@
 "use client";
 
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 import Lenis from "lenis";
 
 export function SmoothScroll() {
+  const pathname = usePathname();
+
   useEffect(() => {
+    // Disable smooth scroll on dashboard and admin areas where inner containers handle scrolling
+    if (pathname?.startsWith("/dashboard") || pathname?.startsWith("/admin")) {
+      return;
+    }
+
     // Disable if user prefers reduced motion
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (prefersReducedMotion) return;
@@ -33,7 +41,7 @@ export function SmoothScroll() {
       cancelAnimationFrame(animationFrameId);
       lenis.destroy();
     };
-  }, []);
+  }, [pathname]);
 
   return null;
 }

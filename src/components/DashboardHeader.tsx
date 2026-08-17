@@ -7,6 +7,7 @@ import {
   Search,
   Bell,
   PanelLeft,
+  Menu,
   Globe,
   Shield,
   Plus,
@@ -168,29 +169,14 @@ export function DashboardHeader({
         <div className="flex h-16 items-center justify-between gap-3 px-4 sm:px-6 w-full">
           {/* Left Section: Mobile Sidebar Toggle + NextAdmin Search Input */}
           <div className="flex items-center gap-3 min-w-0 flex-1">
-            {/* Mobile / Collapsed Sidebar Toggle */}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  onClick={() => {
-                    if (typeof window !== "undefined" && window.innerWidth < 768) {
-                      onOpenMobileNav?.();
-                    } else {
-                      onToggleSidebar?.();
-                    }
-                  }}
-                  variant="ghost"
-                  size="icon"
-                  className="size-9.5 rounded-xl border border-[#222838] bg-[#141721] text-zinc-400 hover:text-white hover:bg-[#191d2a] shrink-0 focus-visible:ring-1 focus-visible:ring-ring transition-all md:hidden"
-                  aria-label="Toggle navigation menu"
-                >
-                  <PanelLeft className="size-4.5" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" className="text-xs font-medium">
-                Toggle Sidebar
-              </TooltipContent>
-            </Tooltip>
+            {/* Mobile Navigation Trigger (Mobile only) */}
+            <button
+              onClick={onOpenMobileNav}
+              className="md:hidden flex size-9.5 items-center justify-center rounded-xl border border-[#222838] bg-[#141721] text-zinc-400 hover:text-white hover:bg-[#191d2a] shrink-0 transition-all cursor-pointer"
+              aria-label="Open mobile navigation"
+            >
+              <Menu className="size-4.5" />
+            </button>
 
             {/* NextAdmin Wide Search Input Box */}
             <button

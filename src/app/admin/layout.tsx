@@ -201,7 +201,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           sidebarOpen={sidebarOpen}
           onToggleSidebar={() => setSidebarOpen((prev) => !prev)}
         />
-        <main className="flex-1 overflow-y-auto p-4 sm:p-5 lg:p-6">
+        <main data-lenis-prevent className="flex-1 overflow-y-auto p-4 sm:p-5 lg:p-6 overscroll-contain">
           {children}
         </main>
       </div>

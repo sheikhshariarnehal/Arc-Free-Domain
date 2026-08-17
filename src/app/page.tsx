@@ -37,6 +37,9 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { ShaderHeroBg } from "@/components/ui/shader-hero";
+import { FeatureCard } from "@/components/ui/grid-feature-cards";
+import { motion, useReducedMotion } from "motion/react";
 
 const SUPPORTED_STACKS = [
   { name: "Next.js", icon: NextjsIcon },
@@ -50,6 +53,26 @@ const SUPPORTED_STACKS = [
   { name: "FastAPI / Python", icon: Zap },
   { name: "Go / Rust", icon: Cpu }
 ];
+
+function AnimatedContainer({ className, delay = 0.1, children }: { delay?: number; className?: string; children: React.ReactNode }) {
+  const shouldReduceMotion = useReducedMotion();
+
+  if (shouldReduceMotion) {
+    return <div className={className}>{children}</div>;
+  }
+
+  return (
+    <motion.div
+      initial={{ filter: 'blur(4px)', translateY: -8, opacity: 0 }}
+      whileInView={{ filter: 'blur(0px)', translateY: 0, opacity: 1 }}
+      viewport={{ once: true }}
+      transition={{ delay, duration: 0.8 }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
 export default function LandingPage() {
   const router = useRouter();
@@ -198,47 +221,89 @@ export default function LandingPage() {
 
   return (
     <div className="flex-1 flex flex-col min-h-screen bg-background text-foreground selection:bg-primary/20 selection:text-primary overflow-x-hidden relative">
+
+      {/* ── MeshGradient shader background ── */}
+      <ShaderHeroBg className="absolute top-0 inset-x-0 z-0 h-[900px] sm:h-[1060px]" />
+
       <Navbar transparent />
 
       <main className="relative z-10 flex-1 flex min-w-0 w-full flex-col items-center">
         {/* Hero Section */}
         <section className="relative mx-auto flex w-full min-w-0 max-w-5xl flex-1 flex-col items-center justify-center px-4 pt-20 pb-8 text-center sm:px-6 sm:pt-28 sm:pb-14 lg:px-8">
+          <AnimatedContainer delay={0.1} className="w-full flex flex-col items-center">
+            {/* .arc.bd — Display-scale centrepiece badge */}
+            <div
+              className="mb-4 sm:mb-6 inline-flex items-center justify-center font-mono font-bold tracking-[-0.04em] select-none"
+              style={{
+                fontSize: "clamp(2.4rem, 8.5vw, 6rem)",
+                lineHeight: 1,
+                color: "rgba(255,255,255,0.92)",
+                textShadow: "0 0 60px rgba(255,255,255,0.07), 0 2px 0 rgba(0,0,0,0.5)",
+                letterSpacing: "-0.04em",
+              }}
+              aria-hidden="true"
+            >
+              <span style={{ color: "rgba(255,255,255,0.35)" }}>/</span>
+              <span>arc.bd</span>
+            </div>
 
-          {/* .arc.bd — Display-scale centrepiece badge */}
-          <div
-            className="mb-4 sm:mb-6 inline-flex items-center justify-center font-mono font-bold tracking-[-0.04em] select-none"
-            style={{
-              fontSize: "clamp(2.4rem, 8.5vw, 6rem)",
-              lineHeight: 1,
-              color: "rgba(255,255,255,0.92)",
-              textShadow: "0 0 60px rgba(255,255,255,0.07), 0 2px 0 rgba(0,0,0,0.5)",
-              letterSpacing: "-0.04em",
-            }}
-            aria-hidden="true"
-          >
-            <span style={{ color: "rgba(255,255,255,0.35)" }}>/</span>
-            <span>arc.bd</span>
-          </div>
+            {/* Headline — single grammatical arc orbiting the badge */}
+            <h1 className="mb-2.5 sm:mb-4 w-full max-w-xl text-[clamp(1.1rem,2.8vw,1.5rem)] font-semibold leading-snug tracking-[-0.02em] text-zinc-300 px-1">
+              Free subdomains for developers, students &amp; side projects.
+            </h1>
 
-          {/* Headline — single grammatical arc orbiting the badge */}
-          <h1 className="mb-2.5 sm:mb-4 w-full max-w-xl text-[clamp(1.1rem,2.8vw,1.5rem)] font-semibold leading-snug tracking-[-0.02em] text-zinc-300 px-1">
-            Free subdomains for developers, students &amp; side projects.
-          </h1>
+            {/* Subheadline */}
+            <p className="mb-6 sm:mb-8 w-full max-w-md px-2 text-xs sm:text-sm font-normal leading-relaxed text-zinc-500 sm:px-0">
+              Search a name, claim it in seconds, point it anywhere. Cloudflare DNS included.
+            </p>
 
-          {/* Subheadline */}
-          <p className="mb-6 sm:mb-8 w-full max-w-md px-2 text-xs sm:text-sm font-normal leading-relaxed text-zinc-500 sm:px-0">
-            Search a name, claim it in seconds, point it anywhere. Cloudflare DNS included.
-          </p>
+            {/* Search Bar Container — full hero width */}
+            <div className="w-full min-w-0 max-w-2xl px-0">
+              <form onSubmit={checkAvailability} className="w-full">
+                {/* Mobile Input Container */}
+                <div className="flex flex-col gap-2.5 sm:hidden w-full">
+                  <div className="relative flex items-center skeuo-input rounded-full px-4 py-2.5 transition-all duration-200 group w-full overflow-hidden">
+                    <Search className="size-4 text-zinc-400 shrink-0 mr-2 group-focus-within:text-blue-400 transition-colors duration-200" strokeWidth={1.5} />
+                    <input
+                      ref={mobileInputRef}
+                      type="text"
+                      placeholder="your-project"
+                      aria-label="Subdomain name to check"
+                      value={searchQuery}
+                      onChange={(e) => {
+                        setSearchQuery(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''));
+                      }}
+                      className="w-full min-w-0 bg-transparent text-sm text-white placeholder:text-zinc-500 focus:outline-none font-mono font-medium pr-1"
+                    />
+                    {searchQuery && (
+                      <button 
+                        type="button" 
+                        onClick={clearSearch} 
+                        aria-label="Clear subdomain search" 
+                        className="p-1 text-zinc-400 hover:text-white transition-all duration-150 mr-1 shrink-0 active:scale-90 cursor-pointer"
+                      >
+                        <X className="size-3.5" strokeWidth={2} />
+                      </button>
+                    )}
+                    <span className="text-xs text-zinc-400 font-mono font-semibold mr-1 shrink-0 select-none">
+                      .arc.bd
+                    </span>
+                  </div>
+                  <Button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full h-10.5 text-xs font-semibold rounded-full bg-blue-600 hover:bg-blue-500 text-white shadow-md shadow-blue-600/25 active:scale-[0.99] transition-all duration-150 cursor-pointer"
+                  >
+                    {loading ? <Loader2 className="size-3.5 animate-spin mr-1.5" /> : <Search className="size-3.5 mr-1.5" strokeWidth={2} />}
+                    {loading ? "Checking..." : "Check availability"}
+                  </Button>
+                </div>
 
-          {/* Search Bar Container — full hero width */}
-          <div className="w-full min-w-0 max-w-2xl px-0">
-            <form onSubmit={checkAvailability} className="w-full">
-              {/* Mobile Input Container */}
-              <div className="flex flex-col gap-2.5 sm:hidden w-full">
-                <div className="relative flex items-center skeuo-input rounded-full px-4 py-2.5 transition-all duration-200 group w-full overflow-hidden">
-                  <Search className="size-4 text-zinc-400 shrink-0 mr-2 group-focus-within:text-blue-400 transition-colors duration-200" strokeWidth={1.5} />
+                {/* Desktop Input Container with Keyboard Shortcut Pill */}
+                <div className="hidden sm:flex relative items-center skeuo-input rounded-full p-1.5 pl-4 transition-all duration-200 group overflow-hidden">
+                  <Search className="size-4 text-zinc-400 shrink-0 mr-2.5 transition-colors duration-200 group-focus-within:text-blue-400" strokeWidth={1.5} />
                   <input
-                    ref={mobileInputRef}
+                    ref={inputRef}
                     type="text"
                     placeholder="your-project"
                     aria-label="Subdomain name to check"
@@ -246,8 +311,16 @@ export default function LandingPage() {
                     onChange={(e) => {
                       setSearchQuery(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''));
                     }}
-                    className="w-full min-w-0 bg-transparent text-sm text-white placeholder:text-zinc-500 focus:outline-none font-mono font-medium pr-1"
+                    className="w-full min-w-0 bg-transparent text-sm text-white placeholder:text-zinc-500 focus:outline-none font-mono font-medium"
                   />
+                  
+                  {/* Keyboard Shortcut Hint Pill */}
+                  {!searchQuery && (
+                    <kbd className="hidden md:inline-flex items-center px-1.5 py-0.5 rounded bg-white/[0.06] text-[10px] font-mono text-zinc-400 border border-white/10 mr-2 select-none pointer-events-none">
+                      /
+                    </kbd>
+                  )}
+
                   {searchQuery && (
                     <button 
                       type="button" 
@@ -258,137 +331,92 @@ export default function LandingPage() {
                       <X className="size-3.5" strokeWidth={2} />
                     </button>
                   )}
-                  <span className="text-xs text-zinc-400 font-mono font-semibold mr-1 shrink-0 select-none">
-                    .arc.bd
-                  </span>
-                </div>
-                <Button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full h-10.5 text-xs font-semibold rounded-full bg-blue-600 hover:bg-blue-500 text-white shadow-md shadow-blue-600/25 active:scale-[0.99] transition-all duration-150 cursor-pointer"
-                >
-                  {loading ? <Loader2 className="size-3.5 animate-spin mr-1.5" /> : <Search className="size-3.5 mr-1.5" strokeWidth={2} />}
-                  {loading ? "Checking..." : "Check availability"}
-                </Button>
-              </div>
-
-              {/* Desktop Input Container with Keyboard Shortcut Pill */}
-              <div className="hidden sm:flex relative items-center skeuo-input rounded-full p-1.5 pl-4 transition-all duration-200 group overflow-hidden">
-                <Search className="size-4 text-zinc-400 shrink-0 mr-2.5 transition-colors duration-200 group-focus-within:text-blue-400" strokeWidth={1.5} />
-                <input
-                  ref={inputRef}
-                  type="text"
-                  placeholder="your-project"
-                  aria-label="Subdomain name to check"
-                  value={searchQuery}
-                  onChange={(e) => {
-                    setSearchQuery(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''));
-                  }}
-                  className="w-full min-w-0 bg-transparent text-sm text-white placeholder:text-zinc-500 focus:outline-none font-mono font-medium"
-                />
-                
-                {/* Keyboard Shortcut Hint Pill */}
-                {!searchQuery && (
-                  <kbd className="hidden md:inline-flex items-center px-1.5 py-0.5 rounded bg-white/[0.06] text-[10px] font-mono text-zinc-400 border border-white/10 mr-2 select-none pointer-events-none">
-                    /
-                  </kbd>
-                )}
-
-                {searchQuery && (
-                  <button 
-                    type="button" 
-                    onClick={clearSearch} 
-                    aria-label="Clear subdomain search" 
-                    className="p-1 text-zinc-400 hover:text-white transition-all duration-150 mr-1 shrink-0 active:scale-90 cursor-pointer"
+                  <span className="text-xs text-zinc-400 font-mono font-semibold mr-3 shrink-0 select-none">.arc.bd</span>
+                  <Button
+                    type="submit"
+                    disabled={loading}
+                    className="h-10 px-5 text-xs font-semibold shrink-0 rounded-full bg-blue-600 hover:bg-blue-500 text-white shadow-sm shadow-blue-600/20 active:scale-[0.98] transition-all duration-150 cursor-pointer"
                   >
-                    <X className="size-3.5" strokeWidth={2} />
-                  </button>
-                )}
-                <span className="text-xs text-zinc-400 font-mono font-semibold mr-3 shrink-0 select-none">.arc.bd</span>
-                <Button
-                  type="submit"
-                  disabled={loading}
-                  className="h-10 px-5 text-xs font-semibold shrink-0 rounded-full bg-blue-600 hover:bg-blue-500 text-white shadow-sm shadow-blue-600/20 active:scale-[0.98] transition-all duration-150 cursor-pointer"
-                >
-                  {loading ? <Loader2 className="size-3.5 animate-spin mr-1" /> : <Search className="size-3.5 mr-1" strokeWidth={2} />}
-                  {loading ? "Checking..." : "Check availability"}
-                </Button>
-              </div>
-            </form>
+                    {loading ? <Loader2 className="size-3.5 animate-spin mr-1" /> : <Search className="size-3.5 mr-1" strokeWidth={2} />}
+                    {loading ? "Checking..." : "Check availability"}
+                  </Button>
+                </div>
+              </form>
 
-            {/* Availability Result Card with Live Region */}
-            {availability !== 'idle' && (
-              <div role="status" aria-live="polite" className="w-full mt-2.5 animate-spring-up">
-                {availability === 'available' && (
-                  <div className="flex flex-col sm:flex-row w-full items-center justify-between gap-3 rounded-2xl sm:rounded-full border border-emerald-500/20 bg-emerald-500/10 p-3 sm:py-1.5 sm:px-4 backdrop-blur-md">
-                    <div className="flex items-center gap-2 text-xs sm:text-sm text-emerald-300 font-mono text-left">
-                      <CheckCircle className="size-4 text-emerald-400 shrink-0 animate-spring-up" strokeWidth={1.75} />
-                      <span><strong className="font-semibold text-white">{searchQuery}</strong>.arc.bd is available</span>
-                    </div>
-                    <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
-                      <span className="text-[11px] text-emerald-400/80 font-medium hidden sm:inline">100% Free Forever</span>
-                      <Button
-                        onClick={() => handleClaimClick()}
-                        disabled={claiming}
-                        className="group h-8 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold px-4 text-xs shrink-0 transition-all duration-150 active:scale-[0.98] shadow-sm w-full sm:w-auto flex items-center justify-center gap-1 cursor-pointer"
-                      >
-                        {claiming && <Loader2 className="size-3 mr-1 animate-spin" />}
-                        <span>{claiming ? "Reserving..." : "Claim Subdomain"}</span>
-                        {!claiming && <ArrowRight className="size-3 group-hover:translate-x-0.5 transition-transform duration-150" strokeWidth={2} />}
-                      </Button>
-                    </div>
-                  </div>
-                )}
-
-                {availability === 'taken' && (
-                  <div className="flex flex-col gap-2.5 p-3.5 px-4 rounded-2xl w-full border border-white/15 bg-[#09090b]/95 backdrop-blur-md text-left shadow-xl">
-                    <div className="flex items-center gap-2 text-xs sm:text-sm text-zinc-200 font-mono">
-                      {isReserved ? (
-                        <ShieldAlert className="size-4 shrink-0 text-zinc-400" strokeWidth={1.5} />
-                      ) : (
-                        <XCircle className="size-4 shrink-0 text-zinc-400" strokeWidth={1.5} />
-                      )}
-                      <span>
-                        <strong className="font-semibold text-white">{searchQuery}</strong>.arc.bd is {isReserved ? "a reserved system name" : "already taken"}
-                      </span>
-                    </div>
-
-                    {!isReserved && (
-                      <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-white/[0.08] text-xs font-mono text-zinc-300">
-                        <span className="flex items-center gap-1 text-zinc-400 text-[11px] font-medium shrink-0 mr-1">
-                          <Lightbulb className="size-3 text-zinc-300" strokeWidth={1.5} /> Alternatives:
-                        </span>
-                        <div className="flex flex-wrap gap-1.5">
-                          {getAlternatives(searchQuery).map((alt, idx) => (
-                            <button
-                              key={alt}
-                              onClick={() => handleSuggestionClick(alt)}
-                              style={{ animationDelay: `${idx * 40}ms` }}
-                              className="animate-chip-in px-2.5 py-0.5 rounded-full bg-white/[0.06] hover:bg-white/15 hover:scale-105 active:scale-95 text-zinc-300 hover:text-white border border-white/10 transition-all duration-150 cursor-pointer text-[11px] font-mono"
-                            >
-                              {alt}.arc.bd
-                            </button>
-                          ))}
-                        </div>
+              {/* Availability Result Card with Live Region */}
+              {availability !== 'idle' && (
+                <div role="status" aria-live="polite" className="w-full mt-2.5 animate-spring-up">
+                  {availability === 'available' && (
+                    <div className="flex flex-col sm:flex-row w-full items-center justify-between gap-3 rounded-2xl sm:rounded-full border border-emerald-500/20 bg-emerald-500/10 p-3 sm:py-1.5 sm:px-4 backdrop-blur-md">
+                      <div className="flex items-center gap-2 text-xs sm:text-sm text-emerald-300 font-mono text-left">
+                        <CheckCircle className="size-4 text-emerald-400 shrink-0 animate-spring-up" strokeWidth={1.75} />
+                        <span><strong className="font-semibold text-white">{searchQuery}</strong>.arc.bd is available</span>
                       </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            )}
+                      <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+                        <span className="text-[11px] text-emerald-400/80 font-medium hidden sm:inline">100% Free Forever</span>
+                        <Button
+                          onClick={() => handleClaimClick()}
+                          disabled={claiming}
+                          className="group h-8 rounded-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold px-4 text-xs shrink-0 transition-all duration-150 active:scale-[0.98] shadow-sm w-full sm:w-auto flex items-center justify-center gap-1 cursor-pointer"
+                        >
+                          {claiming && <Loader2 className="size-3 mr-1 animate-spin" />}
+                          <span>{claiming ? "Reserving..." : "Claim Subdomain"}</span>
+                          {!claiming && <ArrowRight className="size-3 group-hover:translate-x-0.5 transition-transform duration-150" strokeWidth={2} />}
+                        </Button>
+                      </div>
+                    </div>
+                  )}
 
-            {/* Feature caption — responsive row with subtle separators */}
-            <div className="mt-3.5 sm:mt-4 flex flex-wrap items-center justify-center gap-x-2.5 sm:gap-x-3 gap-y-1 text-[10.5px] sm:text-[11px] font-mono text-zinc-500 select-none">
-              <span>Free forever</span>
-              <span className="text-zinc-700 select-none">·</span>
-              <span>Anycast DNS</span>
-              <span className="text-zinc-700 select-none">·</span>
-              <span>Edge SSL included</span>
+                  {availability === 'taken' && (
+                    <div className="flex flex-col gap-2.5 p-3.5 px-4 rounded-2xl w-full border border-white/15 bg-[#09090b]/95 backdrop-blur-md text-left shadow-xl">
+                      <div className="flex items-center gap-2 text-xs sm:text-sm text-zinc-200 font-mono">
+                        {isReserved ? (
+                          <ShieldAlert className="size-4 shrink-0 text-zinc-400" strokeWidth={1.5} />
+                        ) : (
+                          <XCircle className="size-4 shrink-0 text-zinc-400" strokeWidth={1.5} />
+                        )}
+                        <span>
+                          <strong className="font-semibold text-white">{searchQuery}</strong>.arc.bd is {isReserved ? "a reserved system name" : "already taken"}
+                        </span>
+                      </div>
+
+                      {!isReserved && (
+                        <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-white/[0.08] text-xs font-mono text-zinc-300">
+                          <span className="flex items-center gap-1 text-zinc-400 text-[11px] font-medium shrink-0 mr-1">
+                            <Lightbulb className="size-3 text-zinc-300" strokeWidth={1.5} /> Alternatives:
+                          </span>
+                          <div className="flex flex-wrap gap-1.5">
+                            {getAlternatives(searchQuery).map((alt, idx) => (
+                              <button
+                                key={alt}
+                                onClick={() => handleSuggestionClick(alt)}
+                                style={{ animationDelay: `${idx * 40}ms` }}
+                                className="animate-chip-in px-2.5 py-0.5 rounded-full bg-white/[0.06] hover:bg-white/15 hover:scale-105 active:scale-95 text-zinc-300 hover:text-white border border-white/10 transition-all duration-150 cursor-pointer text-[11px] font-mono"
+                              >
+                                {alt}.arc.bd
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Feature caption — responsive row with subtle separators */}
+              <div className="mt-3.5 sm:mt-4 flex flex-wrap items-center justify-center gap-x-2.5 sm:gap-x-3 gap-y-1 text-[10.5px] sm:text-[11px] font-mono text-zinc-500 select-none">
+                <span>Free forever</span>
+                <span className="text-zinc-700 select-none">·</span>
+                <span>Anycast DNS</span>
+                <span className="text-zinc-700 select-none">·</span>
+                <span>Edge SSL included</span>
+              </div>
             </div>
-          </div>
+          </AnimatedContainer>
 
           {/* Supported Stacks & Deployments Ticker / Pill Strip */}
-          <div className="w-full max-w-4xl mx-auto mt-10 sm:mt-16 flex flex-col items-center">
+          <AnimatedContainer delay={0.2} className="w-full max-w-4xl mx-auto mt-10 sm:mt-16 flex flex-col items-center">
             {/* Soft Faded Divider that blends into darkness */}
             <div className="w-full max-w-xs sm:max-w-xl h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent mb-5 sm:mb-8" />
             <div className="text-[10px] font-mono text-zinc-600 tracking-[0.14em] uppercase mb-3.5 sm:mb-4 text-center select-none">
@@ -408,78 +436,68 @@ export default function LandingPage() {
                 );
               })}
             </div>
-          </div>
+          </AnimatedContainer>
         </section>
 
         {/* Feature Grid */}
         <section
-          className="w-full max-w-6xl mx-auto pt-8 pb-12 sm:py-16 px-4 sm:px-6 lg:px-8 border-none relative"
+          className="w-full max-w-5xl mx-auto py-12 md:py-20 px-4 sm:px-6 lg:px-8 border-none relative"
           style={{ contentVisibility: "auto", containIntrinsicSize: "800px" }}
         >
           {/* Soft Faded Divider */}
           <div className="w-full max-w-3xl mx-auto h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent mb-10 sm:mb-14" />
-          <div className="text-center mb-8 sm:mb-12">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-white">Built for fast deployment</h2>
-            <p className="text-xs sm:text-sm text-zinc-400 mt-1 font-normal max-w-md mx-auto">Automated DNS management with zero configuration overhead.</p>
-          </div>
+          
+          <AnimatedContainer className="mx-auto max-w-3xl text-center mb-8 sm:mb-12">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-white">
+              Built for fast deployment
+            </h2>
+            <p className="text-zinc-400 mt-2 text-xs sm:text-sm font-normal max-w-md mx-auto">
+              Automated DNS management with zero configuration overhead.
+            </p>
+          </AnimatedContainer>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <AnimatedContainer
+            delay={0.3}
+            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 divide-x divide-y divide-dashed border border-dashed border-white/15 divide-white/15 bg-transparent"
+          >
             {[
-              { icon: Gift, title: "Zero Cost", desc: "No credit card or recurring charges. Free for personal, student, and production projects." },
-              { icon: Zap, title: "Instant Propagation", desc: "Records sync to Cloudflare's global edge network within seconds of saving." },
-              { icon: Code, title: "Connect Any Host", desc: "Native setup guides for Vercel, Netlify, GitHub Pages, Render, Railway, or VPS." },
-              { icon: Shield, title: "Global Anycast Edge", desc: "Backed by Cloudflare's resilient global infrastructure for reliable DNS uptime." },
-              { icon: Settings, title: "Full Record Control", desc: "Manage root and subdomain A, CNAME, and TXT records right from your dashboard." },
-              { icon: Globe, title: "Up to 5 Subdomains", desc: "Claim and manage multiple project addresses from one unified developer account." }
+              { icon: Gift, title: "Zero Cost", description: "No credit card or recurring charges. Free for personal, student, and production projects." },
+              { icon: Zap, title: "Instant Propagation", description: "Records sync to Cloudflare's global edge network within seconds of saving." },
+              { icon: Code, title: "Connect Any Host", description: "Native setup guides for Vercel, Netlify, GitHub Pages, Render, Railway, or VPS." },
+              { icon: Shield, title: "Global Anycast Edge", description: "Backed by Cloudflare's resilient global infrastructure for reliable DNS uptime." },
+              { icon: Settings, title: "Full Record Control", description: "Manage root and subdomain A, CNAME, and TXT records right from your dashboard." },
+              { icon: Globe, title: "Up to 5 Subdomains", description: "Claim and manage multiple project addresses from one unified developer account." }
             ].map((item, i) => (
-              <Card
-                key={i}
-                className="group p-5 sm:p-6 rounded-xl flex flex-col gap-3 hover:-translate-y-1 transition-all duration-300"
-              >
-                <CardContent className="p-0 flex flex-col gap-3">
-                  <div
-                    className="size-8.5 rounded-lg bg-white/[0.08] border border-white/[0.12] flex items-center justify-center text-zinc-300 group-hover:bg-white/[0.16] group-hover:text-white transition-all duration-200 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2)]"
-                  >
-                    <item.icon className="size-4 text-zinc-300 group-hover:text-white transition-colors" strokeWidth={1.5} />
-                  </div>
-                  <h3 className="font-semibold text-sm text-white tracking-tight">{item.title}</h3>
-                  <p className="text-xs text-zinc-400 leading-relaxed">{item.desc}</p>
-                </CardContent>
-              </Card>
+              <FeatureCard key={i} feature={item} />
             ))}
-          </div>
+          </AnimatedContainer>
         </section>
 
         {/* How it works */}
         <section
-          className="w-full max-w-4xl mx-auto py-10 sm:py-16 px-4 sm:px-6 lg:px-8 border-t border-white/[0.08] text-center"
+          className="w-full max-w-5xl mx-auto py-12 md:py-20 px-4 sm:px-6 lg:px-8 border-none relative text-center"
           style={{ contentVisibility: "auto", containIntrinsicSize: "500px" }}
         >
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-white mb-2">How it works</h2>
-          <p className="text-xs sm:text-sm text-zinc-400 mb-8 sm:mb-12 max-w-md mx-auto">Get your domain live in three straightforward steps.</p>
+          {/* Soft Faded Divider */}
+          <div className="w-full max-w-3xl mx-auto h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent mb-10 sm:mb-14" />
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+          <AnimatedContainer className="mx-auto max-w-3xl text-center mb-8 sm:mb-12">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-white mb-2">How it works</h2>
+            <p className="text-xs sm:text-sm text-zinc-400 font-normal max-w-md mx-auto">Get your domain live in three straightforward steps.</p>
+          </AnimatedContainer>
+
+          <AnimatedContainer
+            delay={0.3}
+            className="grid grid-cols-1 sm:grid-cols-3 divide-x divide-y divide-dashed border border-dashed border-white/15 divide-white/15 text-left bg-transparent"
+          >
             {[
-              { step: "1", title: "Find a name", desc: "Search for your preferred subdomain and verify availability in real time." },
-              { step: "2", title: "Claim your address", desc: "Sign in with GitHub or email to link the subdomain to your account." },
-              { step: "3", title: "Route your traffic", desc: "Add your host's CNAME target or VPS IP address to start receiving requests." }
+              { step: "1", title: "Find a name", description: "Search for your preferred subdomain and verify availability in real time." },
+              { step: "2", title: "Claim your address", description: "Sign in with GitHub or email to link the subdomain to your account." },
+              { step: "3", title: "Route your traffic", description: "Add your host's CNAME target or VPS IP address to start receiving requests." }
             ].map((item, i) => (
-              <Card
-                key={i}
-                className="group text-center p-5 sm:p-6 rounded-xl hover:-translate-y-1 transition-all duration-300"
-              >
-                <CardContent className="p-0 flex flex-col items-center">
-                  <div
-                    className="flex size-8 items-center justify-center rounded-lg bg-white/[0.08] border border-white/[0.12] text-white font-mono text-xs font-bold mb-3 group-hover:bg-white/[0.16] transition-all duration-200 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2)]"
-                  >
-                    {item.step}
-                  </div>
-                  <h3 className="font-semibold text-sm text-white mb-1.5 tracking-tight">{item.title}</h3>
-                  <p className="text-xs text-zinc-400 leading-relaxed">{item.desc}</p>
-                </CardContent>
-              </Card>
+              <FeatureCard key={i} feature={item} />
             ))}
-          </div>
+          </AnimatedContainer>
         </section>
       </main>
 

@@ -267,21 +267,28 @@ input:-webkit-autofill:active {
   box-shadow: inset 0 1px 0px 0 rgba(255, 255, 255, 0.22) !important;
 }
 
-/* Skeuomorphic Input Container (Matches skeuo-button top rim & gradient) */
+/* Skeuomorphic Glass Input Container (Matches exact page theme & shader background) */
 .skeuo-input {
   position: relative;
-  background-image: linear-gradient(180deg, #222226, #141417) !important;
-  border: none !important;
-  box-shadow: inset 0 1px 0px 0 rgba(255, 255, 255, 0.3), inset 0 0 0 1px rgba(255, 255, 255, 0.15) !important;
-  transition: box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  background-color: rgba(255, 255, 255, 0.04) !important;
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: inset 0 1px 0px 0 rgba(255, 255, 255, 0.25), 0 12px 32px -8px rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .skeuo-input:hover {
-  box-shadow: inset 0 1px 0px 0 rgba(255, 255, 255, 0.38), inset 0 0 0 1px rgba(255, 255, 255, 0.22) !important;
+  background-color: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.22) !important;
+  box-shadow: inset 0 1px 0px 0 rgba(255, 255, 255, 0.35), 0 12px 32px -8px rgba(0, 0, 0, 0.7) !important;
 }
 
 .skeuo-input:focus-within {
-  box-shadow: inset 0 1px 0px 0 rgba(255, 255, 255, 0.45), inset 0 0 0 1px rgba(255, 255, 255, 0.3) !important;
+  background-color: rgba(255, 255, 255, 0.07) !important;
+  border-color: rgba(59, 130, 246, 0.65) !important;
+  box-shadow: inset 0 1px 0px 0 rgba(255, 255, 255, 0.4), 0 0 16px -2px rgba(59, 130, 246, 0.4), 0 12px 36px -8px rgba(0, 0, 0, 0.8) !important;
 }
 
 /* ==========================================================================
@@ -512,5 +519,43 @@ html.lenis body {
     scroll-behavior: auto !important;
   }
 }
+
+/* ==========================================================================
+   Minimal Ultra-Slim Dark Scrollbar System (Webkit & Firefox)
+   ========================================================================== */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.16);
+  border-radius: 9999px;
+  transition: background-color 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.35);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
 
 
