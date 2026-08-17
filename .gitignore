@@ -43,3 +43,5 @@ yarn-error.log*
 claude-seo/
 nul
 
+
+.agents/mcp_config.json
